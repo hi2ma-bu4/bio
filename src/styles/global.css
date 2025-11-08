@@ -1,0 +1,33 @@
+@import "tailwindcss";
+@import "tailwindcss/preflight";
+
+@tailwind utilities;
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@layer base {
+	/* アクセシビリティとデザインを両立するフォント設定 */
+	html {
+		font-family: "Inter", "Noto Sans JP", sans-serif;
+		scroll-behavior: smooth;
+		@apply bg-white text-slate-800; /* ライトモードデフォルト */
+	}
+
+	/* ダークモードの基本スタイル */
+	html.dark {
+		@apply bg-slate-900 text-slate-200;
+	}
+
+	/* スムーズな色の移行 */
+	body,
+	header,
+	main,
+	footer {
+		@apply transition-colors duration-300;
+	}
+
+	/* フォーカス時のリング（アクセシビリティ）*/
+	:focus-visible {
+		@apply outline-none ring-2 ring-offset-2 ring-sky-500 ring-offset-white dark:ring-offset-slate-900;
+	}
+}

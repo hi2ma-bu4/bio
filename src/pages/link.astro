@@ -1,0 +1,14 @@
+---
+import LinkCard from "../components/LinkCard.astro";
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout title="Link" description="関連リンク集">
+	<h1 class="text-4xl md:text-5xl font-extrabold mb-10 text-center">Link</h1>
+
+	<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+		<LinkCard href="https://github.com" title="GitHub" description="コードとプロジェクトを管理しています。" iconName="CodeBracket" />
+		<LinkCard href="https://x.com" title="X (Twitter)" description="日々の技術的なつぶやき。" iconName="ChatBubbleLeftRight" />
+		<LinkCard href="https://example.com/blog" title="個人ブログ" description="技術記事やポエムを書いています。" iconName="PencilSquare" />
+	</div>
+</Layout>

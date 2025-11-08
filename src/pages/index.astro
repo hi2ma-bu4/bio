@@ -1,0 +1,32 @@
+---
+import LinkIcon from "astro-heroicons/solid/Link.astro";
+import Squares2X2Icon from "astro-heroicons/solid/Squares2X2.astro";
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout title="Top" description="モダンなポートフォリオサイトのトップページです。">
+	<section class="text-center pt-16 pb-24">
+		<h1 class="text-5xl md:text-7xl font-extrabold mb-6">
+			<span class="text-transparent bg-clip-text bg-linear-to-r from-sky-500 to-indigo-600 dark:from-sky-400 dark:to-indigo-500"> Creative Developer </span>
+		</h1>
+		<p class="text-xl md:text-2xl text-slate-700 dark:text-slate-300 mb-12 max-w-2xl mx-auto">UXとデザインを両立する、モダンなWebサイトを構築します。</p>
+		<div class="flex justify-center gap-4">
+			<a href="/works" class="inline-flex items-center gap-2 px-6 py-3 rounded-lg text-lg font-medium bg-sky-600 text-white hover:bg-sky-700 focus-visible:ring-sky-500">
+				<Squares2X2Icon class="w-5 h-5" />
+				制作実績を見る
+			</a>
+			<a href="/link" class="inline-flex items-center gap-2 px-6 py-3 rounded-lg text-lg font-medium bg-slate-200 text-slate-800 hover:bg-slate-300 dark:bg-slate-700 dark:text-slate-200 dark:hover:bg-slate-600 focus-visible:ring-sky-500">
+				<LinkIcon class="w-5 h-5" />
+				リンク
+			</a>
+		</div>
+	</section>
+
+	<section class="py-16">
+		<h2 class="text-3xl font-bold text-center mb-10">About Me</h2>
+		<div class="max-w-prose mx-auto text-lg text-slate-700 dark:text-slate-300 space-y-6">
+			<p>ここに自己紹介文が入ります。アクセシビリティ（視認性）に配慮し、コントラストの高いテキストカラーと十分な行間を確保しています。</p>
+			<p>クールなデザイン系企業サイトの雰囲気を意識し、余白を活かしたスリムでクリーンなレイアウトを採用しています。</p>
+		</div>
+	</section>
+</Layout>

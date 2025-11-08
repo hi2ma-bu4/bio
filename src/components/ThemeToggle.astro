@@ -1,0 +1,9 @@
+---
+import MoonIcon from "astro-heroicons/solid/Moon.astro";
+import SunIcon from "astro-heroicons/solid/Sun.astro";
+---
+
+<button id="theme-toggle" class="p-2 rounded-full hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors" aria-label="テーマを切り替える">
+	<SunIcon class="w-6 h-6 text-slate-800 dark:hidden" />
+	<MoonIcon name="moon" class="w-6 h-6 text-slate-200 hidden dark:block" />
+</button>

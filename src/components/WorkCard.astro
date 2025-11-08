@@ -1,0 +1,41 @@
+---
+import ArrowTopRightOnSquareIcon from "astro-heroicons/solid/ArrowTopRightOnSquare.astro";
+
+export interface Props {
+	id: string; // モーダル起動用ID
+	title: string;
+	description: string;
+	imageUrl: string;
+	tags: string[];
+	directLink?: string; // 直接移動用リンク
+}
+const { id, title, description, imageUrl, tags, directLink } = Astro.props;
+---
+
+<div classid={`work-card-${id}`} class="group rounded-lg overflow-hidden shadow-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+	<button class="w-full text-left work-modal-trigger" data-work-id={id} aria-haspopup="dialog">
+		<div class="aspect-video overflow-hidden">
+			<img src={imageUrl} alt={`${title}のスクリーンショット`} loading="lazy" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" onerror="this.onerror=null; this.src='/no-image.svg';" />
+		</div>
+
+		<div class="p-4 md:p-6">
+			<h3 class="text-xl font-bold mb-2 text-slate-900 dark:text-white">{title}</h3>
+			<p class="text-slate-600 dark:text-slate-400 text-sm mb-4 line-clamp-2">{description}</p>
+
+			<div class="flex flex-wrap gap-2">
+				{tags.map((tag) => <span class="text-xs font-medium px-2 py-0.5 rounded-full bg-sky-100 text-sky-800 dark:bg-sky-900 dark:text-sky-200">{tag}</span>)}
+			</div>
+		</div>
+	</button>
+
+	{
+		directLink && (
+			<div class="p-4 md:p-6 pt-0">
+				<a href={directLink} target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium bg-sky-600 text-white hover:bg-sky-700 focus-visible:ring-sky-500" onclick="(e) => e.stopPropagation()">
+					サイトへ移動
+					<ArrowTopRightOnSquareIcon class="w-4 h-4" />
+				</a>
+			</div>
+		)
+	}
+</div>

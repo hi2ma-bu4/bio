@@ -4,5 +4,18 @@
 			"path": "."
 		}
 	],
-	"settings": {}
+	"settings": {
+		"files.associations": {
+			"*.css": "tailwindcss"
+		},
+		"editor.quickSuggestions": {
+			"strings": "on"
+		},
+		"cSpell.words": [
+			"COEP",
+			"heroicons",
+			"joda",
+			"Noto"
+		]
+	}
 }

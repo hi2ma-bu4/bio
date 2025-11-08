@@ -1,0 +1,51 @@
+---
+import Bars3Icon from "astro-heroicons/solid/Bars3.astro";
+import { NAV_LINKS, SITE_TITLE } from "../config.ts";
+import ThemeToggle from "./ThemeToggle.astro";
+---
+
+<div class="md:hidden">
+	<input type="checkbox" id="mobile-menu-toggle" class="peer hidden" />
+	<label for="mobile-menu-toggle" class="fixed top-4 right-4 z-40 p-2 rounded-full bg-white/70 dark:bg-slate-800/70 backdrop-blur-sm shadow-lg cursor-pointer" aria-label="メニューを開く">
+		<Bars3Icon class="w-6 h-6 text-slate-800 dark:text-slate-200" />
+	</label>
+
+	<div class="peer-checked:opacity-100 peer-checked:pointer-events-auto opacity-0 pointer-events-none transition-opacity duration-300">
+		<label for="mobile-menu-toggle" class="fixed inset-0 z-30 bg-black/30 backdrop-blur-sm" aria-hidden="true"></label>
+		<nav class="fixed top-0 right-0 z-40 h-full w-64 bg-white dark:bg-slate-900 shadow-xl p-6 transition-transform duration-300 translate-x-full peer-checked:translate-x-0">
+			<div class="flex justify-between items-center mb-8">
+				<span class="text-xl font-bold">Menu</span>
+				<ThemeToggle />
+			</div>
+			<ul class="space-y-4">
+				{
+					NAV_LINKS.map((link) => (
+						<li>
+							<a href={link.href} class="block text-xl font-medium text-slate-700 dark:text-slate-300 hover:text-sky-600 dark:hover:text-sky-400">
+								{link.text}
+							</a>
+						</li>
+					))
+				}
+			</ul>
+		</nav>
+	</div>
+</div>
+
+<header id="floating-header" class="hidden md:block fixed top-0 left-0 right-0 z-20 py-3 px-8 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md shadow-sm transition-transform duration-300 -translate-y-full">
+	<nav class="max-w-5xl mx-auto flex justify-between items-center">
+		<a href="/" class="text-xl font-bold text-sky-600 dark:text-sky-400">{SITE_TITLE}</a>
+		<div class="flex items-center space-x-6">
+			{
+				NAV_LINKS.map((link) => (
+					<a href={link.href} class="text-base font-medium text-slate-700 dark:text-slate-300 hover:text-sky-600 dark:hover:text-sky-400 transition-colors">
+						{link.text}
+					</a>
+				))
+			}
+			<ThemeToggle />
+		</div>
+	</nav>
+</header>
+
+<script src="../scripts/header-scroll.ts"></script>

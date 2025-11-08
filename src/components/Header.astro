@@ -1,0 +1,23 @@
+---
+import { NAV_LINKS, SITE_TITLE } from "../config.ts";
+import ThemeToggle from "./ThemeToggle.astro";
+---
+
+<header id="main-header" class="w-full py-4 px-4 md:px-8 transition-transform duration-300">
+	<nav class="max-w-5xl mx-auto flex justify-between items-center">
+		<a href="/" class="text-2xl font-bold text-sky-600 dark:text-sky-400">{SITE_TITLE}</a>
+		<div class="hidden md:flex items-center space-x-6">
+			{
+				NAV_LINKS.map((link) => (
+					<a href={link.href} class="text-lg font-medium text-slate-700 dark:text-slate-300 hover:text-sky-600 dark:hover:text-sky-400 transition-colors">
+						{link.text}
+					</a>
+				))
+			}
+			<ThemeToggle />
+		</div>
+		<div class="md:hidden">
+			<ThemeToggle />
+		</div>
+	</nav>
+</header>

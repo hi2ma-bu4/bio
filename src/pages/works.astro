@@ -1,0 +1,60 @@
+---
+import Layout from "../layouts/Layout.astro";
+import WorkCard, { type Props as Work } from "../components/WorkCard.astro";
+import WorkModal from "../components/WorkModal.astro";
+
+// 作品データ
+const worksData: (Work & { longDescription: string })[] = [
+	{
+		id: "work1",
+		title: "架空のEコマースサイト",
+		description: "AstroとTailwind CSSで構築した高速なEコマースのデモサイトです。",
+		imageUrl: "/images/dummy-work1.jpg",
+		tags: ["Astro", "Tailwind CSS", "E-commerce"],
+		directLink: "https://example.com",
+		longDescription: "詳細な説明。AstroのSSG機能を利用し、初回読み込み速度を極限まで高めました。決済機能はStripeのデモを統合しています。",
+	},
+	{
+		id: "work2",
+		title: "コーポレートサイト",
+		description: "アクセシビリティ(a11y)を重視した企業の公式サイト。",
+		imageUrl: "https://example.com/invalid-image.png",
+		tags: ["Accessibility", "React", "Next.js"],
+		longDescription: "詳細な説明。WCAG 2.1 AAレベルに準拠するよう設計。スクリーンリーダー利用者のUXテストも実施しました。",
+	},
+	{
+		id: "work3",
+		title: "個人ブログ",
+		description: "ヘッドレスCMS（MicroCMS）と連携したブログ。",
+		imageUrl: "/images/dummy-work3.jpg",
+		tags: ["Headless CMS", "Gatsby", "GraphQL"],
+		directLink: "https://example.com",
+		longDescription: "詳細な説明。ビルド時にCMSからデータを取得し、静的ページとして生成します。運用コストとパフォーマンスを両立しています。",
+	},
+];
+
+// データをJSで扱いやすい形式（オブジェクト）に変換
+const workItemsMap = worksData.reduce(
+	(acc, work) => {
+		acc[work.id] = work;
+		return acc;
+	},
+	{} as Record<string, (typeof worksData)[number]>
+);
+---
+
+<Layout title="Works" description="制作実績一覧">
+	<h1 class="text-4xl md:text-5xl font-extrabold mb-10 text-center">Works</h1>
+
+	<script define:vars={{ items: workItemsMap }}>
+		window.WORK_ITEMS = items;
+	</script>
+
+	<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+		{worksData.map((work) => <WorkCard {...work} />)}
+	</div>
+
+	<WorkModal />
+
+	<script src="../scripts/work-modal.ts"></script>
+</Layout>
