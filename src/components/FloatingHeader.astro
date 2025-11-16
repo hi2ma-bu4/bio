@@ -1,6 +1,6 @@
 ---
 import Bars3Icon from "astro-heroicons/solid/Bars3.astro";
-import { NAV_LINKS, SITE_TITLE } from "../config.ts";
+import { BASE_DIR, NAV_LINKS, SITE_TITLE } from "../config.ts";
 import ThemeToggle from "./ThemeToggle.astro";
 ---
 
@@ -34,7 +34,7 @@ import ThemeToggle from "./ThemeToggle.astro";
 
 <header id="floating-header" class="hidden md:block fixed top-0 left-0 right-0 z-20 py-3 px-8 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md shadow-sm transition-transform duration-300 -translate-y-full">
 	<nav class="max-w-5xl mx-auto flex justify-between items-center">
-		<a href="/" class="text-xl font-bold text-sky-600 dark:text-sky-400">{SITE_TITLE}</a>
+		<a href={BASE_DIR} class="text-xl font-bold text-sky-600 dark:text-sky-400">{SITE_TITLE}</a>
 		<div class="flex items-center space-x-6">
 			{
 				NAV_LINKS.map((link) => (

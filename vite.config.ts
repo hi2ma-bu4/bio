@@ -19,9 +19,7 @@ export default defineConfig({
 		copyPublicDir: false,
 		rollupOptions: {
 			output: {
-				manualChunks: {
-					three: ["three"],
-				},
+				manualChunks: {},
 			},
 		},
 	},

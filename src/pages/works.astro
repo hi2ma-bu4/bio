@@ -2,6 +2,7 @@
 import Layout from "../layouts/Layout.astro";
 import WorkCard, { type Props as Work } from "../components/WorkCard.astro";
 import WorkModal from "../components/WorkModal.astro";
+import { BASE_DIR } from "../config";
 
 // 作品データ
 const worksData: (Work & { longDescription: string })[] = [
@@ -9,7 +10,7 @@ const worksData: (Work & { longDescription: string })[] = [
 		id: "work1",
 		title: "架空のEコマースサイト",
 		description: "AstroとTailwind CSSで構築した高速なEコマースのデモサイトです。",
-		imageUrl: "/images/dummy-work1.jpg",
+		imageUrl: `${BASE_DIR}images/dummy-work1.jpg`,
 		tags: ["Astro", "Tailwind CSS", "E-commerce"],
 		directLink: "https://example.com",
 		longDescription: "詳細な説明。AstroのSSG機能を利用し、初回読み込み速度を極限まで高めました。決済機能はStripeのデモを統合しています。",
@@ -26,7 +27,7 @@ const worksData: (Work & { longDescription: string })[] = [
 		id: "work3",
 		title: "個人ブログ",
 		description: "ヘッドレスCMS（MicroCMS）と連携したブログ。",
-		imageUrl: "/images/dummy-work3.jpg",
+		imageUrl: `${BASE_DIR}images/dummy-work3.jpg`,
 		tags: ["Headless CMS", "Gatsby", "GraphQL"],
 		directLink: "https://example.com",
 		longDescription: "詳細な説明。ビルド時にCMSからデータを取得し、静的ページとして生成します。運用コストとパフォーマンスを両立しています。",

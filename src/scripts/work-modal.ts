@@ -1,5 +1,7 @@
 // 作品モーダルの制御
 
+import { BASE_DIR } from "../config";
+
 function initWorkModal() {
 	const modal = document.getElementById("work-modal") as HTMLDialogElement | null;
 	const closeButton = document.getElementById("modal-close-button");
@@ -28,7 +30,7 @@ function initWorkModal() {
 				// ここでは前回同様innerHTMLを使いますが、堅牢な実装ではサニタイズが必要です
 				modalContent.innerHTML = `
           <h2 class="text-2xl md:text-3xl font-bold mb-4 text-slate-900 dark:text-white">${escapeHTML(workData.title)}</h2>
-          <img src="${escapeHTML(workData.imageUrl)}" alt="${escapeHTML(workData.title)}" class="w-full aspect-video object-cover rounded-md mb-6" onerror="this.onerror=null; this.src='/no-image.svg';">
+          <img src="${escapeHTML(workData.imageUrl)}" alt="${escapeHTML(workData.title)}" class="w-full aspect-video object-cover rounded-md mb-6" onerror="this.onerror=null; this.src='${BASE_DIR}no-image.svg';">
           <p class="text-slate-700 dark:text-slate-300 mb-6">${escapeHTML(workData.longDescription)}</p>
           <div class="flex flex-wrap gap-2 mb-6">
             ${workData.tags.map((tag: string) => `<span class="text-xs font-medium px-2 py-0.5 rounded-full bg-sky-100 text-sky-800 dark:bg-sky-900 dark:text-sky-200">${escapeHTML(tag)}</span>`).join("")}
