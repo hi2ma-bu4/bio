@@ -6,10 +6,32 @@ import Footer from "../components/Footer.astro";
 import { SITE_TITLE, SITE_DESCRIPTION, BASE_DIR } from "../config.ts";
 import { GoogleFontsOptimizer } from "astro-google-fonts-optimizer";
 import { SEO } from "astro-seo";
+import { pwaAssetsHead } from "virtual:pwa-assets/head";
+import { pwaInfo } from "virtual:pwa-info";
 
 interface Props {
 	title: string;
 	description?: string;
+}
+
+const linkArr = [
+	//
+	...pwaAssetsHead.links.map((link: any) => ({ ...link })),
+	{ rel: "sitemap", href: `${BASE_DIR}sitemap-index.xml` },
+];
+if (pwaInfo) {
+	linkArr.push({ rel: "manifest", href: `${BASE_DIR}${pwaInfo.webManifest.href.replace(/^\//, "")}` });
+}
+
+const metaArr = [
+	{ name: "viewport", content: "width=device-width" },
+	{
+		name: "generator",
+		content: Astro.generator,
+	},
+];
+if (pwaAssetsHead.themeColor) {
+	metaArr.push({ name: "theme-color", content: pwaAssetsHead.themeColor.content });
 }
 
 const { title, description = SITE_DESCRIPTION } = Astro.props;
@@ -26,19 +48,12 @@ const { title, description = SITE_DESCRIPTION } = Astro.props;
 			description={description}
 			twitter={{ creator: "@hi2ma_bu4" }}
 			extend={{
-				link: [
-					{ rel: "icon", type: "image/svg+xml", href: `${BASE_DIR}favicon.svg` },
-					{ rel: "sitemap", href: `${BASE_DIR}sitemap-index.xml` },
-				],
-				meta: [
-					{ name: "viewport", content: "width=device-width" },
-					{
-						name: "generator",
-						content: Astro.generator,
-					},
-				],
+				link: linkArr,
+				meta: metaArr,
 			}}
 		/>
+
+		{pwaInfo && <Fragment set:html={pwaInfo.webManifest.linkTag} />}
 
 		<script is:inline>
 			const theme = (() => {

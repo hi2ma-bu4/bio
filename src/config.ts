@@ -1,10 +1,6 @@
-import { BASE_DIR } from "astro:env/client";
+import { BASE_DIR, SITE_DESCRIPTION, SITE_TITLE } from "astro:env/client";
 
-export { BASE_DIR };
-
-// サイトの共通設定
-export const SITE_TITLE = "snowsSite";
-export const SITE_DESCRIPTION = "snows(hi2ma-bu4)のホームページです。";
+export { BASE_DIR, SITE_DESCRIPTION, SITE_TITLE };
 
 // ナビゲーションリンク
 export const NAV_LINKS = [
