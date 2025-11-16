@@ -20,7 +20,7 @@ const linkArr = [
 	{ rel: "sitemap", href: `${BASE_DIR}sitemap-index.xml` },
 ];
 if (pwaInfo) {
-	linkArr.push({ rel: "manifest", href: `${BASE_DIR}${pwaInfo.webManifest.href.replace(/^\//, "")}` });
+	linkArr.push({ rel: "manifest", href: pwaInfo.webManifest.href });
 }
 
 const metaArr = [
@@ -52,8 +52,6 @@ const { title, description = SITE_DESCRIPTION } = Astro.props;
 				meta: metaArr,
 			}}
 		/>
-
-		{pwaInfo && <Fragment set:html={pwaInfo.webManifest.linkTag} />}
 
 		<script is:inline>
 			const theme = (() => {
