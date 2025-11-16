@@ -85,6 +85,10 @@ export default defineConfig({
 						urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
 						handler: "StaleWhileRevalidate",
 					},
+					{
+						urlPattern: /^https:\/\/fonts\.gstatic\.com\/.*/i,
+						handler: "StaleWhileRevalidate",
+					},
 				],
 			},
 		}),
