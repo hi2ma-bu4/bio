@@ -45,6 +45,8 @@ const workItemsMap = worksData.reduce(
 ---
 
 <Layout title="Works" description="制作実績一覧">
+	<script src="../scripts/work-modal.ts" defer></script>
+
 	<h1 class="text-4xl md:text-5xl font-extrabold mb-10 text-center">Works</h1>
 
 	<script define:vars={{ items: workItemsMap }}>
@@ -56,6 +58,4 @@ const workItemsMap = worksData.reduce(
 	</div>
 
 	<WorkModal />
-
-	<script src="../scripts/work-modal.ts"></script>
 </Layout>

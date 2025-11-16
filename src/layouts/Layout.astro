@@ -74,6 +74,9 @@ const { title, description = SITE_DESCRIPTION } = Astro.props;
 
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
 		<GoogleFontsOptimizer url="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Noto+Sans+JP:wght@400;700&display=swap" />
+
+		<script src="../scripts/theme-toggle.ts" defer></script>
+		<script src="../scripts/header-scroll.ts" defer></script>
 	</head>
 	<body class="min-h-screen flex flex-col">
 		<Header />
@@ -84,7 +87,5 @@ const { title, description = SITE_DESCRIPTION } = Astro.props;
 		</main>
 
 		<Footer />
-
-		<script src="../scripts/theme-toggle.ts"></script>
 	</body>
 </html>
