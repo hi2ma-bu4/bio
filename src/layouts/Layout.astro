@@ -75,7 +75,7 @@ const { title, description = SITE_DESCRIPTION } = Astro.props;
 		</script>
 		<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/hi2ma-bu4/jasc@v1.15.3.10/jasc.js" is:inline></script>
 		<script type="module" is:inline define:vars={{ BASE_DIR }}>
-			const ErrorImageUrl = `${BASE_DIR}no_image.svg`;
+			const ErrorImageUrl = `${BASE_DIR}no-image.svg`;
 			jasc.on("imageLoadError", (e) => {
 				e.target.src = ErrorImageUrl;
 			});
