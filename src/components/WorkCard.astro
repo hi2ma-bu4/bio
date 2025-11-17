@@ -13,10 +13,10 @@ export interface Props {
 const { id, title, description, imageUrl, tags, directLink } = Astro.props;
 ---
 
-<div classid={`work-card-${id}`} class="group rounded-lg overflow-hidden shadow-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+<div id={`work-card-${id}`} class="group rounded-lg overflow-hidden shadow-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
 	<button class="w-full text-left work-modal-trigger" data-work-id={id} aria-haspopup="dialog">
 		<div class="aspect-video overflow-hidden">
-			<img src={imageUrl} alt={`${title}のスクリーンショット`} loading="lazy" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" onerror={`this.onerror=null; this.src='${BASE_DIR}no-image.svg';`} />
+			<img src={imageUrl} alt={`${title}のスクリーンショット`} loading="lazy" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" />
 		</div>
 
 		<div class="p-4 md:p-6">

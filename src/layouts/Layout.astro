@@ -6,6 +6,7 @@ import Footer from "../components/Footer.astro";
 import { SITE_TITLE, SITE_DESCRIPTION, BASE_DIR } from "../config.ts";
 import { GoogleFontsOptimizer } from "astro-google-fonts-optimizer";
 import { SEO } from "astro-seo";
+import { ClientRouter } from "astro:transitions";
 import { pwaAssetsHead } from "virtual:pwa-assets/head";
 import { pwaInfo } from "virtual:pwa-info";
 
@@ -52,8 +53,11 @@ const { title, description = SITE_DESCRIPTION } = Astro.props;
 				meta: metaArr,
 			}}
 		/>
+		<ClientRouter />
 
-		<script is:inline>
+		<script type="text/javascript" is:inline>
+			import { BASE_DIR } from "astro:env/client";
+
 			const theme = (() => {
 				if (typeof localStorage !== "undefined" && localStorage.getItem("theme")) {
 					return localStorage.getItem("theme");
@@ -70,6 +74,13 @@ const { title, description = SITE_DESCRIPTION } = Astro.props;
 				document.documentElement.classList.add("dark");
 			}
 			localStorage.setItem("theme", theme);
+		</script>
+		<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/hi2ma-bu4/jasc@v1.15.3.10/jasc.js" is:inline></script>
+		<script type="text/javascript" is:inline>
+			const ErrorImageUrl = `${BASE_DIR}no_image.svg`;
+			jasc.on("imageLoadError", (e) => {
+				e.target.src = ErrorImageUrl;
+			});
 		</script>
 
 		<link rel="preconnect" href="https://fonts.googleapis.com" />

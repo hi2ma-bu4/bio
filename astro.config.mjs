@@ -26,8 +26,10 @@ export default defineConfig({
 	build: {
 		format: "directory",
 	},
+	cacheDir: "./.cache",
 	prefetch: {
 		prefetchAll: true,
+		defaultStrategy: "hover",
 	},
 	integrations: [
 		solidJs(),
@@ -89,6 +91,10 @@ export default defineConfig({
 						urlPattern: /^https:\/\/fonts\.gstatic\.com\/.*/i,
 						handler: "StaleWhileRevalidate",
 					},
+					{
+						urlPattern: /^https:\/\/cdn\.jsdelivr\.net\/.*/i,
+						handler: "StaleWhileRevalidate",
+					},
 				],
 			},
 		}),
@@ -110,6 +116,11 @@ export default defineConfig({
 	],
 	vite: {
 		plugins: [tailwindVite()],
+		build: {
+			rollupOptions: {
+				external: [],
+			},
+		},
 	},
 	env: {
 		schema: {
