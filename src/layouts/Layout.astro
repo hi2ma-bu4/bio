@@ -6,7 +6,6 @@ import Footer from "../components/Footer.astro";
 import { SITE_TITLE, SITE_DESCRIPTION, BASE_DIR } from "../config.ts";
 import { GoogleFontsOptimizer } from "astro-google-fonts-optimizer";
 import { SEO } from "astro-seo";
-import { ClientRouter } from "astro:transitions";
 import { pwaAssetsHead } from "virtual:pwa-assets/head";
 import { pwaInfo } from "virtual:pwa-info";
 
@@ -53,7 +52,6 @@ const { title, description = SITE_DESCRIPTION } = Astro.props;
 				meta: metaArr,
 			}}
 		/>
-		<ClientRouter />
 
 		<script type="text/javascript" is:inline>
 			const theme = (() => {
