@@ -56,8 +56,6 @@ const { title, description = SITE_DESCRIPTION } = Astro.props;
 		<ClientRouter />
 
 		<script type="text/javascript" is:inline>
-			import { BASE_DIR } from "astro:env/client";
-
 			const theme = (() => {
 				if (typeof localStorage !== "undefined" && localStorage.getItem("theme")) {
 					return localStorage.getItem("theme");
@@ -76,7 +74,8 @@ const { title, description = SITE_DESCRIPTION } = Astro.props;
 			localStorage.setItem("theme", theme);
 		</script>
 		<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/hi2ma-bu4/jasc@v1.15.3.10/jasc.js" is:inline></script>
-		<script type="text/javascript" is:inline>
+		<script type="module" is:inline>
+			import { BASE_DIR } from "astro:env/client";
 			const ErrorImageUrl = `${BASE_DIR}no_image.svg`;
 			jasc.on("imageLoadError", (e) => {
 				e.target.src = ErrorImageUrl;
