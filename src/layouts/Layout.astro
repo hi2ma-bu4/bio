@@ -8,6 +8,7 @@ import { GoogleFontsOptimizer } from "astro-google-fonts-optimizer";
 import { SEO } from "astro-seo";
 import { pwaAssetsHead } from "virtual:pwa-assets/head";
 import { pwaInfo } from "virtual:pwa-info";
+import { ClientRouter } from "astro:transitions";
 
 interface Props {
 	title: string;
@@ -78,6 +79,8 @@ const { title, description = SITE_DESCRIPTION } = Astro.props;
 				e.target.src = ErrorImageUrl;
 			});
 		</script>
+
+		<ClientRouter />
 
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
 		<GoogleFontsOptimizer url="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Noto+Sans+JP:wght@400;700&display=swap" />

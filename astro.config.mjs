@@ -8,7 +8,6 @@ import tailwindVite from "@tailwindcss/vite";
 import { minimal2023Preset as preset } from "@vite-pwa/assets-generator/config";
 import AstroPWA from "@vite-pwa/astro";
 import htmlMinifierNext from "astro-html-minifier-next";
-import relativeLinks from "astro-relative-links";
 
 const BASE_DIR = process.env.BASE_DIR ?? "/";
 const SITE_TITLE = process.env.SITE_TITLE ?? "snowsSite";
@@ -99,7 +98,6 @@ export default defineConfig({
 			},
 		}),
 		sitemap(),
-		relativeLinks(),
 		htmlMinifierNext({
 			html5: true,
 			collapseInlineTagWhitespace: true,
