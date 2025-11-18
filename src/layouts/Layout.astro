@@ -54,30 +54,53 @@ const { title, description = SITE_DESCRIPTION } = Astro.props;
 			}}
 		/>
 
-		<script type="text/javascript" is:inline>
-			const theme = (() => {
-				if (typeof localStorage !== "undefined" && localStorage.getItem("theme")) {
-					return localStorage.getItem("theme");
-				}
-				if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
-					return "dark";
-				}
-				return "light";
-			})();
+		<script type="module" is:inline>
+			function updateTheme() {
+				const theme = (() => {
+					if (typeof localStorage !== "undefined" && localStorage.getItem("theme")) {
+						return localStorage.getItem("theme");
+					}
+					if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+						return "dark";
+					}
+					return "light";
+				})();
 
-			if (theme === "light") {
-				document.documentElement.classList.remove("dark");
-			} else {
-				document.documentElement.classList.add("dark");
+				if (theme === "light") {
+					document.documentElement.classList.remove("dark");
+				} else {
+					document.documentElement.classList.add("dark");
+				}
+				localStorage.setItem("theme", theme);
 			}
-			localStorage.setItem("theme", theme);
+			updateTheme();
+			document.addEventListener("astro:after-swap", updateTheme);
 		</script>
-		<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/hi2ma-bu4/jasc@v1.15.3.10/jasc.js" is:inline></script>
 		<script type="module" is:inline define:vars={{ BASE_DIR }}>
 			const ErrorImageUrl = `${BASE_DIR}no-image.svg`;
-			jasc.on("imageLoadError", (e) => {
-				e.target.src = ErrorImageUrl;
-			});
+			const isLoadClassName = "bio-imgCheck";
+			const isErrClassName = "bio-errImg";
+
+			function updateImgLoadChecker() {
+				const imgs = document.querySelectorAll(`img:not(.${isLoadClassName},.${isErrClassName})`);
+
+				for (const img of imgs) {
+					img.classList.add(isLoadClassName);
+					img.onload = () => {
+						img.onload = img.onerror = null;
+					};
+					img.onerror = (e) => {
+						img.onload = img.onerror = null;
+						img.classList.add(isErrClassName);
+						const target = e.target;
+						target.alt = `${target.alt ?? ""}(${target.src})`;
+						target.src = ErrorImageUrl;
+					};
+				}
+			}
+			updateImgLoadChecker();
+			document.addEventListener("astro:after-swap", updateImgLoadChecker);
+			new MutationObserver(updateImgLoadChecker).observe(document.body, { childList: true, subtree: true });
 		</script>
 
 		<ClientRouter />
