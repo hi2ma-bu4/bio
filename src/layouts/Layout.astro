@@ -82,6 +82,21 @@ const { title, description = SITE_DESCRIPTION } = Astro.props;
 			const isLoadClassName = "bio-imgLoad";
 			const isErrClassName = "bio-imgLoadErr";
 
+			function errLoad(e) {
+				const img = e.target;
+				img.onload = img.onerror = null;
+				if (!(img instanceof HTMLImageElement)) return;
+
+				// 無限ループ防止
+				if (img.classList.contains(isLoadClassName) || img.classList.contains(isErrClassName)) return;
+				img.classList.add(isErrClassName);
+
+				img.src = ErrorImageUrl;
+			}
+
+			document.addEventListener("error", errLoad, true);
+
+			let observer = new MutationObserver(updateImgLoadChecker);
 			function updateImgLoadChecker() {
 				const imgs = document.querySelectorAll(`img:not(.${isCheckClassName},.${isLoadClassName},.${isErrClassName})`);
 
@@ -91,18 +106,17 @@ const { title, description = SITE_DESCRIPTION } = Astro.props;
 						img.onload = img.onerror = null;
 						img.classList.add(isLoadClassName);
 					};
-					img.onerror = (e) => {
-						img.onload = img.onerror = null;
-						img.classList.add(isErrClassName);
-						const target = e.target;
-						target.alt = `${target.alt ?? ""}(${target.src})`;
-						target.src = ErrorImageUrl;
-					};
+					img.onerror = errLoad;
 				}
 			}
-			document.addEventListener("astro:after-swap", updateImgLoadChecker);
+			document.addEventListener("astro:after-swap", () => {
+				observer.disconnect();
+
+				observer.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ["src"] });
+				updateImgLoadChecker();
+			});
+			observer.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ["src"] });
 			updateImgLoadChecker();
-			new MutationObserver(updateImgLoadChecker).observe(document.body, { childList: true, subtree: true });
 		</script>
 
 		<ClientRouter />
