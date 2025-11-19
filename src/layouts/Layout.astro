@@ -89,8 +89,10 @@ const { title, description = SITE_DESCRIPTION } = Astro.props;
 
 				// 無限ループ防止
 				if (img.classList.contains(isLoadClassName) || img.classList.contains(isErrClassName)) return;
+				img.classList.add(isCheckClassName);
 				img.classList.add(isErrClassName);
 
+				img.alt = `${target.alt ?? ""}(${target.src})`;
 				img.src = ErrorImageUrl;
 			}
 
