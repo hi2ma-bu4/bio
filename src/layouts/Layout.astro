@@ -78,16 +78,18 @@ const { title, description = SITE_DESCRIPTION } = Astro.props;
 		</script>
 		<script type="module" is:inline define:vars={{ BASE_DIR }}>
 			const ErrorImageUrl = `${BASE_DIR}no-image.svg`;
-			const isLoadClassName = "bio-imgCheck";
-			const isErrClassName = "bio-errImg";
+			const isCheckClassName = "bio-imgCheck";
+			const isLoadClassName = "bio-imgLoad";
+			const isErrClassName = "bio-imgLoadErr";
 
 			function updateImgLoadChecker() {
-				const imgs = document.querySelectorAll(`img:not(.${isLoadClassName},.${isErrClassName})`);
+				const imgs = document.querySelectorAll(`img:not(.${isCheckClassName},.${isLoadClassName},.${isErrClassName})`);
 
 				for (const img of imgs) {
-					img.classList.add(isLoadClassName);
+					img.classList.add(isCheckClassName);
 					img.onload = () => {
 						img.onload = img.onerror = null;
+						img.classList.add(isLoadClassName);
 					};
 					img.onerror = (e) => {
 						img.onload = img.onerror = null;

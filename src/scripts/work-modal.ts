@@ -82,3 +82,4 @@ if (document.readyState === "loading") {
 } else {
 	initWorkModal();
 }
+document.addEventListener("astro:after-swap", initWorkModal);
