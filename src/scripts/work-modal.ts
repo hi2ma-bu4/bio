@@ -77,7 +77,6 @@ function escapeHTML(str: string) {
 }
 
 // DOMの読み込み完了を待ってから実行
-document.addEventListener("astro:after-swap", initWorkModal);
 if (document.readyState === "loading") {
 	document.addEventListener("DOMContentLoaded", initWorkModal);
 } else {
