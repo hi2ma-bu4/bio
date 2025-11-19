@@ -92,11 +92,12 @@ const { title, description = SITE_DESCRIPTION } = Astro.props;
 				img.classList.add(isCheckClassName);
 				img.classList.add(isErrClassName);
 
+				console.warn(`image load error: `, img.src);
 				img.alt = `${img.alt ?? ""}(${img.src})`;
 				img.src = ErrorImageUrl;
 			}
 
-			document.addEventListener("error", errLoad, true);
+			document.addEventListener("error", errLoad);
 
 			let observer = new MutationObserver(updateImgLoadChecker);
 			function updateImgLoadChecker() {
