@@ -6,7 +6,8 @@ function initWorkModal() {
 	const modalContent = document.getElementById("modal-content");
 	const triggers = document.querySelectorAll(".work-modal-trigger");
 
-	if (!modal || !closeButton || !modalContent || !window.WORK_ITEMS) {
+	if (!modal) return;
+	if (!closeButton || !modalContent || !window.WORK_ITEMS) {
 		console.warn("Modal elements or WORK_ITEMS not found.");
 		return;
 	}
@@ -77,6 +78,7 @@ function escapeHTML(str: string) {
 }
 
 // DOMの読み込み完了を待ってから実行
+document.addEventListener("astro:after-swap", initWorkModal);
 if (document.readyState === "loading") {
 	document.addEventListener("DOMContentLoaded", initWorkModal);
 } else {
