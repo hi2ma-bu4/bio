@@ -73,8 +73,8 @@ const { title, description = SITE_DESCRIPTION } = Astro.props;
 				}
 				localStorage.setItem("theme", theme);
 			}
-			updateTheme();
 			document.addEventListener("astro:after-swap", updateTheme);
+			updateTheme();
 		</script>
 		<script type="module" is:inline define:vars={{ BASE_DIR }}>
 			const ErrorImageUrl = `${BASE_DIR}no-image.svg`;
@@ -100,8 +100,8 @@ const { title, description = SITE_DESCRIPTION } = Astro.props;
 					};
 				}
 			}
-			updateImgLoadChecker();
 			document.addEventListener("astro:after-swap", updateImgLoadChecker);
+			updateImgLoadChecker();
 			new MutationObserver(updateImgLoadChecker).observe(document.body, { childList: true, subtree: true });
 		</script>
 
