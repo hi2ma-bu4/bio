@@ -92,7 +92,7 @@ const { title, description = SITE_DESCRIPTION } = Astro.props;
 				img.classList.add(isCheckClassName);
 				img.classList.add(isErrClassName);
 
-				img.alt = `${target.alt ?? ""}(${target.src})`;
+				img.alt = `${img.alt ?? ""}(${img.src})`;
 				img.src = ErrorImageUrl;
 			}
 
