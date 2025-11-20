@@ -2,6 +2,7 @@ import "dotenv/config";
 
 import { defineConfig, envField } from "astro/config";
 
+import partytown from "@astrojs/partytown";
 import sitemap from "@astrojs/sitemap";
 import solidJs from "@astrojs/solid-js";
 import tailwindVite from "@tailwindcss/vite";
@@ -97,7 +98,19 @@ export default defineConfig({
 				],
 			},
 		}),
-		sitemap(),
+		partytown({
+			config: {
+				forward: [
+					// GoogleTagManager
+					"dataLayer.push",
+				],
+			},
+		}),
+		sitemap({
+			changefreq: "weekly",
+			priority: 0.8,
+			lastmod: new Date(),
+		}),
 		htmlMinifierNext({
 			html5: true,
 			collapseInlineTagWhitespace: true,
@@ -123,6 +136,7 @@ export default defineConfig({
 	env: {
 		schema: {
 			BASE_DIR: envField.string(envFieldSetting),
+			AUTHOR: envField.string(envFieldSetting),
 			SITE_TITLE: envField.string(envFieldSetting),
 			SITE_DESCRIPTION: envField.string(envFieldSetting),
 		},

@@ -3,7 +3,7 @@ import "../styles/global.css";
 import Header from "../components/Header.astro";
 import FloatingHeader from "../components/FloatingHeader.astro";
 import Footer from "../components/Footer.astro";
-import { SITE_TITLE, SITE_DESCRIPTION, BASE_DIR } from "../config.ts";
+import { SITE_TITLE, SITE_DESCRIPTION, BASE_DIR, AUTHOR } from "../config";
 import { GoogleFontsOptimizer } from "astro-google-fonts-optimizer";
 import { SEO } from "astro-seo";
 import { pwaAssetsHead } from "virtual:pwa-assets/head";
@@ -25,11 +25,17 @@ if (pwaInfo) {
 }
 
 const metaArr = [
-	{ name: "viewport", content: "width=device-width" },
-	{
-		name: "generator",
-		content: Astro.generator,
-	},
+	{ httpEquiv: "content-type", content: "text/html; charset=UTF-8" },
+	{ httpEquiv: "X-UA-Compatible", content: "IE=edge" },
+	{ httpEquiv: "content-language", content: "ja" },
+	{ name: "viewport", content: "width=device-width, initial-scale=1.0" },
+	{ name: "format-detection", content: "telephone=no, address=no, email=no" },
+	{ name: "author", content: AUTHOR },
+	{ name: "generator", content: Astro.generator },
+	{ name: "mobile-web-app-capable", content: "yes" },
+	{ name: "apple-mobile-web-app-capable", content: "yes" },
+	{ name: "apple-mobile-web-app-status-bar-style", content: "black-translucent" },
+	{ name: "apple-mobile-web-app-title", content: SITE_TITLE },
 ];
 if (pwaAssetsHead.themeColor) {
 	metaArr.push({ name: "theme-color", content: pwaAssetsHead.themeColor.content });
@@ -39,15 +45,27 @@ const { title, description = SITE_DESCRIPTION } = Astro.props;
 ---
 
 <!doctype html>
-<html lang="ja">
-	<head>
+<html lang="ja" prefix="og: https://ogp.me/ns#">
+	<head prefix="website: https://ogp.me/ns/website#">
 		<SEO
 			charset="UTF-8"
 			title={title}
 			titleDefault="Page"
 			titleTemplate={`%s | ${SITE_TITLE}`}
 			description={description}
-			twitter={{ creator: "@hi2ma_bu4" }}
+			openGraph={{
+				basic: {
+					title: title,
+					type: "website",
+					image: BASE_DIR + "maskable-icon-512x512.png",
+				},
+				optional: {
+					description: description,
+					locale: "ja_JP",
+					siteName: SITE_TITLE,
+				},
+			}}
+			twitter={{ creator: "@hi2ma_bu4", card: "summary" }}
 			extend={{
 				link: linkArr,
 				meta: metaArr,
@@ -121,6 +139,18 @@ const { title, description = SITE_DESCRIPTION } = Astro.props;
 			observer.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ["src"] });
 			updateImgLoadChecker();
 		</script>
+		<!-- Google Tag Manager -->
+		<script type="text/partytown" src="https://www.googletagmanager.com/gtag/js?id=GTM-N2NZ68ZJ"></script>
+		<script type="text/partytown">
+			window.dataLayer = window.dataLayer || [];
+			window.gtag = function gtag() {
+				dataLayer.push(arguments);
+			};
+			gtag("js", new Date());
+
+			gtag("config", "GTM-N2NZ68ZJ");
+		</script>
+		<!-- End Google Tag Manager -->
 
 		<ClientRouter />
 
@@ -128,6 +158,9 @@ const { title, description = SITE_DESCRIPTION } = Astro.props;
 		<GoogleFontsOptimizer url="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Noto+Sans+JP:wght@400;700&display=swap" />
 	</head>
 	<body class="min-h-screen flex flex-col">
+		<!-- Google Tag Manager (noscript) -->
+		<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-N2NZ68ZJ" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+		<!-- End Google Tag Manager (noscript) -->
 		<Header />
 		<FloatingHeader />
 
