@@ -2,6 +2,7 @@
 import "../styles/global.css";
 import Header from "../components/Header.astro";
 import FloatingHeader from "../components/FloatingHeader.astro";
+import GoogleAnalytics from "../components/GoogleAnalytics.astro";
 import Footer from "../components/Footer.astro";
 import { SITE_TITLE, SITE_DESCRIPTION, BASE_DIR, AUTHOR } from "../config";
 import { GoogleFontsOptimizer } from "astro-google-fonts-optimizer";
@@ -139,19 +140,8 @@ const { title, description = SITE_DESCRIPTION } = Astro.props;
 			observer.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ["src"] });
 			updateImgLoadChecker();
 		</script>
-		<!-- Google Tag Manager -->
-		<script type="text/partytown" src="https://www.googletagmanager.com/gtag/js?id=GTM-N2NZ68ZJ" is:inline></script>
-		<script type="text/partytown" is:inline>
-			window.dataLayer = window.dataLayer || [];
-			window.gtag = function gtag() {
-				dataLayer.push(arguments);
-			};
-			gtag("js", new Date());
 
-			gtag("config", "GTM-N2NZ68ZJ");
-		</script>
-		<!-- End Google Tag Manager -->
-
+		<GoogleAnalytics />
 		<ClientRouter />
 
 		<link rel="preconnect" href="https://fonts.googleapis.com" />

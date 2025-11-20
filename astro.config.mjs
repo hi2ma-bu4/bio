@@ -140,6 +140,8 @@ export default defineConfig({
 			AUTHOR: envField.string(envFieldSetting),
 			SITE_TITLE: envField.string(envFieldSetting),
 			SITE_DESCRIPTION: envField.string(envFieldSetting),
+
+			GTAG_ID: envField.string(envFieldSetting),
 		},
 	},
 });

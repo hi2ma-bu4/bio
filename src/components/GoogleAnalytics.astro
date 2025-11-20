@@ -1,0 +1,13 @@
+---
+import { GTAG_ID } from "../config";
+---
+
+<script type="text/partytown" src={`https://www.googletagmanager.com/gtag/js?id=${GTAG_ID}`} is:inline data-astro-rerun></script>
+<script type="text/partytown" is:inline define:vars={{ GTAG_ID }} data-astro-rerun>
+	window.dataLayer = window.dataLayer || [];
+	window.gtag = function gtag() {
+		dataLayer.push(arguments);
+	};
+	gtag("js", new Date());
+	gtag("config", GTAG_ID);
+</script>

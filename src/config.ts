@@ -1,6 +1,6 @@
-import { AUTHOR, BASE_DIR, SITE_DESCRIPTION, SITE_TITLE } from "astro:env/client";
+import { AUTHOR, BASE_DIR, GTAG_ID, SITE_DESCRIPTION, SITE_TITLE } from "astro:env/client";
 
-export { AUTHOR, BASE_DIR, SITE_DESCRIPTION, SITE_TITLE };
+export { AUTHOR, BASE_DIR, GTAG_ID, SITE_DESCRIPTION, SITE_TITLE };
 
 // ナビゲーションリンク
 export const NAV_LINKS = [
