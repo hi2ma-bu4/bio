@@ -103,6 +103,7 @@ export default defineConfig({
 				forward: [
 					// GoogleTagManager
 					"dataLayer.push",
+					"gtag",
 				],
 			},
 		}),

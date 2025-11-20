@@ -140,8 +140,8 @@ const { title, description = SITE_DESCRIPTION } = Astro.props;
 			updateImgLoadChecker();
 		</script>
 		<!-- Google Tag Manager -->
-		<script type="text/partytown" src="https://www.googletagmanager.com/gtag/js?id=GTM-N2NZ68ZJ"></script>
-		<script type="text/partytown">
+		<script type="text/partytown" src="https://www.googletagmanager.com/gtag/js?id=GTM-N2NZ68ZJ" is:inline></script>
+		<script type="text/partytown" is:inline>
 			window.dataLayer = window.dataLayer || [];
 			window.gtag = function gtag() {
 				dataLayer.push(arguments);
