@@ -28,7 +28,7 @@ function initWorkModal() {
 				// コンテンツの動的挿入
 				modalContent.innerHTML = `
 					<h2 class="text-2xl md:text-3xl font-bold mb-4 text-slate-900 dark:text-white">${escapeHTML(workData.title)}</h2>
-					<img src="${escapeHTML(workData.imageUrl)}" alt="${escapeHTML(workData.title)}" class="w-full aspect-video object-cover rounded-md mb-6">
+					<img src="${escapeHTML(workData.imageUrl)}" decoding="async" fetchpriority="low" alt="${escapeHTML(workData.title)}" class="w-full aspect-video object-cover rounded-md mb-6">
 					<p class="text-slate-700 dark:text-slate-300 mb-6">${escapeHTML(workData.longDescription)}</p>
 					<div class="flex flex-wrap gap-2 mb-6">
 					${workData.tags.map((tag: string) => `<span class="text-xs font-medium px-2 py-0.5 rounded-full bg-sky-100 text-sky-800 dark:bg-sky-900 dark:text-sky-200">${escapeHTML(tag)}</span>`).join("")}
