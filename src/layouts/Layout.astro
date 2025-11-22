@@ -116,7 +116,7 @@ const { title, description = SITE_DESCRIPTION } = Astro.props;
 				img.src = ErrorImageUrl;
 
 				if (img.classList.contains(CLASS_AUTO_IMG_ALT)) {
-					wrapWithAltButton;
+					wrapWithAltButton(img);
 				}
 			}
 
