@@ -9,6 +9,8 @@ import tailwindVite from "@tailwindcss/vite";
 import { minimal2023Preset as preset } from "@vite-pwa/assets-generator/config";
 import AstroPWA from "@vite-pwa/astro";
 import htmlMinifierNext from "astro-html-minifier-next";
+import browserslist from "browserslist";
+import { browserslistToTargets } from "lightningcss";
 
 const BASE_DIR = process.env.BASE_DIR ?? "/";
 const SITE_TITLE = process.env.SITE_TITLE ?? "snowsSite";
@@ -17,6 +19,32 @@ const envFieldSetting = {
 	context: "client",
 	access: "public",
 } as const;
+
+const terserOpt = {
+	ecma: 2020,
+	module: true,
+	compress: {
+		ecma: 2020,
+		inline: 3,
+		passes: 3,
+		arrows: true,
+		booleans: false,
+		comparisons: true,
+		unsafe: false,
+		dead_code: true,
+		drop_console: false,
+		drop_debugger: true,
+	},
+	mangle: {
+		toplevel: false,
+		safari10: true,
+	},
+	format: {
+		comments: "some",
+	},
+} as const;
+
+const browserTargets = browserslistToTargets(browserslist("> 3% in JP"));
 
 export default defineConfig({
 	output: "static",
@@ -83,6 +111,7 @@ export default defineConfig({
 			workbox: {
 				globPatterns: ["**/*.{ico,css,js,png,jpg,webp,svg,ttf,svg,woff,woff2}"],
 				runtimeCaching: [
+					// Google Fonts
 					{
 						urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
 						handler: "StaleWhileRevalidate",
@@ -91,9 +120,19 @@ export default defineConfig({
 						urlPattern: /^https:\/\/fonts\.gstatic\.com\/.*/i,
 						handler: "StaleWhileRevalidate",
 					},
+					// CDN
 					{
 						urlPattern: /^https:\/\/cdn\.jsdelivr\.net\/.*/i,
 						handler: "StaleWhileRevalidate",
+					},
+					// API キャッシュ
+					{
+						urlPattern: /^https:\/\/api\./,
+						handler: "NetworkFirst",
+						options: {
+							cacheName: "api-cache",
+							networkTimeoutSeconds: 2,
+						},
 					},
 				],
 			},
@@ -119,8 +158,10 @@ export default defineConfig({
 			conservativeCollapse: true,
 			preserveLineBreaks: true,
 			keepClosingSlash: true,
-			minifyCSS: true,
-			minifyJS: true,
+			minifyJS: terserOpt,
+			minifyCSS: {
+				targets: browserTargets,
+			},
 			processScripts: ["text/partytown"],
 			quoteCharacter: '"',
 			sortAttributes: true,
@@ -137,30 +178,9 @@ export default defineConfig({
 		build: {
 			minify: true,
 			copyPublicDir: true,
-			terserOptions: {
-				ecma: 2020,
-				module: true,
-				compress: {
-					ecma: 2020,
-					inline: 3,
-					passes: 3,
-					arrows: true,
-					booleans: false,
-					comparisons: true,
-					unsafe: false,
-					dead_code: true,
-					drop_console: false,
-					drop_debugger: true,
-				},
-				mangle: {
-					toplevel: false,
-					safari10: true,
-				},
-				format: {
-					comments: "some",
-				},
-			},
+			terserOptions: terserOpt,
 			rollupOptions: {
+				cache: true,
 				output: {
 					manualChunks(id) {
 						if (id.includes("node_modules")) {
