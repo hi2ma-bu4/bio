@@ -25,7 +25,7 @@
 
 	/* フォーカス時のリング（アクセシビリティ）*/
 	:focus-visible {
-		@apply outline-none ring-2 ring-offset-2 ring-sky-500 ring-offset-white dark:ring-offset-slate-900;
+		@apply outline-none ring-2 ring-offset-2 ring-sky-500 ring-offset-white dark:ring-offset-slate-800;
 	}
 
 	.bio-imgCheck:not(.bio-imgLoad, .bio-imgLoadErr) {
