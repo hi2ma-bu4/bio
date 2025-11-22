@@ -16,7 +16,7 @@ const SITE_TITLE = process.env.SITE_TITLE ?? "snowsSite";
 const envFieldSetting = {
 	context: "client",
 	access: "public",
-};
+} as const;
 
 export default defineConfig({
 	output: "static",
@@ -26,7 +26,7 @@ export default defineConfig({
 	build: {
 		format: "directory",
 	},
-	cacheDir: "./.cache",
+	cacheDir: "./.cache/astro/",
 	prefetch: {
 		prefetchAll: true,
 		defaultStrategy: "hover",
@@ -121,15 +121,53 @@ export default defineConfig({
 			keepClosingSlash: true,
 			minifyCSS: true,
 			minifyJS: true,
+			processScripts: ["text/partytown"],
 			quoteCharacter: '"',
 			sortAttributes: true,
 			sortClassName: true,
 		}),
 	],
 	vite: {
-		plugins: [tailwindVite()],
+		publicDir: "public",
+		plugins: [tailwindVite() as any],
+		optimizeDeps: {
+			// COOP/COEP設定時に必要
+			exclude: ["@js-joda/core"],
+		},
 		build: {
+			minify: true,
+			copyPublicDir: true,
+			terserOptions: {
+				ecma: 2020,
+				module: true,
+				compress: {
+					ecma: 2020,
+					inline: 3,
+					passes: 3,
+					arrows: true,
+					booleans: false,
+					comparisons: true,
+					unsafe: false,
+					dead_code: true,
+					drop_console: false,
+					drop_debugger: true,
+				},
+				mangle: {
+					toplevel: false,
+					safari10: true,
+				},
+				format: {
+					comments: "some",
+				},
+			},
 			rollupOptions: {
+				output: {
+					manualChunks(id) {
+						if (id.includes("node_modules")) {
+							return "vendor";
+						}
+					},
+				},
 				external: [],
 			},
 		},

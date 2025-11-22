@@ -4,7 +4,7 @@ import { BASE_DIR, NAV_LINKS, SITE_TITLE } from "../config.ts";
 import ThemeToggle from "./ThemeToggle.astro";
 ---
 
-<div class="md:hidden">
+<div class="md:hidden" transition:persist>
 	<input type="checkbox" id="mobile-menu-toggle" class="peer hidden" />
 	<label for="mobile-menu-toggle" class="fixed top-4 right-4 z-40 p-2 rounded-full bg-white/70 dark:bg-slate-800/70 backdrop-blur-sm shadow-lg cursor-pointer" aria-label="メニューを開く">
 		<Bars3Icon class="w-6 h-6 text-slate-800 dark:text-slate-200" />
