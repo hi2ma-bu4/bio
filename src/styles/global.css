@@ -46,7 +46,7 @@
 		left: 4px;
 		bottom: 4px;
 		font-size: 10px;
-		padding: 2px 4px;
+		padding: 1px 8px;
 		background: rgba(0, 0, 0, 0.6);
 		color: #fff;
 		border-radius: 3px;
@@ -60,7 +60,7 @@
 
 	.alt-popup {
 		position: absolute;
-		word-break: break-all;
+		word-break: break-word;
 		bottom: 16px;
 		right: 16px;
 		padding: 10px;
