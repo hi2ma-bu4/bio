@@ -147,14 +147,14 @@ const { title, description = SITE_DESCRIPTION } = Astro.props;
 
 				const altText = img.alt;
 				button.addEventListener("click", () => {
-					const oldPopup = root.querySelector(`.${altPopup}`);
+					const oldPopup = wrapper.querySelector(`.${altPopup}`);
 					if (oldPopup) {
 						oldPopup.remove();
 						return;
 					}
 					const popup = document.createElement("div");
 					popup.className = altPopup;
-					popup.innerText = text;
+					popup.innerText = altText;
 					popup.id = id;
 
 					popup.addEventListener("click", () => popup.remove());
