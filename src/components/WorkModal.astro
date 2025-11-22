@@ -1,6 +1,7 @@
 ---
 import ArrowTopRightOnSquareIcon from "astro-heroicons/solid/ArrowTopRightOnSquare.astro";
 import XMarkIcon from "astro-heroicons/solid/XMark.astro";
+import { CLASS_AUTO_IMG_ALT } from "../config";
 ---
 
 <dialog id="work-modal" class="p-0 max-w-3xl w-11/12 rounded-lg shadow-xl bg-white dark:bg-slate-800 backdrop:bg-black/50 backdrop:backdrop-blur-sm">
@@ -16,7 +17,7 @@ import XMarkIcon from "astro-heroicons/solid/XMark.astro";
 
 <template id="work-modal-template">
 	<h2 class="text-2xl md:text-3xl font-bold mb-4 text-slate-900 dark:text-white" data-template-id="title"></h2>
-	<img src="" decoding="async" fetchpriority="low" alt="" class="w-full aspect-video object-cover rounded-md mb-6" data-template-id="image" />
+	<img src="" decoding="async" fetchpriority="low" alt="" class={`w-full aspect-video object-cover rounded-md mb-6 ${CLASS_AUTO_IMG_ALT}`} data-template-id="image" />
 	<p class="text-slate-700 dark:text-slate-300 mb-6" data-template-id="long-description"></p>
 	<div class="flex flex-wrap gap-2 mb-6" data-template-id="tags"></div>
 	<a href="" target="_blank" rel="noopener noreferrer" class="hidden items-center gap-2 px-5 py-2 rounded-md text-base font-medium bg-sky-600 text-white hover:bg-sky-700 focus-visible:ring-sky-500" data-template-id="direct-link">

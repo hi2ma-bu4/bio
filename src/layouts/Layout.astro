@@ -4,7 +4,7 @@ import Header from "../components/Header.astro";
 import FloatingHeader from "../components/FloatingHeader.astro";
 import GoogleAnalytics from "../components/GoogleAnalytics.astro";
 import Footer from "../components/Footer.astro";
-import { SITE_TITLE, SITE_DESCRIPTION, BASE_DIR, AUTHOR } from "../config";
+import { SITE_TITLE, SITE_DESCRIPTION, BASE_DIR, AUTHOR, CLASS_AUTO_IMG_ALT } from "../config";
 import { GoogleFontsOptimizer } from "astro-google-fonts-optimizer";
 import { SEO } from "astro-seo";
 import { pwaAssetsHead } from "virtual:pwa-assets/head";
@@ -95,7 +95,7 @@ const { title, description = SITE_DESCRIPTION } = Astro.props;
 			document.addEventListener("astro:after-swap", updateTheme);
 			updateTheme();
 		</script>
-		<script type="module" is:inline define:vars={{ BASE_DIR }}>
+		<script type="module" is:inline define:vars={{ BASE_DIR, CLASS_AUTO_IMG_ALT }}>
 			const ErrorImageUrl = `${BASE_DIR}no-image.svg`;
 			const isCheckClassName = "bio-imgCheck";
 			const isLoadClassName = "bio-imgLoad";
@@ -112,8 +112,41 @@ const { title, description = SITE_DESCRIPTION } = Astro.props;
 				img.classList.add(isErrClassName);
 
 				console.warn(`image load error: `, img.src);
-				img.alt = `${img.alt ?? ""}(${img.src})`;
+				img.alt = `${img.alt ?? "説明なし"}(${img.src})`;
 				img.src = ErrorImageUrl;
+
+				if (img.classList.contains(CLASS_AUTO_IMG_ALT)) {
+					wrapWithAltButton;
+				}
+			}
+
+			function wrapWithAltButton(img) {
+				// wrapper 生成
+				const wrapper = document.createElement("div");
+				wrapper.className = "img-wrapper";
+
+				// img の親子入れ替え
+				img.parentNode.insertBefore(wrapper, img);
+				wrapper.appendChild(img);
+
+				// alt ボタン追加
+				const button = document.createElement("input");
+				button.type = "button";
+				button.className = "alt-button";
+				button.value = "alt";
+				wrapper.appendChild(button);
+
+				const altText = img.alt;
+				button.addEventListener("click", () => showAltPopup(altText));
+			}
+
+			function showAltPopup(text) {
+				const popup = document.createElement("div");
+				popup.className = "alt-popup";
+				popup.innerText = text;
+
+				popup.addEventListener("click", () => popup.remove());
+				document.body.appendChild(popup);
 			}
 
 			document.addEventListener("error", errLoad);
