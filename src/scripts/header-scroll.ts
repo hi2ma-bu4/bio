@@ -11,6 +11,22 @@ function initHeaderScroll() {
 		return;
 	}
 
+	const mobileMenuToggle = document.getElementById("mobile-menu-toggle") as HTMLInputElement | null;
+	const mobileNav = mobileMenuToggle?.nextElementSibling?.nextElementSibling as HTMLElement | null;
+
+	if (mobileMenuToggle && mobileNav) {
+		const observer = new MutationObserver(() => {
+			const isHidden = mobileNav.classList.contains("translate-x-full");
+			mobileNav.setAttribute("aria-hidden", isHidden.toString());
+		});
+
+		observer.observe(mobileNav, { attributes: true, attributeFilter: ["class"] });
+
+		// 初期状態を設定
+		const isHidden = mobileNav.classList.contains("translate-x-full");
+		mobileNav.setAttribute("aria-hidden", isHidden.toString());
+	}
+
 	let lastScrollY = window.scrollY;
 	const mainHeaderHeight = mainHeader.offsetHeight;
 
@@ -25,13 +41,16 @@ function initHeaderScroll() {
 			if (scrollY < lastScrollY) {
 				// スクロールアップ時
 				floatingHeader.classList.remove("-translate-y-full");
+				floatingHeader.setAttribute("aria-hidden", "false");
 			} else {
 				// スクロールダウン時
 				floatingHeader.classList.add("-translate-y-full");
+				floatingHeader.setAttribute("aria-hidden", "true");
 			}
 		} else {
 			// 画面上部では常に非表示
 			floatingHeader.classList.add("-translate-y-full");
+			floatingHeader.setAttribute("aria-hidden", "true");
 		}
 
 		lastScrollY = scrollY < 0 ? 0 : scrollY;
