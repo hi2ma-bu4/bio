@@ -100,6 +100,11 @@ const { title, description = SITE_DESCRIPTION } = Astro.props;
 			const isCheckClassName = "bio-imgCheck";
 			const isLoadClassName = "bio-imgLoad";
 			const isErrClassName = "bio-imgLoadErr";
+			const imgWrapper = "img-wrapper";
+			const altButton = "alt-button";
+			const altPopup = "alt-popup";
+
+			let imgIndex = 0;
 
 			function errLoad(e) {
 				const img = e.target;
@@ -121,32 +126,41 @@ const { title, description = SITE_DESCRIPTION } = Astro.props;
 			}
 
 			function wrapWithAltButton(img) {
+				const id = `uid-img-${imgIndex}`;
+				imgIndex++;
+
 				// wrapper 生成
 				const wrapper = document.createElement("div");
-				wrapper.className = "img-wrapper";
+				wrapper.className = imgWrapper;
 
 				// img の親子入れ替え
 				img.parentNode.insertBefore(wrapper, img);
 				wrapper.appendChild(img);
+				img.setAttribute("aria-labelledby", id);
 
 				// alt ボタン追加
 				const button = document.createElement("input");
 				button.type = "button";
-				button.className = "alt-button";
+				button.className = altButton;
 				button.value = "alt";
 				wrapper.appendChild(button);
 
 				const altText = img.alt;
-				button.addEventListener("click", () => showAltPopup(wrapper, altText));
-			}
+				button.addEventListener("click", () => {
+					const oldPopup = root.querySelector(`.${altPopup}`);
+					if (oldPopup) {
+						oldPopup.remove();
+						return;
+					}
+					const popup = document.createElement("div");
+					popup.className = altPopup;
+					popup.innerText = text;
+					popup.id = id;
 
-			function showAltPopup(root, text) {
-				const popup = document.createElement("div");
-				popup.className = "alt-popup";
-				popup.innerText = text;
-
-				popup.addEventListener("click", () => popup.remove());
-				root.appendChild(popup);
+					popup.addEventListener("click", () => popup.remove());
+					wrapper.appendChild(popup);
+					popup.ariaLabel = altText;
+				});
 			}
 
 			document.addEventListener("error", errLoad);
