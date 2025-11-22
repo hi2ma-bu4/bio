@@ -137,16 +137,16 @@ const { title, description = SITE_DESCRIPTION } = Astro.props;
 				wrapper.appendChild(button);
 
 				const altText = img.alt;
-				button.addEventListener("click", () => showAltPopup(altText));
+				button.addEventListener("click", () => showAltPopup(wrapper, altText));
 			}
 
-			function showAltPopup(text) {
+			function showAltPopup(root, text) {
 				const popup = document.createElement("div");
 				popup.className = "alt-popup";
 				popup.innerText = text;
 
 				popup.addEventListener("click", () => popup.remove());
-				document.body.appendChild(popup);
+				root.appendChild(popup);
 			}
 
 			document.addEventListener("error", errLoad);
