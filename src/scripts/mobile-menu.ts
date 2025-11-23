@@ -6,14 +6,6 @@ function initMobileMenu() {
 
 	// ハンバーガーのラベル（<label for="mobile-menu-toggle">）をキーボード操作可能にする
 	const toggleLabel = document.querySelector('label[for="mobile-menu-toggle"]') as HTMLElement | null;
-	if (toggleLabel) {
-		if (!toggleLabel.hasAttribute("tabindex")) toggleLabel.setAttribute("tabindex", "0");
-		toggleLabel.setAttribute("role", "button");
-		// 初期状態はチェックが外れている想定
-		toggleLabel.setAttribute("aria-pressed", String(checkbox.checked));
-		// aria-controls を追加してメニューを関連付け
-		toggleLabel.setAttribute("aria-controls", "mobile-nav");
-	}
 
 	const syncToggleAria = () => {
 		if (toggleLabel) toggleLabel.setAttribute("aria-pressed", String(checkbox!.checked));
@@ -21,8 +13,15 @@ function initMobileMenu() {
 		if (navEl) navEl.setAttribute("aria-hidden", String(!checkbox!.checked));
 	};
 
-	// ラベルで Enter / Space を押したときにトグルする
 	if (toggleLabel) {
+		if (!toggleLabel.hasAttribute("tabindex")) toggleLabel.setAttribute("tabindex", "0");
+		toggleLabel.setAttribute("role", "button");
+		// 初期状態はチェックが外れている想定
+		toggleLabel.setAttribute("aria-pressed", String(checkbox.checked));
+		// aria-controls を追加してメニューを関連付け
+		toggleLabel.setAttribute("aria-controls", "mobile-nav");
+
+		// ラベルで Enter / Space を押したときにトグルする
 		toggleLabel.addEventListener("keydown", (ev: KeyboardEvent) => {
 			if (isActivationKey(ev)) {
 				ev.preventDefault();
@@ -30,6 +29,13 @@ function initMobileMenu() {
 				updateMenuFocus();
 				syncToggleAria();
 			}
+		});
+	}
+
+	const closeButton = document.getElementById("mobile-menu-close-button");
+	if (closeButton) {
+		closeButton.addEventListener("click", () => {
+			closeMobileMenu();
 		});
 	}
 

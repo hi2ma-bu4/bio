@@ -1,5 +1,6 @@
 ---
 import Bars3Icon from "astro-heroicons/solid/Bars3.astro";
+import XMarkIcon from "astro-heroicons/solid/XMark.astro";
 import { BASE_DIR, NAV_LINKS, SITE_TITLE } from "../config.ts";
 import ThemeToggle from "./ThemeToggle.astro";
 ---
@@ -14,7 +15,12 @@ import ThemeToggle from "./ThemeToggle.astro";
 	<nav id="mobile-nav" class="fixed top-0 right-0 z-40 h-full w-64 bg-white dark:bg-slate-900 shadow-xl p-6 transition-transform duration-300 translate-x-full peer-checked:translate-x-0" aria-hidden="true">
 		<div class="flex justify-between items-center mb-8">
 			<span class="text-xl font-bold">Menu</span>
-			<ThemeToggle />
+			<div class="flex flex-nowrap">
+				<ThemeToggle />
+				<button id="mobile-menu-close-button" class="p-2 rounded-full hover:bg-slate-200 dark:hover:bg-slate-700" aria-label="閉じる">
+					<XMarkIcon class="w-6 h-6 text-slate-700 dark:text-slate-300" />
+				</button>
+			</div>
 		</div>
 		<ul class="space-y-4">
 			{
