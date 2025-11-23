@@ -24,7 +24,7 @@ const pwaAssetsHead = {"links":[{"href":"/bio/favicon.ico","rel":"icon","sizes":
 
 const pwaInfo = {"webManifest":{"href":"/bio/manifest.webmanifest"}};
 
-const BASE_DIR = "/bio/";const AUTHOR = "hi2ma-bu4";const SITE_TITLE = "snowsSite";const SITE_DESCRIPTION = "snows(hi2ma-bu4)の個人サイトです。";const GTAG_ID = "GTM-N2NZ68ZJ";
+const BASE_DIR = "/bio/";const AUTHOR = "hi2ma-bu4";const SITE_TITLE = "snowsSite";const SITE_DESCRIPTION = "snows(hi2ma-bu4)の個人サイトです。";const GTAG_ID = "GTM-N2NZ68ZJ";const GA4_TAG = "G-Y5FMM4MPMV";
 
 const NAV_LINKS = [
   { href: BASE_DIR, text: "Top" },
@@ -56,7 +56,7 @@ var __defProp = Object.defineProperty;
 var __template = (cooked, raw) => __freeze(__defProp(cooked, "raw", { value: __freeze(cooked.slice()) }));
 var _a;
 const $$GoogleAnalytics = createComponent(($$result, $$props, $$slots) => {
-  return renderTemplate(_a || (_a = __template(['<script type="text/partytown"', ' data-astro-rerun><\/script> <script type="text/partytown" data-astro-rerun>(function(){', '\n	window.dataLayer = window.dataLayer || [];\n	window.gtag = function gtag() {\n		dataLayer.push(arguments);\n	};\n	gtag("js", new Date());\n	gtag("config", GTAG_ID);\n	gtag("config", GA4_TAG);\n})();<\/script>'])), addAttribute(`https://www.googletagmanager.com/gtag/js?id=${GTAG_ID}`, "src"), defineScriptVars({ GTAG_ID }));
+  return renderTemplate(_a || (_a = __template(['<script type="text/partytown"', ' data-astro-rerun><\/script> <script type="text/partytown" data-astro-rerun>(function(){', '\n	window.dataLayer = window.dataLayer || [];\n	window.gtag = function gtag() {\n		dataLayer.push(arguments);\n	};\n	gtag("js", new Date());\n	gtag("config", GTAG_ID);\n	gtag("config", GA4_TAG);\n})();<\/script>'])), addAttribute(`https://www.googletagmanager.com/gtag/js?id=${GTAG_ID}`, "src"), defineScriptVars({ GTAG_ID, GA4_TAG }));
 }, "C:/Users/snows/Documents/Program/js/bio/src/components/GoogleAnalytics.astro", void 0);
 
 const $$Astro$1 = createAstro("https://hi2ma-bu4.github.io/");
