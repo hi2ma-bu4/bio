@@ -24,7 +24,7 @@ const pwaAssetsHead = {"links":[{"href":"/bio/favicon.ico","rel":"icon","sizes":
 
 const pwaInfo = {"webManifest":{"href":"/bio/manifest.webmanifest"}};
 
-const BASE_DIR = "/bio/";const AUTHOR = "hi2ma-bu4";const SITE_TITLE = "snowsSite";const SITE_DESCRIPTION = "snows(hi2ma-bu4)の個人サイトです。";const GTAG_ID = "G-Y5FMM4MPMV";
+const BASE_DIR = "/bio/";const AUTHOR = "hi2ma-bu4";const SITE_TITLE = "snowsSite";const SITE_DESCRIPTION = "snows(hi2ma-bu4)の個人サイトです。";const GTAG_ID = "GTM-N2NZ68ZJ";
 
 const NAV_LINKS = [
   { href: BASE_DIR, text: "Top" },
@@ -56,7 +56,7 @@ var __defProp = Object.defineProperty;
 var __template = (cooked, raw) => __freeze(__defProp(cooked, "raw", { value: __freeze(cooked.slice()) }));
 var _a;
 const $$GoogleAnalytics = createComponent(($$result, $$props, $$slots) => {
-  return renderTemplate(_a || (_a = __template(['<script type="text/partytown"', ' data-astro-rerun><\/script> <script type="text/partytown" data-astro-rerun>(function(){', '\n	window.dataLayer = window.dataLayer || [];\n	window.gtag = function gtag() {\n		dataLayer.push(arguments);\n	};\n	gtag("js", new Date());\n	gtag("config", GTAG_ID);\n})();<\/script>'])), addAttribute(`https://www.googletagmanager.com/gtag/js?id=${GTAG_ID}`, "src"), defineScriptVars({ GTAG_ID }));
+  return renderTemplate(_a || (_a = __template(['<script type="text/partytown"', ' data-astro-rerun><\/script> <script type="text/partytown" data-astro-rerun>(function(){', '\n	window.dataLayer = window.dataLayer || [];\n	window.gtag = function gtag() {\n		dataLayer.push(arguments);\n	};\n	gtag("js", new Date());\n	gtag("config", GTAG_ID);\n	gtag("config", GA4_TAG);\n})();<\/script>'])), addAttribute(`https://www.googletagmanager.com/gtag/js?id=${GTAG_ID}`, "src"), defineScriptVars({ GTAG_ID }));
 }, "C:/Users/snows/Documents/Program/js/bio/src/components/GoogleAnalytics.astro", void 0);
 
 const $$Astro$1 = createAstro("https://hi2ma-bu4.github.io/");
@@ -127,7 +127,7 @@ const $$Layout = createComponent(($$result, $$props, $$slots) => {
   }, "twitter": { creator: "@hi2ma_bu4", card: "summary" }, "extend": {
     link: linkArr,
     meta: metaArr
-  } })}${renderScript($$result, "C:/Users/snows/Documents/Program/js/bio/src/layouts/Layout.astro?astro&type=script&index=0&lang.ts")}${renderScript($$result, "C:/Users/snows/Documents/Program/js/bio/src/layouts/Layout.astro?astro&type=script&index=1&lang.ts")}${renderComponent($$result, "GoogleAnalytics", $$GoogleAnalytics, {})}${renderComponent($$result, "ClientRouter", $$ClientRouter, {})}<link rel="preconnect" href="https://fonts.googleapis.com">${renderComponent($$result, "GoogleFontsOptimizer", $$GoogleFontsOptimizer, { "url": "https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Noto+Sans+JP:wght@400;700&display=swap" })}${renderHead()}</head> <body class="min-h-screen flex flex-col"> <!-- Google Tag Manager (noscript) --> <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-N2NZ68ZJ" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript> <!-- End Google Tag Manager (noscript) --> ${renderComponent($$result, "Header", $$Header, {})} ${renderComponent($$result, "FloatingHeader", $$FloatingHeader, {})} <main class="grow w-full max-w-5xl mx-auto px-4 py-8 md:px-8" role="main"> ${renderSlot($$result, $$slots["default"])} </main> ${renderComponent($$result, "Footer", $$Footer, {})} ${renderScript($$result, "C:/Users/snows/Documents/Program/js/bio/src/layouts/Layout.astro?astro&type=script&index=2&lang.ts")} </body> </html>`;
+  } })}${renderScript($$result, "C:/Users/snows/Documents/Program/js/bio/src/layouts/Layout.astro?astro&type=script&index=0&lang.ts")}${renderScript($$result, "C:/Users/snows/Documents/Program/js/bio/src/layouts/Layout.astro?astro&type=script&index=1&lang.ts")}${renderComponent($$result, "GoogleAnalytics", $$GoogleAnalytics, {})}${renderComponent($$result, "ClientRouter", $$ClientRouter, {})}<link rel="preconnect" href="https://fonts.googleapis.com">${renderComponent($$result, "GoogleFontsOptimizer", $$GoogleFontsOptimizer, { "url": "https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Noto+Sans+JP:wght@400;700&display=swap" })}${renderHead()}</head> <body class="min-h-screen flex flex-col"> <!-- Google Tag Manager (noscript) --> <noscript><iframe${addAttribute(`https://www.googletagmanager.com/ns.html?id=${GTAG_ID}`, "src")} height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript> <!-- End Google Tag Manager (noscript) --> ${renderComponent($$result, "Header", $$Header, {})} ${renderComponent($$result, "FloatingHeader", $$FloatingHeader, {})} <main class="grow w-full max-w-5xl mx-auto px-4 py-8 md:px-8" role="main"> ${renderSlot($$result, $$slots["default"])} </main> ${renderComponent($$result, "Footer", $$Footer, {})} ${renderScript($$result, "C:/Users/snows/Documents/Program/js/bio/src/layouts/Layout.astro?astro&type=script&index=2&lang.ts")} </body> </html>`;
 }, "C:/Users/snows/Documents/Program/js/bio/src/layouts/Layout.astro", void 0);
 
 export { $$Layout as $, BASE_DIR as B, CLASS_AUTO_IMG_ALT as C, __vite_glob_0_0 as _ };

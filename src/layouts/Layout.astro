@@ -8,7 +8,7 @@ import FloatingHeader from "../components/FloatingHeader.astro";
 import Footer from "../components/Footer.astro";
 import GoogleAnalytics from "../components/GoogleAnalytics.astro";
 import Header from "../components/Header.astro";
-import { AUTHOR, BASE_DIR, SITE_DESCRIPTION, SITE_TITLE } from "../config";
+import { AUTHOR, BASE_DIR, GTAG_ID, SITE_DESCRIPTION, SITE_TITLE } from "../config";
 import "../styles/global.css";
 
 interface Props {
@@ -109,7 +109,7 @@ const { title, description = SITE_DESCRIPTION } = Astro.props;
 	</head>
 	<body class="min-h-screen flex flex-col">
 		<!-- Google Tag Manager (noscript) -->
-		<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-N2NZ68ZJ" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+		<noscript><iframe src={`https://www.googletagmanager.com/ns.html?id=${GTAG_ID}`} height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 		<!-- End Google Tag Manager (noscript) -->
 		<Header />
 		<FloatingHeader />
