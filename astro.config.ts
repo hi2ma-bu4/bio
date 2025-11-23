@@ -187,6 +187,9 @@ export default defineConfig({
 			terserOptions: terserOpt,
 			rollupOptions: {
 				cache: true,
+				treeshake: {
+					moduleSideEffects: false,
+				},
 				output: {
 					manualChunks(id) {
 						if (id.includes("node_modules")) {
