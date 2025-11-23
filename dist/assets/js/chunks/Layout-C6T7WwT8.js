@@ -24,7 +24,7 @@ const pwaAssetsHead = {"links":[{"href":"/bio/favicon.ico","rel":"icon","sizes":
 
 const pwaInfo = {"webManifest":{"href":"/bio/manifest.webmanifest"}};
 
-const BASE_DIR = "/bio/";const AUTHOR = "hi2ma-bu4";const SITE_TITLE = "snowsSite";const SITE_DESCRIPTION = "snows(hi2ma-bu4)の個人サイトです。";const GTAG_ID = "GTM-N2NZ68ZJ";const GA4_TAG = "G-Y5FMM4MPMV";
+const BASE_DIR = "/bio/";const AUTHOR = "hi2ma-bu4";const SITE_TITLE = "snowsSite";const SITE_DESCRIPTION = "snows(hi2ma-bu4)の個人サイトです。";const DEBUG_GTAG = false;const GTAG_ID = "GTM-N2NZ68ZJ";const GA4_TAG = "G-Y5FMM4MPMV";
 
 const NAV_LINKS = [
   { href: BASE_DIR, text: "Top" },
@@ -54,9 +54,9 @@ const $$Footer = createComponent(($$result, $$props, $$slots) => {
 var __freeze = Object.freeze;
 var __defProp = Object.defineProperty;
 var __template = (cooked, raw) => __freeze(__defProp(cooked, "raw", { value: __freeze(cooked.slice()) }));
-var _a;
+var _b;
 const $$GoogleAnalytics = createComponent(($$result, $$props, $$slots) => {
-  return renderTemplate`${renderTemplate(_a || (_a = __template(["<script", " data-astro-rerun><\/script>\n	<script data-astro-rerun>(function(){", '\n		window.dataLayer = window.dataLayer || [];\n		window.gtag = function gtag() {\n			dataLayer.push(arguments);\n		};\n		gtag("js", new Date());\n		gtag("config", GTAG_ID);\n		gtag("config", GA4_TAG);\n	})();<\/script>'])), addAttribute(`https://www.googletagmanager.com/gtag/js?id=${GTAG_ID}`, "src"), defineScriptVars({ GTAG_ID, GA4_TAG }))}${ false}`;
+  return renderTemplate`${DEBUG_GTAG}${renderTemplate(_b || (_b = __template(['<script type="text/partytown"', ' data-astro-rerun><\/script>\n	<script type="text/partytown" data-astro-rerun>(function(){', '\n		window.dataLayer = window.dataLayer || [];\n		window.gtag = function gtag() {\n			dataLayer.push(arguments);\n		};\n		gtag("js", new Date());\n		gtag("config", GTAG_ID);\n		gtag("config", GA4_TAG);\n	})();<\/script>'])), addAttribute(`https://www.googletagmanager.com/gtag/js?id=${GTAG_ID}`, "src"), defineScriptVars({ GTAG_ID, GA4_TAG }))}`;
 }, "C:/Users/snows/Documents/Program/js/bio/src/components/GoogleAnalytics.astro", void 0);
 
 const $$Astro$1 = createAstro("https://hi2ma-bu4.github.io/");
