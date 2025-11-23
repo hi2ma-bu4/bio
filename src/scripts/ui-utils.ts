@@ -79,3 +79,17 @@ export function createFocusTrap(nav: HTMLElement) {
 
 	return { activate, deactivate, focusFirst };
 }
+
+export function addEscapeListener(onClose: () => void) {
+	const _handler = (e: KeyboardEvent) => {
+		const isEscape = e.key === "Escape" || e.key === "Esc" || (e as any).keyCode === 27;
+		if (!isEscape) return;
+		onClose();
+	};
+
+	document.addEventListener("keydown", _handler);
+
+	return () => {
+		document.removeEventListener("keydown", _handler);
+	};
+}

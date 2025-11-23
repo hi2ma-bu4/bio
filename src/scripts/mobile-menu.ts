@@ -1,15 +1,22 @@
-import { createFocusTrap, getFocusable, lockBodyScroll, unlockBodyScroll } from "./ui-utils";
+import { addEscapeListener, createFocusTrap, getFocusable, lockBodyScroll, unlockBodyScroll } from "./ui-utils";
 
 function initMobileMenu() {
 	const checkbox = document.getElementById("mobile-menu-toggle") as HTMLInputElement | null;
 	if (!checkbox) return;
 
 	let focusTrap: ReturnType<typeof createFocusTrap> | null = null;
+	let removeEscape: (() => void) | null = null;
 
 	function closeMobileMenu() {
 		if (checkbox && checkbox.checked) {
 			checkbox.checked = false;
 			updateMenuFocus();
+			// メニューを閉じたらトグルにフォーカスを戻す
+			try {
+				checkbox.focus();
+			} catch (e) {
+				/* ignore */
+			}
 		}
 	}
 
@@ -20,16 +27,12 @@ function initMobileMenu() {
 	}
 
 	// 非表示時にメニュー内のフォーカス可能要素をタブ順から除外する
-
-	// getFocusable imported from ui-utils
-
 	function updateMenuFocus() {
 		const nav = document.querySelector("#mobile-menu-toggle ~ nav") as HTMLElement | null;
-		const overlay = document.querySelector("#mobile-menu-toggle ~ label[for='mobile-menu-toggle']") as HTMLElement | null;
 		const isOpen = checkbox!.checked;
 
 		if (nav) {
-			nav.setAttribute("aria-hidden", String(!isOpen));
+			nav.ariaHidden = String(!isOpen);
 			const focusables = getFocusable(nav);
 			focusables.forEach((el) => {
 				if (!isOpen) {
@@ -47,31 +50,18 @@ function initMobileMenu() {
 				lockBodyScroll();
 				focusTrap = createFocusTrap(nav);
 				focusTrap.activate();
-				const first = focusables[0];
+				if (!removeEscape) removeEscape = addEscapeListener(closeMobileMenu);
 			} else {
 				if (focusTrap) {
 					focusTrap.deactivate();
 					focusTrap = null;
 				}
+				if (removeEscape) {
+					removeEscape();
+					removeEscape = null;
+				}
 				unlockBodyScroll();
 			}
-		}
-
-		if (overlay) {
-			overlay.setAttribute("aria-hidden", String(!isOpen));
-			// overlay は通常フォーカスされないが念のため tabindex 管理
-			const focusables = getFocusable(overlay);
-			focusables.forEach((el) => {
-				if (!isOpen) {
-					if (el.hasAttribute("tabindex")) el.dataset._savedTab = el.getAttribute("tabindex") || "";
-					else el.dataset._savedTab = "";
-					el.setAttribute("tabindex", "-1");
-				} else {
-					if (el.dataset._savedTab === "") el.removeAttribute("tabindex");
-					else if (el.dataset._savedTab != null) el.setAttribute("tabindex", el.dataset._savedTab);
-					delete el.dataset._savedTab;
-				}
-			});
 		}
 	}
 

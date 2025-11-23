@@ -1,5 +1,5 @@
 // 作品モーダルの制御（共通ユーティリティを使用）
-import { createFocusTrap, lockBodyScroll, unlockBodyScroll } from "./ui-utils";
+import { addEscapeListener, createFocusTrap, lockBodyScroll, unlockBodyScroll } from "./ui-utils";
 
 function initWorkModal() {
 	const modal = document.getElementById("work-modal") as HTMLDialogElement | null;
@@ -17,6 +17,7 @@ function initWorkModal() {
 	const workItems = window.WORK_ITEMS;
 	let lastFocusedElement: HTMLElement | null = null;
 	let focusTrap: ReturnType<typeof createFocusTrap> | null = null;
+	let removeEscape: (() => void) | null = null;
 
 	// モーダルを開く
 	triggers.forEach((trigger) => {
@@ -78,6 +79,7 @@ function initWorkModal() {
 				focusTrap = createFocusTrap(modal);
 				focusTrap.activate();
 				focusTrap.focusFirst();
+				if (!removeEscape) removeEscape = addEscapeListener(() => modal.close());
 			}
 		});
 	});
@@ -86,6 +88,10 @@ function initWorkModal() {
 		if (focusTrap) {
 			focusTrap.deactivate();
 			focusTrap = null;
+		}
+		if (removeEscape) {
+			removeEscape();
+			removeEscape = null;
 		}
 		unlockBodyScroll();
 		lastFocusedElement?.focus();
