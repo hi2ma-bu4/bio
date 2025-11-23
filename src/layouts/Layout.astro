@@ -1,15 +1,15 @@
 ---
-import "../styles/global.css";
-import Header from "../components/Header.astro";
-import FloatingHeader from "../components/FloatingHeader.astro";
-import GoogleAnalytics from "../components/GoogleAnalytics.astro";
-import Footer from "../components/Footer.astro";
-import { SITE_TITLE, SITE_DESCRIPTION, BASE_DIR, AUTHOR, CLASS_AUTO_IMG_ALT } from "../config";
 import { GoogleFontsOptimizer } from "astro-google-fonts-optimizer";
 import { SEO, type SEOProps } from "astro-seo";
+import { ClientRouter } from "astro:transitions";
 import { pwaAssetsHead, type PWAAssetHeadLink } from "virtual:pwa-assets/head";
 import { pwaInfo } from "virtual:pwa-info";
-import { ClientRouter } from "astro:transitions";
+import FloatingHeader from "../components/FloatingHeader.astro";
+import Footer from "../components/Footer.astro";
+import GoogleAnalytics from "../components/GoogleAnalytics.astro";
+import Header from "../components/Header.astro";
+import { AUTHOR, BASE_DIR, SITE_DESCRIPTION, SITE_TITLE } from "../config";
+import "../styles/global.css";
 
 interface Props {
 	title: string;
@@ -98,134 +98,7 @@ const { title, description = SITE_DESCRIPTION } = Astro.props;
 			}}
 		/>
 
-		<script type="module" is:inline>
-			const THEME_STORAGE_KEY = "theme";
-
-			function applyTheme(mode) {
-				const setDark = () => document.documentElement.classList.add("dark");
-				const setLight = () => document.documentElement.classList.remove("dark");
-
-				document.documentElement.dataset.theme = mode;
-
-				if (mode === "light") setLight();
-				else if (mode === "dark") setDark();
-				else {
-					if (window.matchMedia("(prefers-color-scheme: dark)").matches) setDark();
-					else setLight();
-				}
-			}
-
-			function updateTheme() {
-				const stored = typeof localStorage !== "undefined" ? localStorage.getItem(THEME_STORAGE_KEY) : null;
-				// デフォルトは auto
-				const theme = stored ?? "auto";
-				applyTheme(theme);
-			}
-
-			const mq = window.matchMedia("(prefers-color-scheme: dark)");
-			function onSystemChange() {
-				const stored = typeof localStorage !== "undefined" ? localStorage.getItem(THEME_STORAGE_KEY) : null;
-				// ユーザーが auto を選んでいる、または未設定の場合にのみ追従
-				if (stored === "auto" || stored === null) {
-					applyTheme("auto");
-				}
-			}
-			if (mq.addEventListener) mq.addEventListener("change", onSystemChange);
-			else mq.addListener(onSystemChange);
-
-			document.addEventListener("astro:after-swap", updateTheme);
-			updateTheme();
-		</script>
-		<script type="module" is:inline define:vars={{ BASE_DIR, CLASS_AUTO_IMG_ALT }}>
-			const ErrorImageUrl = `${BASE_DIR}no-image.svg`;
-			const isCheckClassName = "bio-imgCheck";
-			const isLoadClassName = "bio-imgLoad";
-			const isErrClassName = "bio-imgLoadErr";
-			const imgWrapper = "img-wrapper";
-			const altButton = "alt-button";
-			const altPopup = "alt-popup";
-
-			let imgIndex = 0;
-
-			function errLoad(e) {
-				const img = e.target;
-				img.onload = img.onerror = null;
-				if (!(img instanceof HTMLImageElement)) return;
-
-				// 無限ループ防止
-				if (img.classList.contains(isLoadClassName) || img.classList.contains(isErrClassName)) return;
-				img.classList.add(isCheckClassName);
-				img.classList.add(isErrClassName);
-
-				console.warn(`image load error: `, img.src);
-				img.alt = `${img.alt ?? "説明なし"}(${img.src})`;
-				img.src = ErrorImageUrl;
-
-				if (img.classList.contains(CLASS_AUTO_IMG_ALT)) {
-					wrapWithAltButton(img);
-				}
-			}
-
-			function wrapWithAltButton(img) {
-				const id = `uid-img-${imgIndex}`;
-				imgIndex++;
-
-				// wrapper 生成
-				const wrapper = document.createElement("div");
-				wrapper.className = imgWrapper;
-
-				// img の親子入れ替え
-				img.parentNode.insertBefore(wrapper, img);
-				wrapper.appendChild(img);
-				img.setAttribute("aria-labelledby", id);
-
-				// alt ボタン追加
-				const button = document.createElement("input");
-				button.type = "button";
-				button.className = altButton;
-				button.value = "alt";
-				wrapper.appendChild(button);
-
-				const altText = img.alt;
-				button.addEventListener("click", () => {
-					const oldPopup = wrapper.querySelector(`.${altPopup}`);
-					if (oldPopup) {
-						oldPopup.remove();
-						return;
-					}
-					const popup = document.createElement("div");
-					popup.className = altPopup;
-					popup.innerText = altText;
-					popup.id = id;
-
-					wrapper.appendChild(popup);
-				});
-			}
-
-			document.addEventListener("error", errLoad);
-
-			let observer = new MutationObserver(updateImgLoadChecker);
-			function updateImgLoadChecker() {
-				const imgs = document.querySelectorAll(`img:not(.${isCheckClassName},.${isLoadClassName},.${isErrClassName})`);
-
-				for (const img of imgs) {
-					img.classList.add(isCheckClassName);
-					img.onload = () => {
-						img.onload = img.onerror = null;
-						img.classList.add(isLoadClassName);
-					};
-					img.onerror = errLoad;
-				}
-			}
-			document.addEventListener("astro:after-swap", () => {
-				observer.disconnect();
-
-				observer.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ["src"] });
-				updateImgLoadChecker();
-			});
-			observer.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ["src"] });
-			updateImgLoadChecker();
-		</script>
+		<script src="../scripts/theme-toggle.ts"></script>
 		<script src="../scripts/pwa.ts"></script>
 
 		<GoogleAnalytics />
@@ -247,6 +120,6 @@ const { title, description = SITE_DESCRIPTION } = Astro.props;
 
 		<Footer />
 
-		<script src="../scripts/theme-toggle.ts"></script>
+		<script src="../scripts/image-handler.ts"></script>
 	</body>
 </html>

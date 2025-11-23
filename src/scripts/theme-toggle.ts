@@ -7,12 +7,12 @@ function safeSet(v: string) {
 	if (typeof localStorage !== "undefined") localStorage.setItem(STORAGE_KEY, v);
 }
 
-function applyTheme(mode: string) {
-	const setDark = () => document.documentElement.classList.add("dark");
-	const setLight = () => document.documentElement.classList.remove("dark");
+function applyTheme(mode: string, doc: Document = document) {
+	const setDark = () => doc.documentElement.classList.add("dark");
+	const setLight = () => doc.documentElement.classList.remove("dark");
 
 	// 他のコンポーネントが現在の状態をクエリできるように属性を追加
-	document.documentElement.dataset.theme = mode;
+	doc.documentElement.dataset.theme = mode;
 
 	if (mode === "light") setLight();
 	else if (mode === "dark") setDark();
@@ -20,6 +20,11 @@ function applyTheme(mode: string) {
 		if (window.matchMedia("(prefers-color-scheme: dark)").matches) setDark();
 		else setLight();
 	}
+}
+
+// テーマ変更
+function updateTheme() {
+	applyTheme(safeGet() ?? "auto");
 }
 
 // バインド UI 要素
@@ -87,7 +92,6 @@ function getNextTheme(current: string | null) {
 	}
 }
 
-// Ensure we only add the system preference listener once
 let _mqListenerAdded = false;
 function ensureSystemListener() {
 	if (_mqListenerAdded) return;
@@ -105,6 +109,7 @@ function ensureSystemListener() {
 }
 
 function initThemeUI() {
+	updateTheme();
 	bindThemeUI();
 	ensureSystemListener();
 }
@@ -112,8 +117,18 @@ function initThemeUI() {
 document.addEventListener("DOMContentLoaded", initThemeUI);
 document.addEventListener("astro:after-swap", initThemeUI);
 
-// Also run immediately in case script is loaded after DOMContentLoaded
+document.addEventListener("astro:before-swap", (event) => {
+	const swapFunc = event.swap;
+	event.swap = () => {
+		applyTheme(safeGet() ?? "auto", event.newDocument);
+
+		// 元の swap 実行
+		swapFunc();
+	};
+});
+
 if (document.readyState !== "loading") {
 	initThemeUI();
-	if ((safeGet() ?? "auto") === "auto") applyTheme("auto");
 }
+
+updateTheme();
