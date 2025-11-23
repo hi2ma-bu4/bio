@@ -30,27 +30,63 @@ function initHeaderScroll() {
 	let lastScrollY = window.scrollY;
 	const mainHeaderHeight = mainHeader.offsetHeight;
 
+	// 初期の focus 管理状態を反映（現在のクラス/表示状態から判定して渡す）
+	const initialHiddenByClass = (floatingHeader as HTMLElement).classList.contains("-translate-y-full");
+	const initialComputedHidden = getComputedStyle(floatingHeader as HTMLElement).display === "none" || (floatingHeader as HTMLElement).hidden;
+	let prevIsHidden = initialHiddenByClass || initialComputedHidden;
+	updateFloatingHeaderFocus(prevIsHidden);
+
+	function getFocusable(el: Element) {
+		return Array.from(el.querySelectorAll<HTMLElement>("a,button,input,textarea,select,[tabindex]")).filter((e) => !e.hasAttribute("disabled"));
+	}
+
+	// 表示状態を外部で判定して渡す（衝突を避ける）
+	function updateFloatingHeaderFocus(isHidden: boolean) {
+		const fh = floatingHeader as HTMLElement;
+		fh.setAttribute("aria-hidden", String(isHidden));
+
+		const focusables = getFocusable(fh);
+		focusables.forEach((el) => {
+			if (isHidden) {
+				if (el.hasAttribute("tabindex")) el.dataset._savedTab = el.getAttribute("tabindex") || "";
+				else el.dataset._savedTab = "";
+				el.setAttribute("tabindex", "-1");
+			} else {
+				if (el.dataset._savedTab === "") el.removeAttribute("tabindex");
+				else if (el.dataset._savedTab != null) el.setAttribute("tabindex", el.dataset._savedTab);
+				delete el.dataset._savedTab;
+			}
+		});
+	}
+
 	if (lastScrollFunction) {
 		window.removeEventListener("scroll", lastScrollFunction);
 	}
 	lastScrollFunction = () => {
 		const scrollY = window.scrollY;
 
+		let newIsHidden: boolean;
 		if (scrollY > mainHeaderHeight) {
 			// メインヘッダーが画面外
 			if (scrollY < lastScrollY) {
 				// スクロールアップ時
 				floatingHeader.classList.remove("-translate-y-full");
-				floatingHeader.setAttribute("aria-hidden", "false");
+				newIsHidden = false;
 			} else {
 				// スクロールダウン時
 				floatingHeader.classList.add("-translate-y-full");
-				floatingHeader.setAttribute("aria-hidden", "true");
+				newIsHidden = true;
 			}
 		} else {
 			// 画面上部では常に非表示
 			floatingHeader.classList.add("-translate-y-full");
-			floatingHeader.setAttribute("aria-hidden", "true");
+			newIsHidden = true;
+		}
+
+		// 状態が変化した場合のみ focus 管理を実行
+		if (newIsHidden !== prevIsHidden) {
+			updateFloatingHeaderFocus(newIsHidden);
+			prevIsHidden = newIsHidden;
 		}
 
 		lastScrollY = scrollY < 0 ? 0 : scrollY;
