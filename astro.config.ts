@@ -210,6 +210,7 @@ export default defineConfig({
 			SITE_TITLE: envField.string(envFieldSetting),
 			SITE_DESCRIPTION: envField.string(envFieldSetting),
 
+			DEBUG_GTAG: envField.boolean(envFieldSetting),
 			GTAG_ID: envField.string(envFieldSetting),
 			GA4_TAG: envField.string(envFieldSetting),
 		},

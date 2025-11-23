@@ -56,7 +56,7 @@ var __defProp = Object.defineProperty;
 var __template = (cooked, raw) => __freeze(__defProp(cooked, "raw", { value: __freeze(cooked.slice()) }));
 var _a;
 const $$GoogleAnalytics = createComponent(($$result, $$props, $$slots) => {
-  return renderTemplate(_a || (_a = __template(['<script type="text/partytown"', ' data-astro-rerun><\/script> <script type="text/partytown" data-astro-rerun>(function(){', '\n	window.dataLayer = window.dataLayer || [];\n	window.gtag = function gtag() {\n		dataLayer.push(arguments);\n	};\n	gtag("js", new Date());\n	gtag("config", GTAG_ID);\n	gtag("config", GA4_TAG);\n})();<\/script>'])), addAttribute(`https://www.googletagmanager.com/gtag/js?id=${GTAG_ID}`, "src"), defineScriptVars({ GTAG_ID, GA4_TAG }));
+  return renderTemplate`${renderTemplate(_a || (_a = __template(["<script", " data-astro-rerun><\/script>\n	<script data-astro-rerun>(function(){", '\n		window.dataLayer = window.dataLayer || [];\n		window.gtag = function gtag() {\n			dataLayer.push(arguments);\n		};\n		gtag("js", new Date());\n		gtag("config", GTAG_ID);\n		gtag("config", GA4_TAG);\n	})();<\/script>'])), addAttribute(`https://www.googletagmanager.com/gtag/js?id=${GTAG_ID}`, "src"), defineScriptVars({ GTAG_ID, GA4_TAG }))}${ false}`;
 }, "C:/Users/snows/Documents/Program/js/bio/src/components/GoogleAnalytics.astro", void 0);
 
 const $$Astro$1 = createAstro("https://hi2ma-bu4.github.io/");
