@@ -1,8 +1,37 @@
-import { addEscapeListener, createFocusTrap, getFocusable, lockBodyScroll, unlockBodyScroll } from "./ui-utils";
+import { addEscapeListener, createFocusTrap, getFocusable, isActivationKey, isEnterKey, lockBodyScroll, unlockBodyScroll } from "./ui-utils";
 
 function initMobileMenu() {
 	const checkbox = document.getElementById("mobile-menu-toggle") as HTMLInputElement | null;
 	if (!checkbox) return;
+
+	// ハンバーガーのラベル（<label for="mobile-menu-toggle">）をキーボード操作可能にする
+	const toggleLabel = document.querySelector('label[for="mobile-menu-toggle"]') as HTMLElement | null;
+	if (toggleLabel) {
+		if (!toggleLabel.hasAttribute("tabindex")) toggleLabel.setAttribute("tabindex", "0");
+		toggleLabel.setAttribute("role", "button");
+		// 初期状態はチェックが外れている想定
+		toggleLabel.setAttribute("aria-pressed", String(checkbox.checked));
+		// aria-controls を追加してメニューを関連付け
+		toggleLabel.setAttribute("aria-controls", "mobile-nav");
+	}
+
+	const syncToggleAria = () => {
+		if (toggleLabel) toggleLabel.setAttribute("aria-pressed", String(checkbox!.checked));
+		const navEl = document.getElementById("mobile-nav");
+		if (navEl) navEl.setAttribute("aria-hidden", String(!checkbox!.checked));
+	};
+
+	// ラベルで Enter / Space を押したときにトグルする
+	if (toggleLabel) {
+		toggleLabel.addEventListener("keydown", (ev: KeyboardEvent) => {
+			if (isActivationKey(ev)) {
+				ev.preventDefault();
+				checkbox!.checked = !checkbox!.checked;
+				updateMenuFocus();
+				syncToggleAria();
+			}
+		});
+	}
 
 	let focusTrap: ReturnType<typeof createFocusTrap> | null = null;
 	let removeEscape: (() => void) | null = null;
@@ -14,6 +43,8 @@ function initMobileMenu() {
 			// メニューを閉じたらトグルにフォーカスを戻す
 			try {
 				checkbox.focus();
+				// aria を同期
+				syncToggleAria();
 			} catch (e) {
 				/* ignore */
 			}
@@ -32,7 +63,7 @@ function initMobileMenu() {
 		const isOpen = checkbox!.checked;
 
 		if (nav) {
-			nav.ariaHidden = String(!isOpen);
+			nav.setAttribute("aria-hidden", String(!isOpen));
 			const focusables = getFocusable(nav);
 			focusables.forEach((el) => {
 				if (!isOpen) {
@@ -73,6 +104,16 @@ function initMobileMenu() {
 
 	// チェックボックスの変更で表示状態を反映
 	checkbox.addEventListener("change", updateMenuFocus);
+
+	// チェックボックスにフォーカス時に Enter でトグル（Space は既定でトグル）
+	checkbox.addEventListener("keydown", (ev: KeyboardEvent) => {
+		if (isEnterKey(ev)) {
+			ev.preventDefault();
+			checkbox.checked = !checkbox.checked;
+			updateMenuFocus();
+			syncToggleAria();
+		}
+	});
 }
 
 if (document.readyState === "loading") {
