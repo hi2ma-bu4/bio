@@ -1,4 +1,4 @@
-(() => {
+function initMobileMenu() {
 	const checkbox = document.getElementById("mobile-menu-toggle") as HTMLInputElement | null;
 	if (!checkbox) return;
 
@@ -22,4 +22,10 @@
 
 	// Astro のクライアント遷移後にもメニューを閉じる
 	window.addEventListener("astro:after-swap", closeMobileMenu);
-})();
+}
+
+if (document.readyState === "loading") {
+	document.addEventListener("DOMContentLoaded", initMobileMenu);
+} else {
+	initMobileMenu();
+}
