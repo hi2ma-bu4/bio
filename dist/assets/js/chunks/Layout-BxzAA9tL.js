@@ -24,7 +24,7 @@ const pwaAssetsHead = {"links":[{"href":"/bio/favicon.ico","rel":"icon","sizes":
 
 const pwaInfo = {"webManifest":{"href":"/bio/manifest.webmanifest"}};
 
-const BASE_DIR = "/bio/";const AUTHOR = "hi2ma-bu4";const SITE_TITLE = "snowsSite";const SITE_DESCRIPTION = "snows(hi2ma-bu4)の個人サイトです。";const GTAG_ID = "GTM-N2NZ68ZJ";
+const BASE_DIR = "/bio/";const AUTHOR = "hi2ma-bu4";const SITE_TITLE = "snowsSite";const SITE_DESCRIPTION = "snows(hi2ma-bu4)の個人サイトです。";const GTAG_ID = "G-Y5FMM4MPMV";
 
 const NAV_LINKS = [
   { href: BASE_DIR, text: "Top" },
