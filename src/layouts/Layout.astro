@@ -6,8 +6,8 @@ import GoogleAnalytics from "../components/GoogleAnalytics.astro";
 import Footer from "../components/Footer.astro";
 import { SITE_TITLE, SITE_DESCRIPTION, BASE_DIR, AUTHOR, CLASS_AUTO_IMG_ALT } from "../config";
 import { GoogleFontsOptimizer } from "astro-google-fonts-optimizer";
-import { SEO } from "astro-seo";
-import { pwaAssetsHead } from "virtual:pwa-assets/head";
+import { SEO, type SEOProps } from "astro-seo";
+import { pwaAssetsHead, type PWAAssetHeadLink } from "virtual:pwa-assets/head";
 import { pwaInfo } from "virtual:pwa-info";
 import { ClientRouter } from "astro:transitions";
 
@@ -16,16 +16,44 @@ interface Props {
 	description?: string;
 }
 
-const linkArr = [
-	//
-	...pwaAssetsHead.links.map((link: any) => ({ ...link })),
-	{ rel: "sitemap", href: `${BASE_DIR}sitemap-index.xml` },
-];
+type SeoExtend = NonNullable<SEOProps["extend"]>;
+type LinkArr = NonNullable<SeoExtend["link"]>;
+type MetaArr = NonNullable<SeoExtend["meta"]>;
+
+const linkArr: LinkArr = [];
+const mediaLight = "(prefers-color-scheme: light)";
+const mediaDark = "(prefers-color-scheme: dark)";
+pwaAssetsHead.links
+	.map((link: PWAAssetHeadLink) => ({ ...link }))
+	.forEach((link) => {
+		linkArr.push(link);
+		if (link.rel === "icon") {
+			let newLink;
+			switch (link.href.split(".").pop()) {
+				case "ico":
+					link.media = mediaLight;
+					newLink = { ...link };
+					newLink.href = `${BASE_DIR}favicon-dark.ico`;
+					break;
+				case "svg":
+					link.media = mediaLight;
+					newLink = { ...link };
+					newLink.href = `${BASE_DIR}favicon-dark.svg`;
+					break;
+			}
+			if (newLink) {
+				newLink.media = mediaDark;
+				linkArr.push(newLink);
+			}
+		}
+	});
+
+linkArr.push({ rel: "sitemap", href: `${BASE_DIR}sitemap-index.xml` });
 if (pwaInfo) {
 	linkArr.push({ rel: "manifest", href: pwaInfo.webManifest.href });
 }
 
-const metaArr = [
+const metaArr: MetaArr = [
 	{ httpEquiv: "content-type", content: "text/html; charset=UTF-8" },
 	{ httpEquiv: "X-UA-Compatible", content: "IE=edge" },
 	{ httpEquiv: "content-language", content: "ja" },

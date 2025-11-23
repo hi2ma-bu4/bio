@@ -11,6 +11,7 @@ import AstroPWA from "@vite-pwa/astro";
 import htmlMinifierNext from "astro-html-minifier-next";
 import browserslist from "browserslist";
 import { browserslistToTargets } from "lightningcss";
+import generateDarkIcons from "./dev/integrations/generateDarkIcons";
 
 const BASE_DIR = process.env.BASE_DIR ?? "/";
 const SITE_TITLE = process.env.SITE_TITLE ?? "snowsSite";
@@ -60,6 +61,10 @@ export default defineConfig({
 		defaultStrategy: "hover",
 	},
 	integrations: [
+		generateDarkIcons({
+			darkSrc: "public/favicon-dark.svg",
+			outDir: "dist/",
+		}),
 		solidJs(),
 		AstroPWA({
 			mode: "production",
@@ -82,8 +87,9 @@ export default defineConfig({
 				icons: [
 					{
 						src: `${BASE_DIR}favicon.svg`,
-						sizes: "200x200",
+						sizes: "any",
 						type: "image/svg+xml",
+						purpose: "any monochrome",
 					},
 					{
 						src: `${BASE_DIR}pwa-64x64.png`,
@@ -114,11 +120,11 @@ export default defineConfig({
 					// Google Fonts
 					{
 						urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
-						handler: "StaleWhileRevalidate",
+						handler: "CacheFirst",
 					},
 					{
 						urlPattern: /^https:\/\/fonts\.gstatic\.com\/.*/i,
-						handler: "StaleWhileRevalidate",
+						handler: "CacheFirst",
 					},
 					// CDN
 					{
