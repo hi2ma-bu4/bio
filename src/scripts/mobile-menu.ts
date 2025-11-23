@@ -1,10 +1,15 @@
+import { createFocusTrap, getFocusable, lockBodyScroll, unlockBodyScroll } from "./ui-utils";
+
 function initMobileMenu() {
 	const checkbox = document.getElementById("mobile-menu-toggle") as HTMLInputElement | null;
 	if (!checkbox) return;
 
+	let focusTrap: ReturnType<typeof createFocusTrap> | null = null;
+
 	function closeMobileMenu() {
 		if (checkbox && checkbox.checked) {
 			checkbox.checked = false;
+			updateMenuFocus();
 		}
 	}
 
@@ -15,9 +20,8 @@ function initMobileMenu() {
 	}
 
 	// 非表示時にメニュー内のフォーカス可能要素をタブ順から除外する
-	function getFocusable(el: Element) {
-		return Array.from(el.querySelectorAll<HTMLElement>("a,button,input,textarea,select,[tabindex]")).filter((e) => !e.hasAttribute("disabled"));
-	}
+
+	// getFocusable imported from ui-utils
 
 	function updateMenuFocus() {
 		const nav = document.querySelector("#mobile-menu-toggle ~ nav") as HTMLElement | null;
@@ -38,6 +42,19 @@ function initMobileMenu() {
 					delete el.dataset._savedTab;
 				}
 			});
+
+			if (isOpen) {
+				lockBodyScroll();
+				focusTrap = createFocusTrap(nav);
+				focusTrap.activate();
+				const first = focusables[0];
+			} else {
+				if (focusTrap) {
+					focusTrap.deactivate();
+					focusTrap = null;
+				}
+				unlockBodyScroll();
+			}
 		}
 
 		if (overlay) {

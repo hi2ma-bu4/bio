@@ -1,4 +1,5 @@
-// 作品モーダルの制御
+// 作品モーダルの制御（共通ユーティリティを使用）
+import { createFocusTrap, lockBodyScroll, unlockBodyScroll } from "./ui-utils";
 
 function initWorkModal() {
 	const modal = document.getElementById("work-modal") as HTMLDialogElement | null;
@@ -15,31 +16,7 @@ function initWorkModal() {
 
 	const workItems = window.WORK_ITEMS;
 	let lastFocusedElement: HTMLElement | null = null;
-
-	const handleKeyDown = (event: KeyboardEvent) => {
-		if (event.key !== "Tab") return;
-
-		const focusableElementsString = 'a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])';
-		const focusableElements = Array.from(modal.querySelectorAll(focusableElementsString)) as HTMLElement[];
-		if (focusableElements.length === 0) return;
-
-		const firstFocusableElement = focusableElements[0];
-		const lastFocusableElement = focusableElements[focusableElements.length - 1];
-
-		if (event.shiftKey) {
-			// Shift + Tab
-			if (document.activeElement === firstFocusableElement) {
-				event.preventDefault();
-				lastFocusableElement.focus();
-			}
-		} else {
-			// Tab
-			if (document.activeElement === lastFocusableElement) {
-				event.preventDefault();
-				firstFocusableElement.focus();
-			}
-		}
-	};
+	let focusTrap: ReturnType<typeof createFocusTrap> | null = null;
 
 	// モーダルを開く
 	triggers.forEach((trigger) => {
@@ -95,14 +72,22 @@ function initWorkModal() {
 
 				lastFocusedElement = document.activeElement as HTMLElement;
 				modal.showModal();
-				modal.addEventListener("keydown", handleKeyDown);
-				closeButton.focus();
+
+				// スクロールロックとフォーカストラップを有効化
+				lockBodyScroll();
+				focusTrap = createFocusTrap(modal);
+				focusTrap.activate();
+				focusTrap.focusFirst();
 			}
 		});
 	});
 
 	modal.addEventListener("close", () => {
-		modal.removeEventListener("keydown", handleKeyDown);
+		if (focusTrap) {
+			focusTrap.deactivate();
+			focusTrap = null;
+		}
+		unlockBodyScroll();
 		lastFocusedElement?.focus();
 	});
 

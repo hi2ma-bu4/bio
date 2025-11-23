@@ -70,4 +70,11 @@
 		border-radius: 6px;
 		max-width: 240px;
 	}
+
+	/* スクロールロック用ユーティリティ（モバイルメニューやモーダル時に使用） */
+	.no-scroll {
+		width: 100%;
+		overflow: hidden;
+		touch-action: none;
+	}
 }
