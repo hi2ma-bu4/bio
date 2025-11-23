@@ -11,7 +11,8 @@ export interface Props {
 const { href, title, description, iconName } = Astro.props;
 
 let Icon = null;
-for (const [fileName, file] of Object.entries(import.meta.glob("../../node_modules/astro-heroicons/solid/*.astro", { eager: true }))) {
+
+for (const [fileName, file] of Object.entries(import.meta.glob("./icon/*.astro", { eager: true }))) {
 	const name = fileName.split("/").pop()?.replace(".astro", "");
 	if (name === iconName) {
 		Icon = (file as AstroInstance).default;
@@ -19,6 +20,13 @@ for (const [fileName, file] of Object.entries(import.meta.glob("../../node_modul
 	}
 }
 if (!Icon) {
+	for (const [fileName, file] of Object.entries(import.meta.glob("../../node_modules/astro-heroicons/solid/*.astro", { eager: true }))) {
+		const name = fileName.split("/").pop()?.replace(".astro", "");
+		if (name === iconName) {
+			Icon = (file as AstroInstance).default;
+			break;
+		}
+	}
 	console.warn(`HeroiconsのSolidアイコン[${iconName}]は見つかりません。`);
 }
 ---
@@ -28,7 +36,7 @@ if (!Icon) {
 		{
 			Icon && (
 				<div class="shrink-0 w-12 h-12 flex items-center justify-center rounded-lg bg-sky-100 dark:bg-sky-900 group-hover:bg-sky-200 dark:group-hover:bg-sky-800 transition-colors">
-					<Icon class="w-6 h-6 text-sky-600 dark:text-sky-400" />
+					<Icon class="w-10 h-10 text-sky-600 dark:text-sky-400" />
 				</div>
 			)
 		}

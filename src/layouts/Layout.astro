@@ -99,24 +99,40 @@ const { title, description = SITE_DESCRIPTION } = Astro.props;
 		/>
 
 		<script type="module" is:inline>
-			function updateTheme() {
-				const theme = (() => {
-					if (typeof localStorage !== "undefined" && localStorage.getItem("theme")) {
-						return localStorage.getItem("theme");
-					}
-					if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
-						return "dark";
-					}
-					return "light";
-				})();
+			const THEME_STORAGE_KEY = "theme";
 
-				if (theme === "light") {
-					document.documentElement.classList.remove("dark");
-				} else {
-					document.documentElement.classList.add("dark");
+			function applyTheme(mode) {
+				const setDark = () => document.documentElement.classList.add("dark");
+				const setLight = () => document.documentElement.classList.remove("dark");
+
+				document.documentElement.dataset.theme = mode;
+
+				if (mode === "light") setLight();
+				else if (mode === "dark") setDark();
+				else {
+					if (window.matchMedia("(prefers-color-scheme: dark)").matches) setDark();
+					else setLight();
 				}
-				localStorage.setItem("theme", theme);
 			}
+
+			function updateTheme() {
+				const stored = typeof localStorage !== "undefined" ? localStorage.getItem(THEME_STORAGE_KEY) : null;
+				// デフォルトは auto
+				const theme = stored ?? "auto";
+				applyTheme(theme);
+			}
+
+			const mq = window.matchMedia("(prefers-color-scheme: dark)");
+			function onSystemChange() {
+				const stored = typeof localStorage !== "undefined" ? localStorage.getItem(THEME_STORAGE_KEY) : null;
+				// ユーザーが auto を選んでいる、または未設定の場合にのみ追従
+				if (stored === "auto" || stored === null) {
+					applyTheme("auto");
+				}
+			}
+			if (mq.addEventListener) mq.addEventListener("change", onSystemChange);
+			else mq.addListener(onSystemChange);
+
 			document.addEventListener("astro:after-swap", updateTheme);
 			updateTheme();
 		</script>
