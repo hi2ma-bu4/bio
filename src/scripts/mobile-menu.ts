@@ -44,6 +44,11 @@ function initMobileMenu() {
 
 	function closeMobileMenu() {
 		if (checkbox && checkbox.checked) {
+			const el = document.activeElement;
+			if (el instanceof HTMLElement) {
+				el.blur();
+			}
+
 			checkbox.checked = false;
 			updateMenuFocus();
 			// メニューを閉じたらトグルにフォーカスを戻す
