@@ -183,16 +183,21 @@ export default defineConfig({
 		},
 		build: {
 			minify: true,
+			sourcemap: false,
 			copyPublicDir: true,
 			terserOptions: terserOpt,
 			rollupOptions: {
 				cache: true,
 				output: {
+					entryFileNames: "assets/js/[name]-[hash].js",
+					chunkFileNames: "assets/js/chunks/[name]-[hash].js",
+					assetFileNames: "assets/[name]-[hash][extname]",
 					manualChunks(id) {
 						if (id.includes("node_modules")) {
 							return "vendor";
 						}
 					},
+					strict: true,
 				},
 				external: [],
 			},
