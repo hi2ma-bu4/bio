@@ -23,11 +23,12 @@
 		@apply transition-colors duration-300;
 	}
 
-	/* フォーカス時のリング（アクセシビリティ）*/
+	/* フォーカス時のリング (アクセシビリティ) */
 	:focus-visible {
 		@apply outline-none ring-2 ring-offset-2 ring-sky-500 ring-offset-white dark:ring-offset-slate-800;
 	}
 
+	/* 画像読み込み失敗時のやつ (重複記述を避けるためにここに記載) */
 	.bio-imgCheck:not(.bio-imgLoad, .bio-imgLoadErr) {
 		background-image: url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" stroke="%23555" viewBox="0 0 24 24"><g style="transform-origin:center;animation:zKoa 2s linear infinite"><circle cx="12" cy="12" r="9.5" fill="none" stroke-width="3" style="stroke-linecap:round;animation:YpZS 1.5s ease-in-out infinite"/></g><defs><style>@keyframes zKoa{to{transform:rotate(360deg)}}@keyframes YpZS{0%{stroke-dasharray:0 150;stroke-dashoffset:0}47.5%{stroke-dasharray:42 150;stroke-dashoffset:-16}95%,to{stroke-dasharray:42 150;stroke-dashoffset:-59}}</style></defs></svg>');
 		background-position: center;

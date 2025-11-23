@@ -58,7 +58,7 @@ const $$GoogleAnalytics = createComponent(($$result, $$props, $$slots) => {
 const $$Footer = createComponent(($$result, $$props, $$slots) => {
   const year = (/* @__PURE__ */ new Date()).getFullYear();
   return renderTemplate`${maybeRenderHead()}<footer class="w-full mt-16 py-8 bg-slate-100 dark:bg-slate-800"> <div class="max-w-5xl mx-auto px-4 md:px-8 text-center" role="contentinfo"> <p class="text-slate-600 dark:text-slate-400">
-&copy; ${year} <a href="https://github.com/hi2ma-bu4" target="_blank" rel="noopener noreferrer">${AUTHOR}</a>. All rights reserved.
+&copy; ${year} <a href="https://github.com/hi2ma-bu4" target="_blank" rel="noopener noreferrer" class="hover:text-slate-400 dark:hover:text-slate-600 hover:underline transition-colors">${AUTHOR}</a>. All rights reserved.
 </p> </div> </footer>`;
 }, "C:/Users/snows/Documents/Program/js/bio/src/components/Footer.astro", void 0);
 
