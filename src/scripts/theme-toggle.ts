@@ -118,13 +118,7 @@ document.addEventListener("DOMContentLoaded", initThemeUI);
 document.addEventListener("astro:after-swap", initThemeUI);
 
 document.addEventListener("astro:before-swap", (event) => {
-	const swapFunc = event.swap;
-	event.swap = () => {
-		applyTheme(safeGet() ?? "auto", event.newDocument);
-
-		// 元の swap 実行
-		swapFunc();
-	};
+	applyTheme(safeGet() ?? "auto", event.newDocument);
 });
 
 if (document.readyState !== "loading") {
