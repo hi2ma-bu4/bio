@@ -23,15 +23,15 @@ jobs:
 
             - name: Sync dist to pages
               run: |
-                  rm -rf pages/*
-                  cp -r dist/* pages/
-                  cp -r dist/* pages/
+                  rm -rf pages/* || true
+                  cp -r dist/* pages/ || true
+                  cp -r public/* pages/ || true
 
-            - name: Commit & Push to gh-pages
+            - name: Commit & Push to pages
               env:
                   TOKEN: ${{ secrets.GITHUB_TOKEN }}
               run: |
-                  cd gh-pages
+                  cd pages
                   git config user.name "github-actions"
                   git config user.email "github-actions@github.com"
 
