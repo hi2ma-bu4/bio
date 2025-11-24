@@ -34,10 +34,10 @@ jobs:
               run: |
                   rm -rf ./public/$TARGET_CHILD
                   mkdir -p ./public/$TARGET_CHILD
-                  cp -r tmp-child/test ./public/$TARGET_CHILD/ || true
-                  cp -r tmp-child/dist ./public/$TARGET_CHILD/ || true
-                  cp -r tmp-child/types ./public/$TARGET_CHILD/ || true
-                  cp tmp-child/LICENSE ./public/$TARGET_CHILD/ || true
+                  cp -r ./tmp-child/test ./public/$TARGET_CHILD/ || true
+                  cp -r ./tmp-child/dist ./public/$TARGET_CHILD/ || true
+                  cp -r ./tmp-child/types ./public/$TARGET_CHILD/ || true
+                  cp ./tmp-child/LICENSE ./public/$TARGET_CHILD/ || true
                   cp -r ./public/$TARGET_CHILD/ ./pages/$TARGET_CHILD/ || true
 
             - name: Commit & push
