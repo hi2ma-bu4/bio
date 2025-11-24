@@ -1,0 +1,29 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"files.associations": {
+			"*.css": "tailwindcss"
+		},
+		"editor.quickSuggestions": {
+			"strings": "on"
+		},
+		"cSpell.words": [
+			"COEP",
+			"dasharray",
+			"dashoffset",
+			"focusables",
+			"gstatic",
+			"heroicons",
+			"joda",
+			"lightningcss",
+			"linecap",
+			"Noto",
+			"partytown",
+			"playform"
+		]
+	}
+}

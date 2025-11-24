@@ -1,0 +1,11 @@
+---
+import MoonIcon from "astro-heroicons/solid/Moon.astro";
+import SunIcon from "astro-heroicons/solid/Sun.astro";
+import CircleHalfStroke from "./icon/CircleHalfStroke.astro";
+---
+
+<button class="theme-toggle p-2 rounded-full hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors" aria-label="テーマを切り替える" transition:persist type="button">
+	<span class="icon-sun hidden"><SunIcon class="w-6 h-6 text-slate-800" /></span>
+	<span class="icon-moon hidden"><MoonIcon class="w-6 h-6 text-slate-200" /></span>
+	<span class="icon-auto hidden"><CircleHalfStroke class="w-6 h-6 text-slate-800 dark:text-slate-200" /></span>
+</button>

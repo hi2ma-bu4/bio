@@ -1,0 +1,125 @@
+---
+import { GoogleFontsOptimizer } from "astro-google-fonts-optimizer";
+import { SEO, type SEOProps } from "astro-seo";
+import { ClientRouter } from "astro:transitions";
+import { pwaAssetsHead, type PWAAssetHeadLink } from "virtual:pwa-assets/head";
+import { pwaInfo } from "virtual:pwa-info";
+import FloatingHeader from "../components/FloatingHeader.astro";
+import Footer from "../components/Footer.astro";
+import GoogleAnalytics from "../components/GoogleAnalytics.astro";
+import Header from "../components/Header.astro";
+import { AUTHOR, BASE_DIR, GTAG_ID, SITE_DESCRIPTION, SITE_TITLE } from "../config";
+import "../styles/global.css";
+
+interface Props {
+	title: string;
+	description?: string;
+}
+
+type SeoExtend = NonNullable<SEOProps["extend"]>;
+type LinkArr = NonNullable<SeoExtend["link"]>;
+type MetaArr = NonNullable<SeoExtend["meta"]>;
+
+const linkArr: LinkArr = [];
+const mediaLight = "(prefers-color-scheme: light)";
+const mediaDark = "(prefers-color-scheme: dark)";
+pwaAssetsHead.links
+	.map((link: PWAAssetHeadLink) => ({ ...link }))
+	.forEach((link) => {
+		linkArr.push(link);
+		if (link.rel === "icon") {
+			let newLink;
+			switch (link.href.split(".").pop()) {
+				case "ico":
+					link.media = mediaLight;
+					newLink = { ...link };
+					newLink.href = `${BASE_DIR}favicon-dark.ico`;
+					break;
+				case "svg":
+					link.media = mediaLight;
+					newLink = { ...link };
+					newLink.href = `${BASE_DIR}favicon-dark.svg`;
+					break;
+			}
+			if (newLink) {
+				newLink.media = mediaDark;
+				linkArr.push(newLink);
+			}
+		}
+	});
+
+linkArr.push({ rel: "sitemap", href: `${BASE_DIR}sitemap-index.xml` });
+if (pwaInfo) {
+	linkArr.push({ rel: "manifest", href: pwaInfo.webManifest.href });
+}
+
+const metaArr: MetaArr = [
+	{ name: "viewport", content: "width=device-width, initial-scale=1.0" },
+	{ name: "format-detection", content: "telephone=no, address=no, email=no" },
+	{ name: "author", content: AUTHOR },
+	{ name: "generator", content: Astro.generator },
+	{ name: "mobile-web-app-capable", content: "yes" },
+	{ name: "apple-mobile-web-app-capable", content: "yes" },
+	{ name: "apple-mobile-web-app-status-bar-style", content: "black-translucent" },
+	{ name: "apple-mobile-web-app-title", content: SITE_TITLE },
+];
+if (pwaAssetsHead.themeColor) {
+	metaArr.push({ name: "theme-color", content: pwaAssetsHead.themeColor.content });
+}
+
+const { title, description = SITE_DESCRIPTION } = Astro.props;
+---
+
+<!doctype html>
+<html lang="ja" prefix="og: https://ogp.me/ns#">
+	<head prefix="website: https://ogp.me/ns/website#">
+		<SEO
+			charset="UTF-8"
+			title={title}
+			titleDefault="Page"
+			titleTemplate={`%s | ${SITE_TITLE}`}
+			description={description}
+			openGraph={{
+				basic: {
+					title: title,
+					type: "website",
+					image: BASE_DIR + "maskable-icon-512x512.png",
+				},
+				optional: {
+					description: description,
+					locale: "ja_JP",
+					siteName: SITE_TITLE,
+				},
+			}}
+			twitter={{ creator: "@hi2ma_bu4", card: "summary" }}
+			extend={{
+				link: linkArr,
+				meta: metaArr,
+			}}
+		/>
+
+		<script src="../scripts/theme-toggle.ts"></script>
+		<script src="../scripts/pwa.ts"></script>
+
+		<GoogleAnalytics />
+		<ClientRouter />
+
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<GoogleFontsOptimizer url="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Noto+Sans+JP:wght@400;700&display=swap" />
+	</head>
+	<body class="min-h-screen flex flex-col">
+		<!-- Google Tag Manager (noscript) -->
+		<noscript><iframe src={`https://www.googletagmanager.com/ns.html?id=${GTAG_ID}`} height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+		<!-- End Google Tag Manager (noscript) -->
+		<Header />
+		<FloatingHeader />
+
+		<main class="grow w-full max-w-5xl mx-auto px-4 py-8 md:px-8" role="main">
+			<slot />
+		</main>
+
+		<Footer />
+
+		<script src="../scripts/image-handler.ts"></script>
+	</body>
+</html>
