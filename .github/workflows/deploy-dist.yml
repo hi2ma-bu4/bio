@@ -42,7 +42,7 @@ jobs:
                   git config user.name "github-actions"
                   git config user.email "github-actions@github.com"
                   git add ./pages/
-                  if git diff --quiet -- pages/; then
+                  if git diff --quiet; then
                     echo "No changes."
                     exit 0
                   fi
