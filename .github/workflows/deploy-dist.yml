@@ -16,21 +16,17 @@ jobs:
         runs-on: ubuntu-latest
 
         steps:
-            - name: Checkout main
-              uses: actions/checkout@v3
-
             - name: Checkout gh-pages branch
               uses: actions/checkout@v3
               with:
                   ref: gh-pages
-                  path: gh-pages
 
             - name: Sync dist to pages
               run: |
                   rm -rf ./pages/ || true
                   mkdir -p ./pages/ || true
-                  cp -r ./dist/ ./pages/ || true
-                  cp -r ./public/ ./pages/ || true
+                  cp -r ./dist/* ./pages/ || true
+                  cp -r ./public/* ./pages/ || true
 
             - name: Commit & Push to pages
               env:
@@ -39,7 +35,7 @@ jobs:
                   git config user.name "github-actions"
                   git config user.email "github-actions@github.com"
 
-                  if git diff --quiet; then
+                  if git diff --quiet -- pages/; then
                     echo "No changes."
                     exit 0
                   fi

@@ -18,7 +18,10 @@ jobs:
             - name: Get child name
               run: echo "TARGET_CHILD=${{ github.event.client_payload.child }}" >> $GITHUB_ENV
 
-            - uses: actions/checkout@v3
+            - name: Checkout main
+              uses: actions/checkout@v3
+              with:
+                  ref: main
 
             - name: Clone updated child only
               run: |
@@ -38,11 +41,11 @@ jobs:
               run: |
                   rm -rf ./public/$TARGET_CHILD
                   mkdir -p ./public/$TARGET_CHILD
-                  cp -r ./tmp-child/test ./public/$TARGET_CHILD/ || true
-                  cp -r ./tmp-child/dist ./public/$TARGET_CHILD/ || true
-                  cp -r ./tmp-child/types ./public/$TARGET_CHILD/ || true
+                  cp -r ./tmp-child/test/ ./public/$TARGET_CHILD/ || true
+                  cp -r ./tmp-child/dist/ ./public/$TARGET_CHILD/ || true
+                  cp -r ./tmp-child/types/ ./public/$TARGET_CHILD/ || true
                   cp ./tmp-child/LICENSE ./public/$TARGET_CHILD/ || true
-                  cp -r ./public/$TARGET_CHILD/ ./pages/$TARGET_CHILD/ || true
+                  cp -r ./public/$TARGET_CHILD/* ./pages/$TARGET_CHILD/ || true
 
             - name: Commit & push
               env:
@@ -51,8 +54,8 @@ jobs:
               run: |
                   git config user.name github-actions
                   git config user.email github-actions@github.com
-                  git add ./public/$TARGET_CHILD
-                  git add ./pages/$TARGET_CHILD
+                  git add ./public/$TARGET_CHILD/
+                  git add ./pages/$TARGET_CHILD/
                   if git diff --cached --quiet; then
                     echo "No changes to commit."
                     exit 0
