@@ -30,8 +30,8 @@ jobs:
             - name: Sync dist to pages
               run: |
                   rm -rf ./gh-pages/pages/ || true
-                  mkdir -p ./gh-pages/pages/ || true
-                  cp -r ./dist/* ./gh-pages/pages/ || true
+                  mkdir -p ./gh-pages/pages/
+                  cp -r ./dist/* ./gh-pages/pages/
                   cp -r ./gh-pages/public/* ./gh-pages/pages/ || true
 
             - name: Commit & Push to pages
@@ -41,13 +41,11 @@ jobs:
                   cd ./gh-pages/
                   git config user.name "github-actions"
                   git config user.email "github-actions@github.com"
-
+                  git add ./pages/
                   if git diff --quiet -- pages/; then
                     echo "No changes."
                     exit 0
                   fi
-
-                  git add ./pages/
                   git commit -m "Deploy from main"
                   git push https://x-access-token:${GITHUB_TOKEN}@github.com/hi2ma-bu4/bio.git HEAD:gh-pages
 
