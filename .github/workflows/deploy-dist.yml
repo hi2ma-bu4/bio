@@ -1,0 +1,53 @@
+name: Deploy to gh-pages
+
+on:
+    push:
+        branches: [main]
+
+permissions:
+    contents: write
+
+jobs:
+    deploy:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout main
+              uses: actions/checkout@v3
+
+            - name: Checkout gh-pages branch
+              uses: actions/checkout@v3
+              with:
+                  ref: gh-pages
+                  path: gh-pages
+
+            - name: Sync dist to pages
+              run: |
+                  rm -rf pages/*
+                  cp -r dist/* pages/
+                  cp -r dist/* pages/
+
+            - name: Commit & Push to gh-pages
+              env:
+                  TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              run: |
+                  cd gh-pages
+                  git config user.name "github-actions"
+                  git config user.email "github-actions@github.com"
+
+                  if git diff --quiet; then
+                    echo "No changes."
+                    exit 0
+                  fi
+
+                  git add .
+                  git commit -m "Deploy from main"
+                  git push https://x-access-token:${TOKEN}@github.com/${GITHUB_REPOSITORY}.git HEAD:gh-pages
+
+    notify-parent:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Dispatch event to gh-pages
+              uses: peter-evans/repository-dispatch@v3
+              with:
+                  event-type: static_pages
