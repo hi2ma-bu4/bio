@@ -14,6 +14,8 @@ concurrency:
 jobs:
     update-specific-child:
         runs-on: ubuntu-latest
+        outputs:
+            pages_changed: ${{ steps.check_diff.outputs.changed }}
         steps:
             - name: Get child name
               run: echo "TARGET_CHILD=${{ github.event.client_payload.child }}" >> $GITHUB_ENV
@@ -48,6 +50,7 @@ jobs:
                   cp -r ./public/$TARGET_CHILD/* ./pages/$TARGET_CHILD/ || true
 
             - name: Commit & push
+              id: check_diff
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
                   CHILD_MSG: ${{ env.CHILD_MSG }}
@@ -57,14 +60,18 @@ jobs:
                   git add ./public/$TARGET_CHILD/
                   git add ./pages/$TARGET_CHILD/
                   if git diff --cached --quiet; then
+                    echo "changed=false" >> $GITHUB_OUTPUT
                     echo "No changes to commit."
                     exit 0
                   fi
                   git commit -m "🔄Update from $TARGET_CHILD: $CHILD_MSG"
                   git push https://x-access-token:${GITHUB_TOKEN}@github.com/hi2ma-bu4/bio.git HEAD:gh-pages
+                  echo "changed=true" >> $GITHUB_OUTPUT
 
     notify-parent:
         runs-on: ubuntu-latest
+        needs: update-specific-child
+        if: needs.update-specific-child.outputs.pages_changed == 'true'
         steps:
             - name: Dispatch event to gh-pages
               uses: peter-evans/repository-dispatch@v3
