@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="UTF-8" />
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>js-Ryo is you</title>
+
+	<link rel="stylesheet" href="foundation.css" media="print" onload="this.media='all'">
+
+	<script type="text/javascript" src="map.js" defer></script>
+	<script type="text/javascript" src="name.js" defer></script>
+	<script type="text/javascript" src="main.js" defer></script>
+</head>
+<body onload="init();">
+	<div class="canvas-wrap">
+		<div id="backgrounds" class="wraps"></div>
+		<canvas id="stills"></canvas>
+		<canvas id="animations"></canvas>
+		<canvas id="uis"></canvas>
+		
+		<div id="backOverlays" class="wraps"></div>
+		<div id="mainOverlays" class="wraps">
+			<p id="MapTitles">
+				<span id="level">please wait</span><br/>
+				<span id="title">Now Loading...</span>
+			</p>
+		</div>
+	</div>
+</body>
+
+</html>

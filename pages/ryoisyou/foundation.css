@@ -1,0 +1,104 @@
+@charset "utf-8";
+
+@font-face {
+	font-family: 'TanukiMagic';
+	src: url('TanukiMagic.ttf') format('truetype');
+}
+
+*{
+	font-family: 'TanukiMagic', 'Hannotate SC', 'HanziPen SC', 'ヒラギノ丸ゴ Pro', 'メイリオ', 'meiryo', sans-serif;
+}
+
+html,body{
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+	-webkit-user-select: none !important;
+	-webkit-user-drag: none !important;
+	-khtml-user-select: none !important;
+	-khtml-user-drag: none !important;
+	-moz-user-select: none !important;
+	-ms-user-select: none !important;
+	user-select: none !important;
+	overscroll-behavior: none !important;
+}
+body{
+	background: #000;
+	min-height: 100%;
+	margin: 0;
+}
+
+.canvas-wrap{
+	width: 100%;
+	position: relative;
+	padding: 0;
+	box-sizing: content-box;
+}
+.canvas_warp:before{
+	content:"";
+	display: block;
+	padding-top: 50%;
+}
+
+canvas,.wraps{
+	position: fixed;
+	left:0;
+	top:0;
+	border: 0;
+	box-sizing: content-box;
+	padding: 0;
+	margin: 0;
+}
+
+#backgrounds{
+	/*background: #fff;*/
+	background: url("pictures/ground.png");
+	background-repeat: repeat;
+	background-size: 40px;
+	z-index: 1;
+}
+
+#stills{
+	z-index: 10;
+}
+#animations{
+	z-index: 11;
+}
+#uis{
+	z-index: 12;
+}
+
+#backOverlays{
+	background-color: rgb(0,0,0);
+	width: 100%;
+	height: 100%;
+	z-index: 20;
+}
+
+#mainOverlays{
+	width: 100%;
+	height: 100%;
+	z-index: 21;
+}
+
+#MapTitles{
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	margin: auto;
+	width: 100%;
+	height: 2em;
+	text-align: center;
+}
+
+#level{
+	font-size: 30px;
+	color: rgba(252,208,215, 0.9);
+}
+#title{
+	font-size: 50px;
+	color: rgba(250,250,250, 0.9);
+
+}
