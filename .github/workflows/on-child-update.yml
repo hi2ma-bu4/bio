@@ -65,7 +65,7 @@ jobs:
                     MODE="root"
                   fi
 
-                  shopt -s nullglob dotglob extglob
+                  shopt -s nullglob extglob
                   if [ "$MODE" = "root" ]; then
                     cp -r ./tmp-child/!(.git) "$DEST/"
                   else
