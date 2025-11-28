@@ -43,11 +43,28 @@ jobs:
               run: |
                   rm -rf ./public/$TARGET_CHILD
                   mkdir -p ./public/$TARGET_CHILD
-                  cp -r ./tmp-child/test/ ./public/$TARGET_CHILD/ || true
-                  cp -r ./tmp-child/dist/ ./public/$TARGET_CHILD/ || true
-                  cp -r ./tmp-child/types/ ./public/$TARGET_CHILD/ || true
-                  cp ./tmp-child/LICENSE ./public/$TARGET_CHILD/ || true
-                  cp -r ./public/$TARGET_CHILD/* ./pages/$TARGET_CHILD/ || true
+
+                  COPY_LIST=""
+
+                  if [ -d "./tmp-child/test" ]; then
+                    COPY_LIST="$COPY_LIST test dist types LICENSE"
+
+                  elif [ -d "./tmp-child/dist" ]; then
+                    COPY_LIST="$COPY_LIST dist/* types/* LICENSE"
+
+                  else
+                    COPY_LIST="$COPY_LIST *"
+                  fi
+
+                  for ITEM in $COPY_LIST; do
+                    SRC="./tmp-child/$ITEM"
+                    if [ -e "$SRC" ]; then
+                      cp -r $SRC ./public/$TARGET_CHILD/
+                    fi
+                  done
+
+                  mkdir -p ./pages/$TARGET_CHILD
+                  cp -r ./public/$TARGET_CHILD/* ./pages/$TARGET_CHILD/
 
             - name: Commit & push
               id: check_diff
