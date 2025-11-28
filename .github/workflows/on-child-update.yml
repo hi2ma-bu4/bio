@@ -47,12 +47,15 @@ jobs:
                   COPY_LIST=""
 
                   if [ -d "./tmp-child/test" ]; then
+                    echo testDir
                     COPY_LIST="$COPY_LIST test dist types LICENSE"
 
                   elif [ -d "./tmp-child/dist" ]; then
+                    echo DistDir
                     COPY_LIST="$COPY_LIST dist/* types/* LICENSE"
 
                   else
+                    echo rootDir
                     COPY_LIST="$COPY_LIST *"
                   fi
 
@@ -60,6 +63,7 @@ jobs:
                   for ITEM in $COPY_LIST; do
                     files=( "./tmp-child/$ITEM" )
                     if (( ${#files[@]} )); then
+                      echo copy "${files[@]}"
                       cp -r "${files[@]}" "./public/$TARGET_CHILD/"
                     fi
                   done
