@@ -41,35 +41,54 @@ jobs:
 
             - name: Copy only required files
               run: |
-                  rm -rf ./public/$TARGET_CHILD
-                  mkdir -p ./public/$TARGET_CHILD
+                  DEST="./public/$TARGET_CHILD"
+                  rm -rf "$DEST"
+                  mkdir -p "$DEST"
 
-                  COPY_LIST=""
+                  MODE="root"
+                  COPY_LIST=()
+                  COPY_SUBDIRS=()
 
                   if [ -d "./tmp-child/test" ]; then
-                    echo testDir
-                    COPY_LIST="$COPY_LIST test dist types LICENSE"
+                    echo "Mode: testDir"
+                    MODE="test"
+                    COPY_LIST=("test" "LICENSE")
+                    COPY_SUBDIRS=("dist" "types")
 
                   elif [ -d "./tmp-child/dist" ]; then
-                    echo DistDir
-                    COPY_LIST="$COPY_LIST dist/* types/* LICENSE"
+                    echo "Mode: DistDir"
+                    MODE="dist"
+                    COPY_LIST=("LICENSE")
+                    COPY_SUBDIRS=("dist" "types")
 
                   else
-                    echo rootDir
-                    COPY_LIST="$COPY_LIST *"
+                    echo "Mode: rootDir"
+                    MODE="root"
                   fi
 
                   shopt -s nullglob dotglob
-                  for ITEM in $COPY_LIST; do
-                    files=( "./tmp-child/$ITEM" )
-                    if (( ${#files[@]} )); then
-                      echo copy "${files[@]}"
-                      cp -r "${files[@]}" "./public/$TARGET_CHILD/"
-                    fi
-                  done
+                  if [ "$MODE" = "root" ]; then
+                    cp -r ./tmp-child/* "$DEST/"
+                  else
+                    for ITEM in "${COPY_LIST[@]}"; do
+                      SRC="./tmp-child/$ITEM"
+                      if [ -e "$SRC" ]; then
+                        cp -r "$SRC" "$DEST/"
+                      fi
+                    done
 
-                  mkdir -p ./pages/$TARGET_CHILD
-                  cp -r ./public/$TARGET_CHILD/* ./pages/$TARGET_CHILD/
+                    for DIR in "${COPY_SUBDIRS[@]}"; do
+                      if [ -d "./tmp-child/$DIR" ]; then
+                        files=( ./tmp-child/"$DIR"/* )
+                        if (( ${#files[@]} )); then
+                          cp -r "${files[@]}" "$DEST/"
+                        fi
+                      fi
+                    done
+                  fi
+
+                  mkdir -p "./pages/$TARGET_CHILD"
+                  cp -r "$DEST/"* "./pages/$TARGET_CHILD/"
 
             - name: Commit & push
               id: check_diff
