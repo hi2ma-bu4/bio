@@ -65,9 +65,9 @@ jobs:
                     MODE="root"
                   fi
 
-                  shopt -s nullglob dotglob
+                  shopt -s nullglob dotglob extglob
                   if [ "$MODE" = "root" ]; then
-                    cp -r ./tmp-child/* "$DEST/"
+                    cp -r ./tmp-child/!(.git) "$DEST/"
                   else
                     for ITEM in "${COPY_LIST[@]}"; do
                       SRC="./tmp-child/$ITEM"
