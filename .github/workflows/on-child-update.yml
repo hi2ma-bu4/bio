@@ -58,7 +58,7 @@ jobs:
 
                   for ITEM in $COPY_LIST; do
                     SRC="./tmp-child/$ITEM"
-                    if [ -e "$SRC" ]; then
+                    if [ -e $SRC ]; then
                       cp -r $SRC ./public/$TARGET_CHILD/
                     fi
                   done
