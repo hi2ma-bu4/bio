@@ -52,8 +52,7 @@ jobs:
                   if [ -d "./tmp-child/test" ]; then
                     echo "Mode: testDir"
                     MODE="test"
-                    COPY_LIST=("test" "LICENSE")
-                    COPY_SUBDIRS=("dist" "types")
+                    COPY_LIST=("dist" "types" "test" "LICENSE")
 
                   elif [ -d "./tmp-child/dist" ]; then
                     echo "Mode: DistDir"
