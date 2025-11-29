@@ -54,7 +54,7 @@ jobs:
                     MODE="test"
                     COPY_LIST=("dist" "types" "test" "LICENSE")
 
-                  elif [ -d "./tmp-child/dist" ]; then
+                  elif [ -f "./tmp-child/dist/index.html" ]; then
                     echo "Mode: DistDir"
                     MODE="dist"
                     COPY_LIST=("LICENSE")
