@@ -21,6 +21,7 @@ function initWorkModal() {
 	OverlayScrollbars(modalWrapper, {
 		showNativeOverlaidScrollbars: true,
 		scrollbars: {
+			theme: "os-theme-bio",
 			clickScroll: true,
 		},
 	});

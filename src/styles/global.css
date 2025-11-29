@@ -2,6 +2,25 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+.os-theme-bio {
+	box-sizing: border-box;
+	--os-size: 10px;
+	--os-padding-perpendicular: 2px;
+	--os-padding-axis: 2px;
+	--os-track-border-radius: 10px;
+	--os-handle-interactive-area-offset: 4px;
+	--os-handle-border-radius: 10px;
+	--os-handle-bg: rgba(0, 0, 0, 0.44);
+	--os-handle-bg-hover: rgba(0, 0, 0, 0.55);
+	--os-handle-bg-active: rgba(0, 0, 0, 0.66);
+}
+
+.dark .os-theme-bio {
+	--os-handle-bg: rgba(255, 255, 255, 0.44);
+	--os-handle-bg-hover: rgba(255, 255, 255, 0.55);
+	--os-handle-bg-active: rgba(255, 255, 255, 0.66);
+}
+
 @layer base {
 	/* アクセシビリティとデザインを両立するフォント設定 */
 	html {

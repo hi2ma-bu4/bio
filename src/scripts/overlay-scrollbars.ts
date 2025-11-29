@@ -7,6 +7,7 @@ function overrideScroll() {
 	OverlayScrollbars(document.body, {
 		showNativeOverlaidScrollbars: true,
 		scrollbars: {
+			theme: "os-theme-bio",
 			clickScroll: true,
 		},
 	});

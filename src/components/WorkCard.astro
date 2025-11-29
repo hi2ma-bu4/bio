@@ -42,7 +42,7 @@ const isCardFooter = directLink || githubLink;
 					</a>
 				)}
 				{githubLink && (
-					<a href={githubLink} target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium bg-gray-800 text-white hover:bg-gray-900 focus-visible:ring-sky-500" onclick="event.stopPropagation()" aria-label={`${title}のGitHubへ移動`}>
+					<a href={githubLink} target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium bg-gray-800 text-white hover:bg-gray-900 dark:text-gray-900 dark:bg-gray-400 dark:hover:bg-gray-300 focus-visible:ring-sky-500" onclick="event.stopPropagation()" aria-label={`${title}のGitHubへ移動`}>
 						<GitHub class="w-5 h-5" />
 					</a>
 				)}
