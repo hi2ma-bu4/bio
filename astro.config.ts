@@ -1,5 +1,7 @@
 import "dotenv/config";
 
+import path from "node:path";
+
 import { defineConfig, envField } from "astro/config";
 
 import partytown from "@astrojs/partytown";
@@ -11,6 +13,7 @@ import AstroPWA from "@vite-pwa/astro";
 import htmlMinifierNext from "astro-html-minifier-next";
 import browserslist from "browserslist";
 import { browserslistToTargets } from "lightningcss";
+import type { PreRenderedAsset, PreRenderedChunk } from "rollup";
 import generateDarkIcons from "./dev/integrations/generateDarkIcons";
 
 const BASE_DIR = process.env.BASE_DIR ?? "/";
@@ -185,13 +188,24 @@ export default defineConfig({
 			minify: true,
 			sourcemap: false,
 			copyPublicDir: true,
+			assetsInlineLimit: 0,
 			terserOptions: terserOpt,
 			rollupOptions: {
 				cache: true,
 				output: {
-					entryFileNames: "assets/js/[name]-[hash].js",
-					chunkFileNames: "assets/js/chunks/[name]-[hash].js",
-					assetFileNames: "assets/[name]-[hash][extname]",
+					entryFileNames(chunkInfo: PreRenderedChunk): string {
+						const { name } = path.parse(chunkInfo.name);
+						return `assets/js/${name}-[hash].js`;
+					},
+					chunkFileNames(chunkInfo: PreRenderedChunk): string {
+						const { name } = path.parse(chunkInfo.name);
+						return `assets/js/chunks/${name}-[hash].js`;
+					},
+					assetFileNames(chunkInfo: PreRenderedAsset): string {
+						const { ext, name } = path.parse(chunkInfo.names[0]);
+						if (ext == ".css") return `assets/css/${name}-[hash][extname]`;
+						return `assets/${name}-[hash][extname]`;
+					},
 					manualChunks(id) {
 						if (id.includes("node_modules")) {
 							return "vendor";

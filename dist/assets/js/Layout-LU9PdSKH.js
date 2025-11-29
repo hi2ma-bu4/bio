@@ -1,0 +1,1 @@
+import{O as r,H as l,$ as o,z as t}from"./ClientRouter-1yU_dtC4.js";r.plugin([l,o,t]);function a(){r(document.body,{showNativeOverlaidScrollbars:!0,scrollbars:{clickScroll:!0}})}document.addEventListener("astro:after-swap",a);a();

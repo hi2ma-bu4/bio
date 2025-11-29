@@ -1,4 +1,4 @@
-// フローティングヘッダーのスクロール制御
+import { getFocusable } from "./ui-utils";
 
 let lastScrollFunction: () => void;
 function initHeaderScroll() {
@@ -35,10 +35,6 @@ function initHeaderScroll() {
 	const initialComputedHidden = getComputedStyle(floatingHeader as HTMLElement).display === "none" || (floatingHeader as HTMLElement).hidden;
 	let prevIsHidden = initialHiddenByClass || initialComputedHidden;
 	updateFloatingHeaderFocus(prevIsHidden);
-
-	function getFocusable(el: Element) {
-		return Array.from(el.querySelectorAll<HTMLElement>("a,button,input,textarea,select,[tabindex]")).filter((e) => !e.hasAttribute("disabled"));
-	}
 
 	// 表示状態を外部で判定して渡す（衝突を避ける）
 	function updateFloatingHeaderFocus(isHidden: boolean) {

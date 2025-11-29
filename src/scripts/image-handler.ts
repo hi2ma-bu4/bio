@@ -36,7 +36,7 @@ function wrapWithAltButton(img: HTMLImageElement): void {
 
 	const altText = img.alt;
 	button.addEventListener("click", () => {
-		const oldPopup = wrapper.querySelector(`.${altPopupClassName}`);
+		const oldPopup = wrapper.querySelector<HTMLDivElement>(`.${altPopupClassName}`);
 		if (oldPopup) {
 			oldPopup.remove();
 			return;
@@ -137,7 +137,7 @@ function checkNodesForImages(nodes: NodeList): void {
 				processImage(el as HTMLImageElement);
 			}
 			// Check for images within the node
-			const imgs = el.querySelectorAll("img");
+			const imgs = el.querySelectorAll<HTMLImageElement>("img");
 			imgs.forEach(processImage);
 		}
 	}
@@ -148,7 +148,7 @@ function checkNodesForImages(nodes: NodeList): void {
  */
 function initImageHandler(): void {
 	// Initial check for all images on the page
-	document.querySelectorAll("img").forEach(processImage);
+	document.querySelectorAll<HTMLImageElement>("img").forEach(processImage);
 
 	// Use MutationObserver to detect dynamically added images
 	const observer = new MutationObserver((mutationsList) => {

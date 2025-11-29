@@ -1,7 +1,7 @@
-import { c as createAstro, a as createComponent, m as maybeRenderHead, s as spreadAttributes, r as renderTemplate, ek as addAttribute, el as renderComponent, es as createTransitionScope, et as $$Sun, eu as $$Moon, eo as renderScript, ev as $$Bars3, en as $$XMark, ep as defineScriptVars, ew as renderHead, ex as renderSlot, ey as $$SEO, ez as $$ClientRouter, eA as $$GoogleFontsOptimizer } from './vendor-CY-O8yK5.js';
+import { c as createAstro, a as createComponent, m as maybeRenderHead, s as spreadAttributes, r as renderTemplate, ek as addAttribute, el as renderComponent, es as createTransitionScope, et as $$Sun, eu as $$Moon, eo as renderScript, ev as $$Bars3, en as $$XMark, ep as defineScriptVars, ew as renderHead, ex as renderSlot, ey as $$SEO, ez as $$ClientRouter, eA as $$GoogleFontsOptimizer } from './vendor-Dy3KZ1wk.js';
 import 'piccolore';
 import 'clsx';
-/* empty css                        */
+/* empty css               */
 
 const $$Astro$3 = createAstro("https://hi2ma-bu4.github.io/");
 const $$CircleHalfStroke = createComponent(($$result, $$props, $$slots) => {
@@ -113,7 +113,7 @@ const $$Layout = createComponent(($$result, $$props, $$slots) => {
     metaArr.push({ name: "theme-color", content: pwaAssetsHead.themeColor.content });
   }
   const { title, description = SITE_DESCRIPTION } = Astro2.props;
-  return renderTemplate`<html lang="ja" prefix="og: https://ogp.me/ns#"> <head prefix="website: https://ogp.me/ns/website#">${renderComponent($$result, "SEO", $$SEO, { "charset": "UTF-8", "title": title, "titleDefault": "Page", "titleTemplate": `%s | ${SITE_TITLE}`, "description": description, "openGraph": {
+  return renderTemplate`<html lang="ja" prefix="og: https://ogp.me/ns#" data-overlayscrollbars-initialize> <head prefix="website: https://ogp.me/ns/website#">${renderComponent($$result, "SEO", $$SEO, { "charset": "UTF-8", "title": title, "titleDefault": "Page", "titleTemplate": `%s | ${SITE_TITLE}`, "description": description, "openGraph": {
     basic: {
       title,
       type: "website",
@@ -127,7 +127,7 @@ const $$Layout = createComponent(($$result, $$props, $$slots) => {
   }, "twitter": { creator: "@hi2ma_bu4", card: "summary" }, "extend": {
     link: linkArr,
     meta: metaArr
-  } })}${renderScript($$result, "C:/Users/snows/Documents/Program/js/bio/src/layouts/Layout.astro?astro&type=script&index=0&lang.ts")}${renderScript($$result, "C:/Users/snows/Documents/Program/js/bio/src/layouts/Layout.astro?astro&type=script&index=1&lang.ts")}${renderComponent($$result, "GoogleAnalytics", $$GoogleAnalytics, {})}${renderComponent($$result, "ClientRouter", $$ClientRouter, {})}<link rel="preconnect" href="https://fonts.googleapis.com">${renderComponent($$result, "GoogleFontsOptimizer", $$GoogleFontsOptimizer, { "url": "https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Noto+Sans+JP:wght@400;700&display=swap" })}${renderHead()}</head> <body class="min-h-screen flex flex-col"> <!-- Google Tag Manager (noscript) --> <noscript><iframe${addAttribute(`https://www.googletagmanager.com/ns.html?id=${GTAG_ID}`, "src")} height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript> <!-- End Google Tag Manager (noscript) --> ${renderComponent($$result, "Header", $$Header, {})} ${renderComponent($$result, "FloatingHeader", $$FloatingHeader, {})} <main class="grow w-full max-w-5xl mx-auto px-4 py-8 md:px-8" role="main"> ${renderSlot($$result, $$slots["default"])} </main> ${renderComponent($$result, "Footer", $$Footer, {})} ${renderScript($$result, "C:/Users/snows/Documents/Program/js/bio/src/layouts/Layout.astro?astro&type=script&index=2&lang.ts")} </body> </html>`;
+  } })}${renderScript($$result, "C:/Users/snows/Documents/Program/js/bio/src/layouts/Layout.astro?astro&type=script&index=0&lang.ts")}${renderScript($$result, "C:/Users/snows/Documents/Program/js/bio/src/layouts/Layout.astro?astro&type=script&index=1&lang.ts")}${renderComponent($$result, "GoogleAnalytics", $$GoogleAnalytics, {})}${renderComponent($$result, "ClientRouter", $$ClientRouter, {})}<link rel="preconnect" href="https://fonts.googleapis.com">${renderComponent($$result, "GoogleFontsOptimizer", $$GoogleFontsOptimizer, { "url": "https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Noto+Sans+JP:wght@400;700&display=swap" })}${renderHead()}</head> <body class="min-h-screen flex flex-col" data-overlayscrollbars-initialize> <!-- Google Tag Manager (noscript) --> <noscript><iframe${addAttribute(`https://www.googletagmanager.com/ns.html?id=${GTAG_ID}`, "src")} height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript> <!-- End Google Tag Manager (noscript) --> ${renderComponent($$result, "Header", $$Header, {})} ${renderComponent($$result, "FloatingHeader", $$FloatingHeader, {})} <main class="grow w-full max-w-5xl mx-auto px-4 py-8 md:px-8" role="main"> ${renderSlot($$result, $$slots["default"])} </main> ${renderComponent($$result, "Footer", $$Footer, {})} ${renderScript($$result, "C:/Users/snows/Documents/Program/js/bio/src/layouts/Layout.astro?astro&type=script&index=2&lang.ts")} ${renderScript($$result, "C:/Users/snows/Documents/Program/js/bio/src/layouts/Layout.astro?astro&type=script&index=3&lang.ts")} </body> </html>`;
 }, "C:/Users/snows/Documents/Program/js/bio/src/layouts/Layout.astro", void 0);
 
 export { $$Layout as $, BASE_DIR as B, CLASS_AUTO_IMG_ALT as C, __vite_glob_0_0 as _ };

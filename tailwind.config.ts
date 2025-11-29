@@ -5,6 +5,9 @@ const config: Config = {
 	theme: {
 		extend: {},
 	},
+	future: {
+		hoverOnlyWhenSupported: true,
+	},
 	plugins: [],
 };
 

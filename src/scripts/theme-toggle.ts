@@ -30,7 +30,7 @@ function updateTheme() {
 // バインド UI 要素
 function bindThemeUI() {
 	const checkThemeBtnClass = "theme-toggle-check";
-	const toggleButtons = document.querySelectorAll(`.theme-toggle:not(.${checkThemeBtnClass})`);
+	const toggleButtons = document.querySelectorAll<HTMLButtonElement>(`.theme-toggle:not(.${checkThemeBtnClass})`);
 	for (const toggleButton of toggleButtons) {
 		toggleButton.classList.add(checkThemeBtnClass);
 
@@ -77,7 +77,7 @@ function updateToggleButtonUI(btn: Element) {
 }
 
 function updateAllToggleButtonsUI() {
-	document.querySelectorAll<HTMLElement>(".theme-toggle").forEach((b) => updateToggleButtonUI(b));
+	document.querySelectorAll<HTMLButtonElement>(".theme-toggle").forEach((b) => updateToggleButtonUI(b));
 }
 
 function getNextTheme(current: string | null) {

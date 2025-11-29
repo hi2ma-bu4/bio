@@ -2,17 +2,20 @@
 import ArrowTopRightOnSquareIcon from "astro-heroicons/solid/ArrowTopRightOnSquare.astro";
 import XMarkIcon from "astro-heroicons/solid/XMark.astro";
 import { CLASS_AUTO_IMG_ALT } from "../config";
+import GitHub from "./icon/GitHub.astro";
 ---
 
-<dialog id="work-modal" class="p-0 max-w-3xl w-11/12 rounded-lg shadow-xl bg-white dark:bg-slate-800 backdrop:bg-black/50 backdrop:backdrop-blur-sm inset-0 m-auto h-fit">
-	<div id="modal-content" class="relative p-6 md:p-8">
-		<div class="text-center p-8">
-			<p>読み込み中...</p>
+<dialog id="work-modal" class="p-0 max-w-3xl w-11/12 rounded-lg shadow-xl bg-white dark:bg-slate-800 backdrop:bg-black/50 backdrop:backdrop-blur-sm inset-0 m-auto h-full overflow-visible">
+	<div id="work-modal-wrapper" class="w-full h-full">
+		<div id="modal-content" class="relative p-6 md:p-8">
+			<div class="text-center p-8">
+				<p>読み込み中...</p>
+			</div>
 		</div>
+		<button id="modal-close-button" class="absolute top-4 right-4 p-2 rounded-full hover:bg-slate-200 dark:hover:bg-slate-700" aria-label="閉じる">
+			<XMarkIcon class="w-6 h-6 text-slate-700 dark:text-slate-300" />
+		</button>
 	</div>
-	<button id="modal-close-button" class="absolute top-4 right-4 p-2 rounded-full hover:bg-slate-200 dark:hover:bg-slate-700" aria-label="閉じる">
-		<XMarkIcon class="w-6 h-6 text-slate-700 dark:text-slate-300" />
-	</button>
 </dialog>
 
 <template id="work-modal-template">
@@ -20,8 +23,13 @@ import { CLASS_AUTO_IMG_ALT } from "../config";
 	<img src="" decoding="async" fetchpriority="low" alt="" class={`w-full aspect-video object-cover rounded-md mb-6 ${CLASS_AUTO_IMG_ALT}`} data-template-id="image" />
 	<p class="text-slate-700 dark:text-slate-300 mb-6" data-template-id="long-description"></p>
 	<div class="flex flex-wrap gap-2 mb-6" data-template-id="tags"></div>
-	<a href="" target="_blank" rel="noopener noreferrer" class="hidden items-center gap-2 px-5 py-2 rounded-md text-base font-medium bg-sky-600 text-white hover:bg-sky-700 focus-visible:ring-sky-500" data-template-id="direct-link">
-		サイトへ移動
-		<ArrowTopRightOnSquareIcon class="w-4 h-4" />
-	</a>
+	<div class="flex flex-row gap-2">
+		<a href="" target="_blank" rel="noopener noreferrer" class="hidden items-center gap-2 px-5 py-2 rounded-md text-base font-medium bg-sky-600 text-white hover:bg-sky-700 focus-visible:ring-sky-500" data-template-id="direct-link">
+			サイトへ移動
+			<ArrowTopRightOnSquareIcon class="w-4 h-4" />
+		</a>
+		<a href="" target="_blank" rel="noopener noreferrer" class="hidden items-center gap-2 px-4 py-2 rounded-md text-sm font-medium bg-gray-800 text-white hover:bg-gray-900 focus-visible:ring-sky-500" data-template-id="github-link">
+			<GitHub class="w-5 h-5" />
+		</a>
+	</div>
 </template>

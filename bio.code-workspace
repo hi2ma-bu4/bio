@@ -16,14 +16,18 @@
 			"dasharray",
 			"dashoffset",
 			"focusables",
+			"GLSL",
 			"gstatic",
 			"heroicons",
 			"joda",
 			"lightningcss",
 			"linecap",
 			"Noto",
+			"overlayscrollbars",
 			"partytown",
-			"playform"
+			"playform",
+			"Synthesia",
+			"tonejs"
 		]
 	}
 }

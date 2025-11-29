@@ -1,18 +1,29 @@
 // 作品モーダルの制御（共通ユーティリティを使用）
+import { OverlayScrollbars } from "overlayscrollbars";
+
+import type { worksDataType } from "../pages/works.astro";
 import { addEscapeListener, createFocusTrap, lockBodyScroll, unlockBodyScroll } from "./ui-utils";
 
 function initWorkModal() {
 	const modal = document.getElementById("work-modal") as HTMLDialogElement | null;
-	const closeButton = document.getElementById("modal-close-button");
-	const modalContent = document.getElementById("modal-content");
-	const triggers = document.querySelectorAll(".work-modal-trigger");
+	const modalWrapper = document.getElementById("work-modal-wrapper") as HTMLDivElement | null;
+	const closeButton = document.getElementById("modal-close-button") as HTMLButtonElement | null;
+	const modalContent = document.getElementById("modal-content") as HTMLDivElement | null;
+	const triggers = document.querySelectorAll<HTMLButtonElement>(".work-modal-trigger");
 	const template = document.getElementById("work-modal-template") as HTMLTemplateElement | null;
 
-	if (!modal) return;
+	if (!modal || !modalWrapper) return;
 	if (!closeButton || !modalContent || !template || !window.WORK_ITEMS) {
 		console.warn("Modal elements, template, or WORK_ITEMS not found.");
 		return;
 	}
+
+	OverlayScrollbars(modalWrapper, {
+		showNativeOverlaidScrollbars: true,
+		scrollbars: {
+			clickScroll: true,
+		},
+	});
 
 	const workItems = window.WORK_ITEMS;
 	let lastFocusedElement: HTMLElement | null = null;
@@ -26,25 +37,25 @@ function initWorkModal() {
 			const workId = (trigger as HTMLElement).dataset.workId;
 			if (!workId) return;
 
-			const workData = workItems[workId];
+			const workData: worksDataType = workItems[workId];
 			if (workData && modal) {
 				// コンテンツの動的挿入
 				const content = template.content.cloneNode(true) as DocumentFragment;
 
-				const titleEl = content.querySelector('[data-template-id="title"]');
+				const titleEl = content.querySelector<HTMLHeadingElement>('[data-template-id="title"]');
 				if (titleEl) titleEl.textContent = workData.title;
 
-				const imageEl = content.querySelector('[data-template-id="image"]') as HTMLImageElement | null;
+				const imageEl = content.querySelector<HTMLImageElement>('[data-template-id="image"]') as HTMLImageElement | null;
 				if (imageEl) {
 					const absoluteImageUrl = new URL(workData.imageUrl, window.location.origin).href;
 					imageEl.src = absoluteImageUrl;
 					imageEl.alt = workData.title;
 				}
 
-				const longDescriptionEl = content.querySelector('[data-template-id="long-description"]');
-				if (longDescriptionEl) longDescriptionEl.textContent = workData.longDescription;
+				const longDescriptionEl = content.querySelector<HTMLParagraphElement>('[data-template-id="long-description"]');
+				if (longDescriptionEl) longDescriptionEl.innerText = workData.longDescription;
 
-				const tagsEl = content.querySelector('[data-template-id="tags"]');
+				const tagsEl = content.querySelector<HTMLDivElement>('[data-template-id="tags"]');
 				if (tagsEl) {
 					tagsEl.innerHTML = ""; // Clear existing tags
 					workData.tags.forEach((tag: string) => {
@@ -55,7 +66,7 @@ function initWorkModal() {
 					});
 				}
 
-				const directLinkEl = content.querySelector('[data-template-id="direct-link"]') as HTMLAnchorElement | null;
+				const directLinkEl = content.querySelector<HTMLAnchorElement>('[data-template-id="direct-link"]');
 				if (directLinkEl) {
 					if (workData.directLink) {
 						directLinkEl.href = workData.directLink;
@@ -64,6 +75,18 @@ function initWorkModal() {
 					} else {
 						directLinkEl.classList.add("hidden");
 						directLinkEl.classList.remove("inline-flex");
+					}
+				}
+
+				const githubLinkEl = content.querySelector<HTMLAnchorElement>('[data-template-id="github-link"]');
+				if (githubLinkEl) {
+					if (workData.githubLink) {
+						githubLinkEl.href = workData.githubLink;
+						githubLinkEl.classList.remove("hidden");
+						githubLinkEl.classList.add("inline-flex");
+					} else {
+						githubLinkEl.classList.add("hidden");
+						githubLinkEl.classList.remove("inline-flex");
 					}
 				}
 
@@ -80,6 +103,11 @@ function initWorkModal() {
 				focusTrap.activate();
 				focusTrap.focusFirst();
 				if (!removeEscape) removeEscape = addEscapeListener(() => modal.close());
+
+				modal.scroll({
+					top: 0,
+					behavior: "instant",
+				});
 			}
 		});
 	});

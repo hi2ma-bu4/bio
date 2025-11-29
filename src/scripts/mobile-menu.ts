@@ -5,7 +5,7 @@ function initMobileMenu() {
 	if (!checkbox) return;
 
 	// ハンバーガーのラベル（<label for="mobile-menu-toggle">）をキーボード操作可能にする
-	const toggleLabel = document.querySelector('label[for="mobile-menu-toggle"]') as HTMLElement | null;
+	const toggleLabel = document.querySelector<HTMLLabelElement>('label[for="mobile-menu-toggle"]') as HTMLElement | null;
 
 	const syncToggleAria = () => {
 		if (toggleLabel) toggleLabel.setAttribute("aria-pressed", String(checkbox!.checked));
@@ -32,7 +32,7 @@ function initMobileMenu() {
 		});
 	}
 
-	const closeButton = document.getElementById("mobile-menu-close-button");
+	const closeButton = document.getElementById("mobile-menu-close-button") as HTMLButtonElement | null;
 	if (closeButton) {
 		closeButton.addEventListener("click", () => {
 			closeMobileMenu();
@@ -64,13 +64,13 @@ function initMobileMenu() {
 
 	function attachLinkHandlers() {
 		// mobile メニュー内のリンクがクリックされたらメニューを閉じる
-		const links = document.querySelectorAll("#mobile-menu-toggle ~ nav a");
+		const links = document.querySelectorAll<HTMLAnchorElement>("#mobile-menu-toggle ~ nav a");
 		links.forEach((el) => el.addEventListener("click", closeMobileMenu));
 	}
 
 	// 非表示時にメニュー内のフォーカス可能要素をタブ順から除外する
 	function updateMenuFocus() {
-		const nav = document.querySelector("#mobile-menu-toggle ~ nav") as HTMLElement | null;
+		const nav = document.querySelector<HTMLElement>("#mobile-menu-toggle ~ nav");
 		const isOpen = checkbox!.checked;
 
 		if (nav) {
