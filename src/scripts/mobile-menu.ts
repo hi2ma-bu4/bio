@@ -1,4 +1,4 @@
-import { addEscapeListener, createFocusTrap, getFocusable, isActivationKey, isEnterKey, lockBodyScroll, unlockBodyScroll } from "./ui-utils";
+import { addEscapeListener, createFocusTrap, getFocusable, isActivationKey, isEnterKey, lockBodyScroll, unlockBodyScroll } from "./libs/ui-utils";
 
 function initMobileMenu() {
 	const checkbox = document.getElementById("mobile-menu-toggle") as HTMLInputElement | null;

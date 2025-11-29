@@ -2,7 +2,7 @@
 import { OverlayScrollbars } from "overlayscrollbars";
 
 import type { worksDataType } from "../pages/works.astro";
-import { addEscapeListener, createFocusTrap, lockBodyScroll, unlockBodyScroll } from "./ui-utils";
+import { addEscapeListener, createFocusTrap, lockBodyScroll, unlockBodyScroll } from "./libs/ui-utils";
 
 function initWorkModal() {
 	const modal = document.getElementById("work-modal") as HTMLDialogElement | null;

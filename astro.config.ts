@@ -15,6 +15,7 @@ import browserslist from "browserslist";
 import { browserslistToTargets } from "lightningcss";
 import type { PreRenderedAsset, PreRenderedChunk } from "rollup";
 import generateDarkIcons from "./dev/integrations/generateDarkIcons";
+import staticTsCompile from "./dev/integrations/staticTsCompile";
 
 const BASE_DIR = process.env.BASE_DIR ?? "/";
 const SITE_TITLE = process.env.SITE_TITLE ?? "snowsSite";
@@ -67,6 +68,11 @@ export default defineConfig({
 		generateDarkIcons({
 			darkSrc: "public/favicon-dark.svg",
 			outDir: "dist/",
+		}),
+		staticTsCompile({
+			srcDir: "src/static_script/",
+			outDir: "dist/assets/js/static/",
+			terserSetting: terserOpt,
 		}),
 		solidJs(),
 		AstroPWA({

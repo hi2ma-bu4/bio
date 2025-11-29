@@ -1,4 +1,4 @@
-import { getFocusable } from "./ui-utils";
+import { getFocusable } from "./libs/ui-utils";
 
 let lastScrollFunction: () => void;
 function initHeaderScroll() {
