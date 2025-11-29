@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2048 最善手計算ツール</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="dist/main.js" defer></script>
+</head>
+<body>
+
+    <h1>2048 最善手計算ツール</h1>
+    <div class="header">
+        <div class="score-container">
+            スコア: <span id="score">0</span>
+        </div>
+        <button id="calculate-btn">最善手を計算</button>
+        <button id="reset-btn">リセット</button>
+    </div>
+
+    <div class="main-content">
+        <div class="game-container">
+            <div class="grid-container" id="grid-container">
+            </div>
+        </div>
+
+        <div class="ai-recommendation">
+            <h2>AIの推奨手</h2>
+            <div class="recommendation-item">
+                <span>上 (Up)</span>
+                <span id="rec-up">-%</span>
+            </div>
+            <div class="recommendation-item">
+                <span>下 (Down)</span>
+                <span id="rec-down">-%</span>
+            </div>
+            <div class="recommendation-item">
+                <span>左 (Left)</span>
+                <span id="rec-left">-%</span>
+            </div>
+            <div class="recommendation-item">
+                <span>右 (Right)</span>
+                <span id="rec-right">-%</span>
+            </div>
+            <p id="ai-message" class="ai-message-text"></p>
+        </div>
+    </div>
+
+
+    <div class="settings-container">
+        <h2>設定</h2>
+        <div class="setting-item">
+            <label for="ai-algorithm-select">AIアルゴリズム:</label>
+            <select id="ai-algorithm-select">
+                <option value="heuristic">標準ヒューリスティック</option>
+                <option value="snake">蛇行パターン</option>
+                <option value="pattern">パターン評価探索</option>
+            </select>
+        </div>
+        <div class="setting-item">
+            <label for="search-depth-input">探索深度 (AIの賢さ):</label>
+            <input type="number" id="search-depth-input" value="6" min="1" max="30">
+        </div>
+        <div class="setting-item">
+            <label for="merge-limit-input">結合可能な上限タイル:</label>
+            <input type="number" id="merge-limit-input" value="2048" step="2">
+        </div>
+        <div class="setting-item">
+            <input type="checkbox" id="auto-add-tile-checkbox" checked>
+            <label for="auto-add-tile-checkbox">移動後に自動でタイルを配置する</label>
+        </div>
+        <div class="setting-item">
+            <input type="checkbox" id="realtime-checkbox">
+            <label for="realtime-checkbox">リアルタイムで推奨手を計算する</label>
+        </div>
+        <div class="setting-item ai-auto-play-container">
+            <button id="ai-auto-play-btn">AI自動操作を開始</button>
+            <label for="ai-interval-input">実行間隔(ms):</label>
+            <input type="number" id="ai-interval-input" value="0" min="0" step="10">
+        </div>
+    </div>
+</body>
+</html>
