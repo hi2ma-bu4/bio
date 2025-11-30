@@ -115,6 +115,8 @@ const { title, description = SITE_DESCRIPTION } = Astro.props;
 		<Header />
 		<FloatingHeader />
 
+		<div id="bg-particles" transition:persist></div>
+
 		<main class="grow w-full max-w-5xl mx-auto px-4 py-8 md:px-8" role="main">
 			<slot />
 		</main>
@@ -123,5 +125,6 @@ const { title, description = SITE_DESCRIPTION } = Astro.props;
 
 		<script src="../scripts/image-handler.ts"></script>
 		<script src="../scripts/overlay-scrollbars.ts"></script>
+		<script src=`../scripts/background-particles.ts`></script>
 	</body>
 </html>

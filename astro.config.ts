@@ -187,8 +187,7 @@ export default defineConfig({
 		publicDir: "public",
 		plugins: [tailwindVite() as any],
 		optimizeDeps: {
-			// COOP/COEP設定時に必要
-			exclude: ["@js-joda/core"],
+			exclude: [],
 		},
 		build: {
 			minify: true,
@@ -213,8 +212,18 @@ export default defineConfig({
 						return `assets/${name}-[hash][extname]`;
 					},
 					manualChunks(id) {
+						if (id.includes("@tsparticles")) {
+							return "@tsparticles";
+						}
 						if (id.includes("node_modules")) {
 							return "vendor";
+						}
+						if (id.includes("tsparticles")) {
+							const match = id.match(/tsparticles\/[^/]+/);
+							if (match) {
+								return `tsparticles-${match[0]}`;
+							}
+							return "tsparticles";
 						}
 					},
 					strict: true,

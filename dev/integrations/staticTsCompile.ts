@@ -1,8 +1,12 @@
 import type { AstroIntegration } from "astro";
 import esbuild from "esbuild";
-import { mkdir, readdir, writeFile } from "node:fs/promises";
+import fg from "fast-glob";
+import { createHash } from "node:crypto";
+import { mkdir, readdir, readFile, writeFile } from "node:fs/promises";
 import { extname, join, relative } from "node:path";
 import { minify, type MinifyOptions } from "terser";
+
+const manifest: Record<string, string> = {};
 
 export default function compileAndMinifyTS({ srcDir, outDir = "dist/assets/static/", terserSetting }: { srcDir: string; outDir?: string; terserSetting?: MinifyOptions }): AstroIntegration {
 	return {
@@ -10,6 +14,9 @@ export default function compileAndMinifyTS({ srcDir, outDir = "dist/assets/stati
 		hooks: {
 			"astro:build:generated": async (ctx) => {
 				ctx.logger.info("TSコンパイル＆Terser圧縮開始…");
+
+				// リセット
+				Object.keys(manifest).forEach((k) => delete manifest[k]);
 
 				await mkdir(outDir, { recursive: true });
 
@@ -50,9 +57,14 @@ export default function compileAndMinifyTS({ srcDir, outDir = "dist/assets/stati
 								return;
 							}
 
-							// 3. 出力
-							const rel = relative(srcDir, file); // ← これで絶対安全
-							const outPath = join(outDir, rel.replace(/\.ts$/, ".js"));
+							// 3. 圧縮後コードのハッシュ生成
+							const hash = createHash("sha256").update(minified.code).digest("hex").slice(0, 10);
+
+							// 4. 出力ファイル名へハッシュ付け
+							const rel = relative(srcDir, file).replace(/\.ts$/, "");
+							const name = `${rel}-${hash}.js`;
+							const outPath = join(outDir, name);
+							manifest[rel + ".js"] = name;
 							await writeFile(outPath, minified.code, "utf8");
 
 							ctx.logger.info(`✔ 出力: ${outPath}`);
@@ -62,6 +74,21 @@ export default function compileAndMinifyTS({ srcDir, outDir = "dist/assets/stati
 
 				await Promise.all(tasks);
 				ctx.logger.info("✨ TSコンパイル＆Terser圧縮完了！");
+			},
+			"astro:build:done": async ({ dir, logger }) => {
+				// HTML を全部スキャンして置換
+				const htmlFiles = await fg("dist/**/*.html");
+
+				for (const htmlFile of htmlFiles) {
+					let html = await readFile(htmlFile, "utf8");
+
+					for (const [original, hashed] of Object.entries(manifest)) {
+						html = html.replace(new RegExp(original, "g"), hashed);
+					}
+
+					await writeFile(htmlFile, html, "utf8");
+					logger.info(`🔗 HTML 書き換え: ${htmlFile}`);
+				}
 			},
 		},
 	};

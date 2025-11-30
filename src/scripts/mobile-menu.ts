@@ -132,3 +132,10 @@ if (document.readyState === "loading") {
 } else {
 	initMobileMenu();
 }
+
+window.addEventListener("mousedown", (e) => {
+	// e.detail >=2 でダブルクリック以上
+	if (e.detail >= 2) {
+		e.preventDefault();
+	}
+});

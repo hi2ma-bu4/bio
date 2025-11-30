@@ -19,6 +19,7 @@
 			"GLSL",
 			"gstatic",
 			"heroicons",
+			"isbot",
 			"joda",
 			"lightningcss",
 			"linecap",
@@ -26,6 +27,8 @@
 			"overlayscrollbars",
 			"partytown",
 			"playform",
+			"sakura",
+			"svgs",
 			"Synthesia",
 			"tonejs"
 		]

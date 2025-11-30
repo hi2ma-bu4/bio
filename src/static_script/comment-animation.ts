@@ -1,4 +1,5 @@
-// DomAnimator.ts (または DomAnimator.js にコンパイルされたファイル) からインポート
+import { isbot } from "isbot";
+import { getQueryParams } from "../scripts/libs/query";
 import { DomAnimator } from "./libs/dom-animator";
 
 function slidingWindowsCircular(s: string, N: number, M: number): string[] {
@@ -55,10 +56,25 @@ function init() {
 	if (timerId) {
 		stop();
 	}
+
+	const params = getQueryParams(["egg"]);
+	if (params.egg && !Array.isArray(params.egg)) {
+		switch (params.egg.toLowerCase()) {
+			case "false":
+			case "0":
+			case "off":
+				return;
+		}
+	}
+
+	if (/android|iphone|ipad|mobile/i.test(navigator.userAgent)) {
+		return;
+	}
+
 	DomAnimator.animate(500);
 	timerId = setTimeout(
 		stop,
-		1000 * 60 * 10 // 10分後に停止
+		1000 * 60 * 5 // 5分後に停止
 	);
 }
 
@@ -67,5 +83,8 @@ function stop() {
 	DomAnimator.stop();
 }
 
-init();
-document.addEventListener("astro:before-preparation", stop);
+// クローラー以外の場合のみ動作
+if (!isbot(navigator.userAgent)) {
+	init();
+	document.addEventListener("astro:before-preparation", stop);
+}
