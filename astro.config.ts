@@ -14,6 +14,7 @@ import htmlMinifierNext from "astro-html-minifier-next";
 import browserslist from "browserslist";
 import { browserslistToTargets } from "lightningcss";
 import type { PreRenderedAsset, PreRenderedChunk } from "rollup";
+import { type MinifyOptions } from "terser";
 import generateDarkIcons from "./dev/integrations/generateDarkIcons";
 import staticTsCompile from "./dev/integrations/staticTsCompile";
 
@@ -25,13 +26,14 @@ const envFieldSetting = {
 	access: "public",
 } as const;
 
-const terserOpt = {
+const terserOpt: MinifyOptions = {
 	ecma: 2020,
 	module: true,
 	compress: {
 		ecma: 2020,
 		inline: 3,
-		passes: 3,
+		passes: 5,
+		hoist_props: true,
 		arrows: true,
 		booleans: false,
 		comparisons: true,
@@ -39,6 +41,8 @@ const terserOpt = {
 		dead_code: true,
 		drop_console: false,
 		drop_debugger: true,
+		side_effects: true,
+		keep_infinity: true,
 	},
 	mangle: {
 		toplevel: false,
@@ -46,6 +50,7 @@ const terserOpt = {
 	},
 	format: {
 		comments: "some",
+		safari10: true,
 	},
 } as const;
 
