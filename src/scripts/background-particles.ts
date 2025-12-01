@@ -7,6 +7,7 @@ import { themeChangeLock, updateAllToggleButtonsUI, type themeType } from "./lib
 
 async function initParticles() {
 	let preset: string = "";
+	let pageThemeClass: string = "";
 
 	const params = getQueryParams(["effect"]);
 	if (params.effect) {
@@ -24,13 +25,25 @@ async function initParticles() {
 			case "autumn-leaves":
 				preset = nowYearlyEvent;
 				break;
+			case "valentine":
+				preset = "heart-bubble";
+				break;
+			case "halloween":
+				break;
 			case "christmas":
 				preset = "snow";
+				break;
 		}
 	}
 
 	let theme: themeType | null = null;
 	switch (preset) {
+		case "heart-bubble": {
+			const { loadHeartBubblePreset } = await import("./libs/tsparticles/heart-bubble");
+			await loadHeartBubblePreset(tsParticles);
+			pageThemeClass = "theme-pink";
+			break;
+		}
 		case "sakura": {
 			const { loadSakuraPreset } = await import("./libs/tsparticles/sakura");
 			await loadSakuraPreset(tsParticles);
@@ -45,6 +58,7 @@ async function initParticles() {
 		case "autumn-leaves": {
 			const { loadAutumnLeavesPreset } = await import("./libs/tsparticles/autumn-leaves");
 			await loadAutumnLeavesPreset(tsParticles);
+			pageThemeClass = "theme-amber";
 			break;
 		}
 		case "snow":
@@ -63,6 +77,12 @@ async function initParticles() {
 	if (theme) {
 		themeChangeLock(true, theme);
 		updateAllToggleButtonsUI();
+	}
+	if (pageThemeClass) {
+		document.body.classList.add(pageThemeClass);
+		document.addEventListener("astro:before-swap", (event) => {
+			event.newDocument.body.classList.add(pageThemeClass);
+		});
 	}
 
 	await tsParticles.load({

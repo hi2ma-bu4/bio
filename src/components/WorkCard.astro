@@ -27,7 +27,7 @@ const isCardFooter = directLink || githubLink;
 			<p class="text-slate-600 dark:text-slate-400 text-sm mb-4 line-clamp-2">{description}</p>
 
 			<div class="flex flex-wrap gap-2">
-				{tags.map((tag) => <span class="text-xs font-medium px-2 py-0.5 rounded-full bg-sky-100 text-sky-800 dark:bg-sky-900 dark:text-sky-200">{tag}</span>)}
+				{tags.map((tag) => <span class="text-xs font-medium px-2 py-0.5 rounded-full bg-primary-100 text-primary-800 dark:bg-primary-900 dark:text-primary-200">{tag}</span>)}
 			</div>
 		</div>
 	</button>
@@ -36,13 +36,13 @@ const isCardFooter = directLink || githubLink;
 		isCardFooter && (
 			<div class="p-4 md:p-6 pt-0 md:pt-0 flex flex-row gap-2">
 				{directLink && (
-					<a href={directLink} target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium bg-sky-600 text-white hover:bg-sky-700 focus-visible:ring-sky-500" onclick="event.stopPropagation()" aria-label={`${title}のサイトへ移動`}>
+					<a href={directLink} target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium bg-primary-600 text-white hover:bg-primary-700 focus-visible:ring-primary-500" onclick="event.stopPropagation()" aria-label={`${title}のサイトへ移動`}>
 						サイトへ移動
 						<ArrowTopRightOnSquareIcon class="w-4 h-4" />
 					</a>
 				)}
 				{githubLink && (
-					<a href={githubLink} target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium bg-gray-800 text-white hover:bg-gray-900 dark:text-gray-900 dark:bg-gray-400 dark:hover:bg-gray-300 focus-visible:ring-sky-500" onclick="event.stopPropagation()" aria-label={`${title}のGitHubへ移動`}>
+					<a href={githubLink} target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium bg-gray-800 text-white hover:bg-gray-900 dark:text-gray-900 dark:bg-gray-400 dark:hover:bg-gray-300 focus-visible:ring-primary-500" onclick="event.stopPropagation()" aria-label={`${title}のGitHubへ移動`}>
 						<GitHub class="w-5 h-5" />
 					</a>
 				)}

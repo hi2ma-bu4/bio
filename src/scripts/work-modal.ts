@@ -61,7 +61,7 @@ function initWorkModal() {
 					tagsEl.innerHTML = ""; // Clear existing tags
 					workData.tags.forEach((tag: string) => {
 						const tagSpan = document.createElement("span");
-						tagSpan.className = "text-xs font-medium px-2 py-0.5 rounded-full bg-sky-100 text-sky-800 dark:bg-sky-900 dark:text-sky-200";
+						tagSpan.className = "text-xs font-medium px-2 py-0.5 rounded-full bg-primary-100 text-primary-800 dark:bg-primary-900 dark:text-primary-200";
 						tagSpan.textContent = tag;
 						tagsEl.appendChild(tagSpan);
 					});

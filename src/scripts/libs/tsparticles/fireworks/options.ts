@@ -99,7 +99,7 @@ export function initOptions(engine: Engine): ISourceOptions {
 				delay: 0.1,
 			},
 			rate: {
-				delay: 0.1,
+				delay: 0.3,
 				quantity: 1,
 			},
 			size: {

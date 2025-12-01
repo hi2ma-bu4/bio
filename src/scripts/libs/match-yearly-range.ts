@@ -26,7 +26,7 @@ export function matchYearlyRange<T extends string>(target: Date, ranges: readonl
 
 const yearlyRanges = [
 	{
-		id: "valentine", // 未使用
+		id: "valentine",
 		start: { month: 2, day: 13 },
 		end: { month: 2, day: 15 },
 	},

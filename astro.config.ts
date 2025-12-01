@@ -190,7 +190,13 @@ export default defineConfig({
 	],
 	vite: {
 		publicDir: "public",
-		plugins: [tailwindVite() as any],
+		plugins: [
+			tailwindVite({
+				optimize: {
+					minify: true,
+				},
+			}) as any,
+		],
 		optimizeDeps: {
 			exclude: [],
 		},
