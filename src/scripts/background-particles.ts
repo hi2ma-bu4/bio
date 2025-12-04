@@ -26,7 +26,19 @@ async function initParticles() {
 				preset = nowYearlyEvent;
 				break;
 			case "valentine":
+			case "white-day":
 				preset = "heart-bubble";
+				break;
+			case "april-fool":
+				break;
+			case "golden-week":
+				break;
+			case "rainy-season":
+				preset = "rain";
+				break;
+			case "star-festival":
+				break;
+			case "harvest-moon":
 				break;
 			case "halloween":
 				break;
@@ -47,6 +59,12 @@ async function initParticles() {
 		case "sakura": {
 			const { loadSakuraPreset } = await import("./libs/tsparticles/sakura");
 			await loadSakuraPreset(tsParticles);
+			break;
+		}
+		case "rain": {
+			const { loadRainPreset } = await import("./libs/tsparticles/rain");
+			await loadRainPreset(tsParticles);
+			theme = "dark";
 			break;
 		}
 		case "fireworks": {

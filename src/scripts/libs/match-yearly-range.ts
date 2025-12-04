@@ -27,22 +27,62 @@ export function matchYearlyRange<T extends string>(target: Date, ranges: readonl
 const yearlyRanges = [
 	{
 		id: "valentine",
-		start: { month: 2, day: 13 },
-		end: { month: 2, day: 15 },
+		start: { month: 2, day: 14 },
+		end: { month: 2, day: 14 },
+	},
+	{
+		id: "white-day",
+		start: { month: 3, day: 14 },
+		end: { month: 3, day: 14 },
 	},
 	{
 		id: "sakura",
 		start: { month: 3, day: 21 },
+		end: { month: 3, day: 31 },
+	},
+	{
+		id: "april-fool",
+		start: { month: 4, day: 1 },
+		end: { month: 4, day: 1 },
+	},
+	{
+		id: "sakura",
+		start: { month: 4, day: 2 },
 		end: { month: 4, day: 10 },
+	},
+	{
+		id: "golden-week",
+		start: { month: 4, day: 29 },
+		end: { month: 5, day: 6 },
+	},
+	{
+		id: "rainy-season",
+		start: { month: 6, day: 11 },
+		end: { month: 7, day: 6 },
+	},
+	{
+		id: "star-festival",
+		start: { month: 7, day: 7 },
+		end: { month: 7, day: 7 },
 	},
 	{
 		id: "fireworks",
 		start: { month: 7, day: 21 },
+		end: { month: 8, day: 14 },
+	},
+	{
+		id: "harvest-moon",
+		start: { month: 8, day: 15 },
+		end: { month: 8, day: 15 },
+	},
+	{
+		id: "fireworks",
+		start: { month: 8, day: 16 },
 		end: { month: 8, day: 31 },
 	},
 	{
-		id: "halloween", // 未使用
-		start: { month: 10, day: 28 },
+		id: "halloween",
+		start: { month: 10, day: 31 },
 		end: { month: 10, day: 31 },
 	},
 	{
