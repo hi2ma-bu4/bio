@@ -236,6 +236,9 @@ export default defineConfig({
 							}
 							return "tsparticles";
 						}
+						if (id.includes("pseudo-debugkit")) {
+							return "pseudo-debugkit";
+						}
 					},
 					strict: true,
 				},

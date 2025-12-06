@@ -5,6 +5,9 @@ import { nowYearlyEvent } from "./libs/match-yearly-range";
 import { getQueryParams } from "./libs/query";
 import { themeChangeLock, updateAllToggleButtonsUI, type themeType } from "./libs/theme-utils";
 
+const stopFunc: (() => void)[] = [];
+const updateFunc: (() => void)[] = [];
+
 async function initParticles() {
 	let preset: string = "";
 	let pageThemeClass: string = "";
@@ -22,6 +25,7 @@ async function initParticles() {
 		switch (nowYearlyEvent) {
 			case "sakura":
 			case "fireworks":
+			case "programmers-day":
 			case "autumn-leaves":
 				preset = nowYearlyEvent;
 				break;
@@ -49,6 +53,7 @@ async function initParticles() {
 	}
 
 	let theme: themeType | null = null;
+	let isParticles: boolean = true;
 	switch (preset) {
 		case "heart-bubble": {
 			const { loadHeartBubblePreset } = await import("./libs/tsparticles/heart-bubble");
@@ -71,6 +76,29 @@ async function initParticles() {
 			const { loadFireworksPreset } = await import("./libs/tsparticles/fireworks");
 			await loadFireworksPreset(tsParticles);
 			theme = "dark";
+			break;
+		}
+		case "programmers-day": {
+			// 特殊動作
+			isParticles = false;
+			theme = "light";
+			const { PseudoDebugKit } = await import("./libs/pseudo-debugkit/src/index");
+			const pseudoDebugKit = new PseudoDebugKit({
+				panel: false,
+				shortcuts: true,
+			});
+			function init() {
+				pseudoDebugKit.init();
+				pseudoDebugKit.enable();
+				pseudoDebugKit.setWire(true);
+				pseudoDebugKit.setHighlight(true);
+			}
+			init();
+			stopFunc.push(() => {
+				pseudoDebugKit.disable();
+				pseudoDebugKit.destroy();
+			});
+			updateFunc.push(init);
 			break;
 		}
 		case "autumn-leaves": {
@@ -103,12 +131,22 @@ async function initParticles() {
 		});
 	}
 
-	await tsParticles.load({
-		id: "bg-particles",
-		options: {
-			preset,
-		},
-	});
+	if (isParticles) {
+		await tsParticles.load({
+			id: "bg-particles",
+			options: {
+				preset,
+			},
+		});
+	}
+}
+
+function stop() {
+	stopFunc.forEach((fn) => fn?.());
+}
+
+function update() {
+	updateFunc.forEach((fn) => fn?.());
 }
 
 // クローラー以外の場合のみ動作
@@ -118,4 +156,6 @@ if (!isbot(navigator.userAgent)) {
 	} else {
 		initParticles();
 	}
+	document.addEventListener("astro:before-preparation", stop);
+	document.addEventListener("astro:after-swap", update);
 }

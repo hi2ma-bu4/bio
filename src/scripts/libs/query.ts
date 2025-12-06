@@ -18,3 +18,16 @@ export function getQueryParams<T extends string = string>(keys?: T[]): Record<T,
 
 	return result;
 }
+
+export function paramToBoolean(param: string | string[]): boolean {
+	if (!param) return false;
+	if (!Array.isArray(param)) {
+		switch (param.toLowerCase()) {
+			case "false":
+			case "0":
+			case "off":
+				return false;
+		}
+	}
+	return true;
+}

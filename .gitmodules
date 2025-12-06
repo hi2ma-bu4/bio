@@ -1,0 +1,3 @@
+[submodule "src/scripts/libs/pseudo-debugkit"]
+	path = src/scripts/libs/pseudo-debugkit
+	url = git@github.com:hi2ma-bu4/PseudoDebugKit.git

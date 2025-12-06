@@ -1,5 +1,6 @@
 import { isbot } from "isbot";
-import { getQueryParams } from "../scripts/libs/query";
+
+import { getQueryParams, paramToBoolean } from "../scripts/libs/query";
 import { DomAnimator } from "./libs/dom-animator";
 
 function slidingWindowsCircular(s: string, N: number, M: number): string[] {
@@ -40,13 +41,13 @@ const base = `                                                                  
 Mb     dM   MM    MM  YA.   ,A9     VVV    VVV    L.   I8     Mb     dM   MM    MM    YM.    ,
 P"Ybmmd"  .JMML  JMML. \`Ybmd9'       W      W     M9mmmP'     P"Ybmmd"  .JMML.  \`Mbmo  \`Mbmmd'`;
 
-const maxChar = 60;
+const maxChar = 40;
 const rowArr = base.split("\n");
 const maxRowLength = Math.max(...rowArr.map((s) => s.length));
 const frameData = transpose(
 	rowArr.map((s) =>
 		//
-		slidingWindowsCircular(s.padEnd(maxRowLength, " "), maxChar, 4)
+		slidingWindowsCircular(s.padEnd(maxRowLength, " "), maxChar, 5)
 	)
 );
 frameData.forEach((f) => DomAnimator.addFrame(f));
@@ -58,13 +59,8 @@ function init() {
 	}
 
 	const params = getQueryParams(["egg"]);
-	if (params.egg && !Array.isArray(params.egg)) {
-		switch (params.egg.toLowerCase()) {
-			case "false":
-			case "0":
-			case "off":
-				return;
-		}
+	if (!paramToBoolean(params.egg)) {
+		return;
 	}
 
 	if (/android|iphone|ipad|mobile/i.test(navigator.userAgent)) {
