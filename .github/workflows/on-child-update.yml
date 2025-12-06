@@ -8,7 +8,7 @@ permissions:
     contents: write
 
 concurrency:
-    group: "pages"
+    group: "child-pages"
     cancel-in-progress: true
 
 jobs:
