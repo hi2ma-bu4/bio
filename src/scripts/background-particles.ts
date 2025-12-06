@@ -3,6 +3,7 @@ import { isbot } from "isbot";
 
 import { nowYearlyEvent } from "./libs/match-yearly-range";
 import { getQueryParams } from "./libs/query";
+import { styledLog, type LogPart } from "./libs/styledConsole";
 import { themeChangeLock, updateAllToggleButtonsUI, type themeType } from "./libs/theme-utils";
 
 const stopFunc: (() => void)[] = [];
@@ -142,6 +143,21 @@ async function initParticles() {
 	}
 }
 
+function initLog() {
+	const logs: LogPart[] = [
+		{ text: "SnowsSite\n", style: "font-weight: bold; font-size: 20px;", mode: "gradient", gradientFrom: "#00a6f4", gradientTo: "#4f39f6" },
+		{ text: "Hi👋", style: "color: #c3cfe2;font-weight: bold; font-size: 16px;" },
+		{ text: "何か探し物ですか？\n", style: "font-weight: bold; font-size: 16px;", mode: "gradient", gradientFrom: "#96e6a1", gradientTo: "#84fab0" },
+		{ text: "一緒にこちらもいかがでしょうか。\n", style: "font-style: italic; font-size: 14px;", mode: "rainbow" },
+		{ text: "https://github.com/hi2ma-bu4/bio", style: "text-decoration: underline; font-size: 12px;" },
+	];
+	function init() {
+		styledLog(logs);
+	}
+	init();
+	updateFunc.push(init);
+}
+
 function stop() {
 	stopFunc.forEach((fn) => fn?.());
 }
@@ -157,6 +173,7 @@ if (!isbot(navigator.userAgent)) {
 	} else {
 		initParticles();
 	}
+	initLog();
 	document.addEventListener("astro:before-preparation", stop);
 	document.addEventListener("astro:after-swap", update);
 }
