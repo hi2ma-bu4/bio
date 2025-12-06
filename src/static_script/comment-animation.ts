@@ -59,7 +59,7 @@ function init() {
 	}
 
 	const params = getQueryParams(["egg"]);
-	if (!paramToBoolean(params.egg)) {
+	if (params.egg && !paramToBoolean(params.egg)) {
 		return;
 	}
 

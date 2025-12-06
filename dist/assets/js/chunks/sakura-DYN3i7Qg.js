@@ -1,4 +1,4 @@
-import{O as i,M as s,l,a as o,b as r,c as n,d}from"./@tsparticles-DCGklebE.js";const m=[`<svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+import{O as i,M as s,l,a as o,b as r,c as n,d}from"./@tsparticles-CTsohXOu.js";const m=[`<svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
 			<path fill="#E579A5" stroke="null" d="M461.38,349.439c-18.413-1.532-29.271,2.129-27.615,19.949c1.653,17.822,17.944,34.58,23.494,46.737
 				c5.548,12.157,7.676,41.426-23.367,33.995c-31.043-7.428-164.501,38.943-262.862-66.648C55.813,259.791-14.913,91.606,2.671,61.979
 				c8.515-14.35,228.643,12.236,314.085,40.676C434.439,141.826,477.889,260.68,505.638,321.46

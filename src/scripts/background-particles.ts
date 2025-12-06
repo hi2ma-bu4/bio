@@ -1,4 +1,4 @@
-import { tsParticles } from "@tsparticles/engine";
+import type { Engine } from "@tsparticles/engine";
 import { isbot } from "isbot";
 
 import { nowYearlyEvent } from "./libs/match-yearly-range";
@@ -53,34 +53,33 @@ async function initParticles() {
 	}
 
 	let theme: themeType | null = null;
-	let isParticles: boolean = true;
+	let loadPreset: ((engine: Engine, refresh?: boolean) => Promise<void>) | null = null;
 	switch (preset) {
 		case "heart-bubble": {
 			const { loadHeartBubblePreset } = await import("./libs/tsparticles/heart-bubble");
-			await loadHeartBubblePreset(tsParticles);
+			loadPreset = loadHeartBubblePreset;
 			pageThemeClass = "theme-pink";
 			break;
 		}
 		case "sakura": {
 			const { loadSakuraPreset } = await import("./libs/tsparticles/sakura");
-			await loadSakuraPreset(tsParticles);
+			loadPreset = loadSakuraPreset;
 			break;
 		}
 		case "rain": {
 			const { loadRainPreset } = await import("./libs/tsparticles/rain");
-			await loadRainPreset(tsParticles);
+			loadPreset = loadRainPreset;
 			theme = "dark";
 			break;
 		}
 		case "fireworks": {
 			const { loadFireworksPreset } = await import("./libs/tsparticles/fireworks");
-			await loadFireworksPreset(tsParticles);
+			loadPreset = loadFireworksPreset;
 			theme = "dark";
 			break;
 		}
 		case "programmers-day": {
 			// 特殊動作
-			isParticles = false;
 			theme = "light";
 			const { PseudoDebugKit } = await import("./libs/pseudo-debugkit/src/index");
 			const pseudoDebugKit = new PseudoDebugKit({
@@ -103,13 +102,13 @@ async function initParticles() {
 		}
 		case "autumn-leaves": {
 			const { loadAutumnLeavesPreset } = await import("./libs/tsparticles/autumn-leaves");
-			await loadAutumnLeavesPreset(tsParticles);
+			loadPreset = loadAutumnLeavesPreset;
 			pageThemeClass = "theme-amber";
 			break;
 		}
 		case "snow":
 			const { loadSnowPreset } = await import("./libs/tsparticles/snow");
-			await loadSnowPreset(tsParticles);
+			loadPreset = loadSnowPreset;
 			theme = "dark";
 			break;
 		default:
@@ -131,7 +130,9 @@ async function initParticles() {
 		});
 	}
 
-	if (isParticles) {
+	if (loadPreset) {
+		const { tsParticles } = await import("@tsparticles/engine");
+		await loadPreset(tsParticles);
 		await tsParticles.load({
 			id: "bg-particles",
 			options: {
