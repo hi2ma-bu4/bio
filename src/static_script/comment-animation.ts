@@ -63,10 +63,6 @@ function init() {
 		return;
 	}
 
-	if (/android|iphone|ipad|mobile/i.test(navigator.userAgent)) {
-		return;
-	}
-
 	DomAnimator.animate(500);
 	timerId = setTimeout(
 		stop,
@@ -80,7 +76,7 @@ function stop() {
 }
 
 // クローラー以外の場合のみ動作
-if (!isbot(navigator.userAgent)) {
+if (!isbot(navigator.userAgent) && !/android|iphone|ipad|mobile/i.test(navigator.userAgent)) {
 	init();
 	document.addEventListener("astro:before-preparation", stop);
 }

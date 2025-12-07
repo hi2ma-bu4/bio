@@ -35,6 +35,7 @@ async function initParticles() {
 				preset = "heart-bubble";
 				break;
 			case "april-fool":
+				preset = "gravity";
 				break;
 			case "golden-week":
 				break;
@@ -67,6 +68,11 @@ async function initParticles() {
 			loadPreset = loadSakuraPreset;
 			break;
 		}
+		case "gravity": {
+			const { initializePhysicsEngine } = await import("./libs/gravity");
+			initializePhysicsEngine();
+			break;
+		}
 		case "rain": {
 			const { loadRainPreset } = await import("./libs/tsparticles/rain");
 			loadPreset = loadRainPreset;
@@ -82,7 +88,7 @@ async function initParticles() {
 		case "programmers-day": {
 			// 特殊動作
 			theme = "light";
-			const { PseudoDebugKit } = await import("./libs/pseudo-debugkit/src/index");
+			const { PseudoDebugKit } = await import("./libs/pseudo-debugkit/src/PseudoDebugKit");
 			const pseudoDebugKit = new PseudoDebugKit({
 				panel: false,
 				shortcuts: true,

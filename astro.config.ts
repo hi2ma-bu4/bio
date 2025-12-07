@@ -56,6 +56,19 @@ const terserOpt: MinifyOptions = {
 
 const browserTargets = browserslistToTargets(browserslist("> 3% in JP"));
 
+const PREFIX_RULES = [
+	{ keyword: "@tsparticles", name: "@tsparticles" },
+	{ keyword: "matter-js", name: "matter-js" },
+	{ keyword: "node_modules", name: "vendor" },
+	{ keyword: "pseudo-debugkit", name: "pseudo-debugkit" },
+	{ keyword: "gravity", name: "gravity" },
+];
+
+const DYNAMIC_RULES = [
+	{ keyword: "tsparticles", prefix: "tsparticles" },
+	{ keyword: "key-command", prefix: "key-command" },
+];
+
 export default defineConfig({
 	output: "static",
 	site: process.env.SITE_URL,
@@ -223,21 +236,17 @@ export default defineConfig({
 						return `assets/${name}-[hash][extname]`;
 					},
 					manualChunks(id) {
-						if (id.includes("@tsparticles")) {
-							return "@tsparticles";
+						// 単純マッチ
+						for (const rule of PREFIX_RULES) {
+							if (id.includes(rule.keyword)) return rule.name;
 						}
-						if (id.includes("node_modules")) {
-							return "vendor";
-						}
-						if (id.includes("tsparticles")) {
-							const match = id.match(/tsparticles\/[^/]+/);
-							if (match) {
-								return `tsparticles-${match[0]}`;
+
+						// 動的マッチ
+						for (const rule of DYNAMIC_RULES) {
+							if (id.includes(rule.keyword)) {
+								const match = id.match(new RegExp(`${rule.keyword}/[^/]+`));
+								return match ? `${rule.prefix}-${match[0]}` : rule.prefix;
 							}
-							return "tsparticles";
-						}
-						if (id.includes("pseudo-debugkit")) {
-							return "pseudo-debugkit";
 						}
 					},
 					strict: true,
