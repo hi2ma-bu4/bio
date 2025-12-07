@@ -91,10 +91,20 @@ function initHeaderScroll() {
 	window.addEventListener("scroll", lastScrollFunction, { passive: true });
 }
 
+function init() {
+	initHeaderScroll();
+	if (Math.random() < 0.01) {
+		const logos = document.querySelectorAll<HTMLAnchorElement>("#logo,#floating-logo");
+		for (const logo of Array.from(logos)) {
+			logo.style.transform = "rotateY(180deg)";
+		}
+	}
+}
+
 // DOMの読み込み完了を待ってから実行
 document.addEventListener("astro:after-swap", initHeaderScroll);
 if (document.readyState === "loading") {
-	document.addEventListener("DOMContentLoaded", initHeaderScroll);
+	document.addEventListener("DOMContentLoaded", init);
 } else {
-	initHeaderScroll();
+	init();
 }
