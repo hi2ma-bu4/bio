@@ -65,6 +65,8 @@ function initWorkModal() {
 							urlLi.className = "mb-2 list-none";
 							const urlAnchor = document.createElement("a");
 							urlAnchor.className = "text-primary-600 hover:text-primary-800 dark:text-primary-400 dark:hover:text-primary-200 underline break-all";
+							urlAnchor.target = "_blank";
+							urlAnchor.rel = "noopener noreferrer";
 							urlAnchor.href = link;
 							urlAnchor.textContent = urlAnchor.href;
 							urlLi.appendChild(urlAnchor);
