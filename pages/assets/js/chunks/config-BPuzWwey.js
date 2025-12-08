@@ -1,0 +1,1 @@
+const a="auto-img-alt",A="back-canvas-mini";export{a as C,A as I};
