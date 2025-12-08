@@ -1,0 +1,195 @@
+
+:root {
+	--font: "Helvetica Neue",Arial,"Hiragino Kaku Gothic ProN","Hiragino Sans",Meiryo,sans-serif;
+}
+
+
+html, body {
+	font-family: var(--font);
+	height: 100%;
+	margin: 0;
+	padding: 0;
+	width: 100%;
+}
+
+body {
+	background-color: #fafafa;
+}
+
+p {
+	margin: 0;
+}
+
+h4 {
+	margin: 0;
+	margin-top: 1em;
+}
+
+textarea {
+	box-sizing: border-box;
+	font-family: var(--font);
+	font-size: 1.1em;
+	height: 20em;
+	margin: 0;
+	max-height: 30em;
+	min-height: 8em;
+	padding: 0;
+	resize: vertical;
+	width: 100%;
+}
+
+select {
+	box-sizing: border-box;
+	width: 100%;
+}
+
+summary {
+	font-size: 1.2em;
+	font-weight: bold;
+}
+
+details {
+	margin-bottom: 1em;
+	width: 100%;
+}
+
+table {
+	border: 1px solid #ddd;
+	border-collapse: collapse;
+	box-sizing: border-box;
+	margin-top: 1em;
+	table-layout: fixed;
+	width: 100%;
+}
+
+th, td {
+	border: 1px solid #ddd;
+	padding: 8px;
+	text-align: center;
+}
+
+:is(th,td):nth-child(1) {
+	padding: 0;
+	width: 1.5em;
+	word-break: break-all;
+}
+:is(th,td):nth-child(2) {
+	padding: 0;
+	width: 1em;
+}
+:is(th,td):nth-child(3) {
+	text-align: left;
+}
+:is(th,td):nth-child(4) {
+	width: 3em;
+}
+
+
+tr:first-child .ud a:first-child, tr:last-child .ud a:last-child {
+	visibility: hidden;
+}
+
+.ud {
+	padding: 0;
+	white-space: nowrap;
+	width: 1%;
+}
+.ud div {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	width: auto;
+}
+.ud a {
+	box-sizing: border-box;
+	color: #555;
+	flex: 1;
+	height: 100%;
+	text-decoration: none;
+	width: 100%;
+}
+.ud a:hover {
+	color: #008000;
+}
+
+.lang-name {
+	max-width: 100%;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	width: 100%;
+}
+
+
+.del {
+	padding: 0;
+}
+
+.del [type="button"] {
+	cursor: pointer;
+	height: 100%;
+	margin: 0;
+	padding: 8px;
+	width: 100%;
+}
+
+#wrapper {
+	align-items: center;
+	box-sizing: border-box;
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	justify-content: flex-start;
+	padding: 0 10px;
+	position: relative;
+	width: 100%;
+}
+
+.card {
+	align-items: flex-start;
+	background-color: #fff;
+	border-radius: 5px;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, .1);
+	box-sizing: border-box;
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	margin: 0 auto 10px;
+	padding: 20px;
+	width: 100%;
+}
+
+.transing, .transing * {
+	background-color: #eee;
+}
+
+#lang-form {
+	display: flex;
+	flex-direction: row;
+}
+
+#doTranslate {
+	background-color: #ccc;
+	border: none;
+	box-sizing: border-box;
+	color: #333;
+	cursor: pointer;
+	font-size: 1em;
+	margin: 0;
+	padding: 8px;
+	width: 100%;
+}
+
+#doTranslate:hover {
+	background-color: #999;
+	color: #fff;
+}
+
+#doTranslate:disabled {
+	background-color: #eee;
+	cursor: not-allowed;
+}
+
+#translates {
+	width: 100%;
+}

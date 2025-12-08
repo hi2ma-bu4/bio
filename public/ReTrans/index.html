@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>再翻訳</title>
+
+	<link rel="stylesheet" href="style.css?v13">
+	<script src="https://cdn.jsdelivr.net/gh/hi2ma-bu4/jasc@v1.13.9/jasc.js"></script>
+	<script src="main.js?v13"></script>
+</head>
+<body>
+	<template id="transCard-template">
+		<div class="card">
+			<div>
+				<span class="langData"></span>
+			</div>
+			<textarea class="transRoute" readonly></textarea>
+		</div>
+	</template>
+	<div id="wrapper">
+		<h2>再翻訳</h2>
+		<div class="card">
+			<p>翻訳元</p>
+			<textarea id="baseText" placeholder="翻訳元文章を入力してください"></textarea>
+			<details open>
+				<summary>設定</summary>
+				<h4>サンプルテキスト</h4>
+				<div id="sample-btns">
+				</div>
+				<h4>言語追加</h4>
+				<div id="lang-form">
+					<select id="trans-lang"></select>
+					<input type="button" value="追加">
+				</div>
+				<table>
+					<thead>
+						<tr>
+							<th>#</th>
+							<th></th>
+							<th>言語コード</th>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody id="langs"></tbody>
+				</table>
+			</details>
+			<input id="doTranslate" type="button" value="翻訳">
+		</div>
+		<div id="translates"></div>
+	</div>
+</body>
+</html>
