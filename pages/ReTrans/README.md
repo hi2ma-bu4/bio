@@ -3,11 +3,11 @@
 公開 URL
 
 ```
-https://hi2ma-bu4.github.io/bio/Retrans/
+https://hi2ma-bu4.github.io/bio/ReTrans/
 ```
 
 事前設定済 URL
 
 ```
-https://hi2ma-bu4.github.io/bio/Retrans/?ja&en&gd&az&lo&ur&yo&ko&ar&is&gd&lb&ur&yi&vi&be&de&rw&sl&ny&zh-CN&ja
+https://hi2ma-bu4.github.io/bio/ReTrans/?ja&en&gd&az&lo&ur&yo&ko&ar&is&gd&lb&ur&yi&vi&be&de&rw&sl&ny&zh-CN&ja
 ```
