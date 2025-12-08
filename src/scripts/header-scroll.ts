@@ -96,7 +96,7 @@ function init() {
 	if (Math.random() < 0.01) {
 		const logos = document.querySelectorAll<HTMLAnchorElement>("#logo,#floating-logo");
 		for (const logo of Array.from(logos)) {
-			logo.style.transform = "rotateY(180deg)";
+			logo.classList.add("rotate-y-180"); // tailwindcss
 		}
 	}
 }

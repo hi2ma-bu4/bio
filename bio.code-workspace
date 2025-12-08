@@ -12,6 +12,10 @@
 			"strings": "on"
 		},
 		"cSpell.words": [
+			"arrowdown",
+			"arrowleft",
+			"arrowright",
+			"arrowup",
 			"COEP",
 			"dasharray",
 			"dashoffset",
@@ -21,6 +25,7 @@
 			"GLSL",
 			"gstatic",
 			"heroicons",
+			"IJKL",
 			"isbot",
 			"joda",
 			"lerp",

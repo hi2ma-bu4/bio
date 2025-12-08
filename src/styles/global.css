@@ -135,8 +135,8 @@
 @layer components {
 	/* 画像読み込み失敗時のやつ */
 	.bio-imgCheck:not(.bio-imgLoad, .bio-imgLoadErr) {
-		background-image: url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" stroke="%23555" viewBox="0 0 24 24"><g style="transform-origin:center;animation:z 2s linear infinite"><circle cx="12" cy="12" r="9.5" fill="none" stroke-width="3" stroke-linecap="round" style="animation:y 1.5s ease-in-out infinite"/></g><style>@keyframes z{to{transform:rotate(360deg)}}@keyframes y{0%{stroke-dasharray:0 150;stroke-dashoffset:0}47.5%{stroke-dasharray:42 150;stroke-dashoffset:-16}95%,to{stroke-dasharray:42 150;stroke-dashoffset:-59}}</style></svg>');
 		@apply bg-center bg-no-repeat bg-size-[25%];
+		background-image: url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" stroke="%23555" viewBox="0 0 24 24"><g style="transform-origin:center;animation:z 2s linear infinite"><circle cx="12" cy="12" r="9.5" fill="none" stroke-width="3" stroke-linecap="round" style="animation:y 1.5s ease-in-out infinite"/></g><style>@keyframes z{to{transform:rotate(360deg)}}@keyframes y{0%{stroke-dasharray:0 150;stroke-dashoffset:0}47.5%{stroke-dasharray:42 150;stroke-dashoffset:-16}95%,to{stroke-dasharray:42 150;stroke-dashoffset:-59}}</style></svg>');
 	}
 
 	.img-wrapper {
@@ -152,7 +152,12 @@
 	}
 
 	/* 背景エフェクト */
-	#bg-particles {
+	#bg-canvas {
 		@apply fixed inset-0 w-dvw h-dvh -z-1 pointer-events-none;
+	}
+
+	#back-canvas-mini {
+		@apply fixed top-0 left-1/2 w-dvw h-dvh object-contain -z-1 pointer-events-none opacity-40 -translate-x-1/2;
+		image-rendering: pixelated;
 	}
 }

@@ -15,7 +15,7 @@ export function startRetro8bit(): void {
                 background-color: #000000 !important;
             }
             body, body *:not(.${EXCLUDE_CLASS}) {
-                font-family: 'Courier New', Courier, monospace !important;
+                font-family: 'Courier New', Courier, 'ＭＳ ゴシック', 'MS UI Gothic	', monospace !important;
                 color: #00FF00 !important;
                 text-shadow:
                     1px 1px #008000,

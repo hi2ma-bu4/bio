@@ -1,6 +1,7 @@
 import type { Engine } from "@tsparticles/engine";
 import { isbot } from "isbot";
 
+import { ID_BACK_CANVAS_MINI } from "../config";
 import { nowYearlyEvent } from "./libs/match-yearly-range";
 import { getQueryParams } from "./libs/query";
 import { styledLog, type LogPart } from "./libs/styledConsole";
@@ -25,6 +26,7 @@ async function initParticles() {
 	} else {
 		switch (nowYearlyEvent) {
 			case "sakura":
+			case "tetris":
 			case "fireworks":
 			case "programmers-day":
 			case "autumn-leaves":
@@ -74,6 +76,26 @@ async function initParticles() {
 		case "gravity": {
 			const { initializePhysicsEngine } = await import("./libs/day-effect/gravity");
 			initializePhysicsEngine();
+			break;
+		}
+		case "tetris": {
+			const { Tetris } = await import("./libs/day-effect/tetris");
+
+			const canvas = document.createElement("canvas");
+			canvas.id = ID_BACK_CANVAS_MINI;
+			const div = document.getElementById("bg-canvas");
+			if (!div) break;
+			div.appendChild(canvas);
+
+			const tetris = new Tetris(canvas);
+			window.addEventListener("keydown", (e) => tetris.handleKey(e));
+
+			function loop() {
+				tetris.update();
+				tetris.draw();
+				requestAnimationFrame(loop);
+			}
+			loop();
 			break;
 		}
 		case "rain": {
@@ -134,7 +156,7 @@ async function initParticles() {
 	}
 
 	// DOM が ready になってからロード
-	const el = document.getElementById("bg-particles");
+	const el = document.getElementById("bg-canvas");
 	if (!el) return;
 
 	if (theme) {
@@ -152,7 +174,7 @@ async function initParticles() {
 		const { tsParticles } = await import("@tsparticles/engine");
 		await loadPreset(tsParticles);
 		await tsParticles.load({
-			id: "bg-particles",
+			id: "bg-canvas",
 			options: {
 				preset,
 			},

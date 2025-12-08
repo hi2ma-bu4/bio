@@ -56,6 +56,23 @@ function initWorkModal() {
 				const longDescriptionEl = content.querySelector<HTMLParagraphElement>('[data-template-id="long-description"]');
 				if (longDescriptionEl) longDescriptionEl.innerText = workData.longDescription;
 
+				const othUrlsEl = content.querySelector<HTMLParagraphElement>('[data-template-id="oth-urls"]');
+				if (othUrlsEl) {
+					othUrlsEl.innerHTML = "";
+					if (workData.othUrls) {
+						workData.othUrls.forEach((link: string) => {
+							const urlLi = document.createElement("li");
+							urlLi.className = "mb-2 list-none";
+							const urlAnchor = document.createElement("a");
+							urlAnchor.className = "text-primary-600 hover:text-primary-800 dark:text-primary-400 dark:hover:text-primary-200 underline break-all";
+							urlAnchor.href = link;
+							urlAnchor.textContent = urlAnchor.href;
+							urlLi.appendChild(urlAnchor);
+							othUrlsEl.appendChild(urlLi);
+						});
+					}
+				}
+
 				const tagsEl = content.querySelector<HTMLDivElement>('[data-template-id="tags"]');
 				if (tagsEl) {
 					tagsEl.innerHTML = ""; // Clear existing tags

@@ -10,3 +10,4 @@ export const NAV_LINKS = [
 ] as const;
 
 export const CLASS_AUTO_IMG_ALT = "auto-img-alt";
+export const ID_BACK_CANVAS_MINI = "back-canvas-mini";

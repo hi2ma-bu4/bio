@@ -14,7 +14,7 @@ function initKeyCommand() {
 	fk.register(
 		["B", "O", "M", "B"],
 		async () => {
-			showToast("💣BombMode: ON!");
+			showToast("💣BombMode: Enabled!");
 			const { domOnBomb } = await import("./libs/key-command/boom-on-click");
 
 			function init() {
@@ -25,6 +25,28 @@ function initKeyCommand() {
 				document.body.removeEventListener("click", domOnBomb);
 			});
 			updateFunc.push(init);
+		},
+		{ once: true }
+	);
+
+	fk.register(
+		["M", "I", "R", "R", "O", "R"],
+		async () => {
+			showToast("🪞MirrorMode: Enabled!");
+			const { MirrorMode } = await import("./libs/key-command/mirror");
+			const mirror = new MirrorMode();
+			mirror.toggle();
+			let toggleFlag = true;
+
+			stopFunc.push(() => mirror.destroy());
+			updateFunc.push(() => {
+				mirror.init();
+				if (toggleFlag) mirror.toggle();
+			});
+			fk.register([["Shift", "M"]], () => {
+				mirror.toggle();
+				toggleFlag = !toggleFlag;
+			});
 		},
 		{ once: true }
 	);

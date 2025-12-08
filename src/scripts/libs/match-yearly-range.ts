@@ -56,6 +56,11 @@ const yearlyRanges = [
 		end: { month: 5, day: 6 },
 	},
 	{
+		id: "tetris",
+		start: { month: 6, day: 6 },
+		end: { month: 6, day: 6 },
+	},
+	{
 		id: "rainy-season",
 		start: { month: 6, day: 11 },
 		end: { month: 7, day: 6 },

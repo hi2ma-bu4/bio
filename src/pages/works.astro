@@ -4,10 +4,20 @@ import WorkCard, { type Props as Work } from "../components/WorkCard.astro";
 import WorkModal from "../components/WorkModal.astro";
 import { BASE_DIR } from "../config";
 
-export type worksDataType = Work & { longDescription: string };
+export type worksDataType = Work & { longDescription: string; othUrls?: string[] };
 
 // 作品データ
 const worksData: worksDataType[] = [
+	{
+		id: "RepoShowcase",
+		title: "RepoShowcase",
+		description: "作成した個人利用用途のライブラリ一覧。",
+		imageUrl: "",
+		tags: ["Hub Page"],
+		directLink: `https://hi2ma-bu4.github.io/RepoShowcase/`,
+		githubLink: "https://github.com/hi2ma-bu4/RepoShowcase",
+		longDescription: `作成したライブラリ(ほとんど個人利用用途)の一覧とそのデモページを設置しています。`,
+	},
 	{
 		id: "MIDI-FallingBar",
 		title: "MIDI FallingBar",
@@ -33,6 +43,19 @@ WebGLレンダリングにはThree.jsを、MIDIファイルのパースには@to
 最小手数での到達や高スコア戦略の検証に活用できます。`,
 	},
 	{
+		id: "ReTrans",
+		title: "ReTrans",
+		description: "再翻訳ブームに乗ったページです。",
+		imageUrl: "",
+		directLink: `${BASE_DIR}ReTrans/`,
+		githubLink: "https://github.com/hi2ma-bu4/ReTrans",
+		tags: ["JavaScript", "GAS"],
+		longDescription: `巷で噂の「再翻訳」で遊べるページです。
+
+以下のURLで、カスタム再翻訳が試す事ができます。`,
+		othUrls: [`${BASE_DIR}ReTrans/?ja&en&gd&az&lo&ur&yo&ko&ar&is&gd&lb&ur&yi&vi&be&de&rw&sl&ny&zh-CN&ja`],
+	},
+	{
 		id: "mandelbrot",
 		title: "Mandelbrot Set",
 		description: "マンデルブロ集合の表示ページです。",
@@ -56,6 +79,17 @@ OpenGL Shading Languageの数値上限によりズーム限界が決まってい
 		tags: ["JavaScript", "PC Only"],
 		longDescription: `本ページの内容は「Baba Is You」に着想を得て構成されています。
 つまりパクリということです。`,
+	},
+	{
+		id: "js-minecraft",
+		title: "js-minecraft",
+		description: "DOMだけでMinecraftを再現したかった...",
+		imageUrl: "",
+		directLink: `${BASE_DIR}js-minecraft/`,
+		githubLink: "https://github.com/hi2ma-bu4/js-minecraft",
+		tags: ["JavaScript", "PC Only"],
+		longDescription: `DOMだけでMinecraftを再現しているページがあり、
+そのページを9割真似て作成したものです。`,
 	},
 ];
 
