@@ -61,11 +61,11 @@ const PREFIX_RULES = [
 	{ keyword: "matter-js", name: "matter-js" },
 	{ keyword: "node_modules", name: "vendor" },
 	{ keyword: "pseudo-debugkit", name: "pseudo-debugkit" },
-	{ keyword: "gravity", name: "gravity" },
 ];
 
 const DYNAMIC_RULES = [
 	{ keyword: "tsparticles", prefix: "tsparticles" },
+	{ keyword: "day-effect", name: "day-effect" },
 	{ keyword: "key-command", prefix: "key-command" },
 ];
 

@@ -48,6 +48,9 @@ async function initParticles() {
 				break;
 			case "halloween":
 				break;
+			case "labor-thanksgiving":
+				preset = "8-bit";
+				break;
 			case "christmas":
 				preset = "snow";
 				break;
@@ -69,7 +72,7 @@ async function initParticles() {
 			break;
 		}
 		case "gravity": {
-			const { initializePhysicsEngine } = await import("./libs/gravity");
+			const { initializePhysicsEngine } = await import("./libs/day-effect/gravity");
 			initializePhysicsEngine();
 			break;
 		}
@@ -87,7 +90,6 @@ async function initParticles() {
 		}
 		case "programmers-day": {
 			// 特殊動作
-			theme = "light";
 			const { PseudoDebugKit } = await import("./libs/pseudo-debugkit/src/PseudoDebugKit");
 			const pseudoDebugKit = new PseudoDebugKit({
 				panel: false,
@@ -105,12 +107,21 @@ async function initParticles() {
 				pseudoDebugKit.destroy();
 			});
 			updateFunc.push(init);
+			theme = "light";
 			break;
 		}
 		case "autumn-leaves": {
 			const { loadAutumnLeavesPreset } = await import("./libs/tsparticles/autumn-leaves");
 			loadPreset = loadAutumnLeavesPreset;
 			pageThemeClass = "theme-amber";
+			break;
+		}
+		case "8-bit": {
+			const { startRetro8bit, destroyRetro8bit } = await import("./libs/day-effect/retro8bit");
+			startRetro8bit();
+			stopFunc.push(destroyRetro8bit);
+			updateFunc.push(startRetro8bit);
+			theme = "dark";
 			break;
 		}
 		case "snow":

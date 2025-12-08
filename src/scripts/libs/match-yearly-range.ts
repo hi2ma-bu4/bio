@@ -93,6 +93,16 @@ const yearlyRanges = [
 	{
 		id: "autumn-leaves",
 		start: { month: 11, day: 10 },
+		end: { month: 11, day: 22 },
+	},
+	{
+		id: "labor-thanksgiving",
+		start: { month: 11, day: 23 },
+		end: { month: 11, day: 23 },
+	},
+	{
+		id: "autumn-leaves",
+		start: { month: 11, day: 24 },
 		end: { month: 11, day: 30 },
 	},
 	{
