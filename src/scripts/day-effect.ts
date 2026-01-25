@@ -44,6 +44,9 @@ async function initParticles() {
 			case "rainy-season":
 				preset = "rain";
 				break;
+			case "world-ufo-day":
+				preset = "absentglyph";
+				break;
 			case "star-festival":
 				break;
 			case "harvest-moon":
@@ -102,6 +105,29 @@ async function initParticles() {
 			const { loadRainPreset } = await import("./libs/tsparticles/rain");
 			loadPreset = loadRainPreset;
 			theme = "dark";
+			break;
+		}
+		case "absentglyph": {
+			const FONT_URL = `https://hi2ma-bu4.github.io/RepoShowcase/public/absentglyph/fonts/absentglyph.ttf?v=${Date.now()}`;
+			const font = new FontFace("AbsentGlyph", `url(${FONT_URL}) format("truetype")`);
+			font.load().then((f) => {
+				document.fonts.add(f);
+
+				let style: HTMLStyleElement | undefined;
+				function init() {
+					style = document.createElement("style");
+					style.textContent = `html, body, * {font-family: "AbsentGlyph", sans-serif !important;}`;
+					document.head.appendChild(style);
+				}
+				init();
+				stopFunc.push(() => {
+					if (style) {
+						style.remove();
+						style = undefined;
+					}
+				});
+				updateFunc.push(init);
+			});
 			break;
 		}
 		case "fireworks": {

@@ -63,6 +63,16 @@ const yearlyRanges = [
 	{
 		id: "rainy-season",
 		start: { month: 6, day: 11 },
+		end: { month: 7, day: 1 },
+	},
+	{
+		id: "world-ufo-day",
+		start: { month: 7, day: 2 },
+		end: { month: 7, day: 2 },
+	},
+	{
+		id: "rainy-season",
+		start: { month: 7, day: 3 },
 		end: { month: 7, day: 6 },
 	},
 	{
