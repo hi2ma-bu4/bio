@@ -113,19 +113,12 @@ async function initParticles() {
 			font.load().then((f) => {
 				document.fonts.add(f);
 
-				let style: HTMLStyleElement | undefined;
 				function init() {
-					style = document.createElement("style");
+					const style = document.createElement("style");
 					style.textContent = `html, body, * {font-family: "AbsentGlyph", sans-serif !important;}`;
 					document.head.appendChild(style);
 				}
 				init();
-				stopFunc.push(() => {
-					if (style) {
-						style.remove();
-						style = undefined;
-					}
-				});
 				updateFunc.push(init);
 			});
 			break;
