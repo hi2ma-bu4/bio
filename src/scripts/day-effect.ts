@@ -109,7 +109,7 @@ async function initParticles() {
 			break;
 		}
 		case "absentglyph": {
-			const FONT_URL = `https://hi2ma-bu4.github.io/RepoShowcase/public/absentglyph/fonts/absentglyph.ttf?v=${Date.now()}`;
+			const FONT_URL = `/RepoShowcase/public/absentglyph/fonts/absentglyph.ttf?v=${Date.now()}`;
 			const init = await loadFont("AbsentGlyph", FONT_URL);
 			if (init) {
 				init();
@@ -156,7 +156,7 @@ async function initParticles() {
 			startRetro8bit();
 			stopFunc.push(destroyRetro8bit);
 			updateFunc.push(startRetro8bit);
-			const FONT_URL = `https://hi2ma-bu4.github.io/RepoShowcase/public/fonts/EnkaDotGothic24.ttf`;
+			const FONT_URL = `/bio/fonts/EnkaDotGothic24/EnkaDotGothic24.ttf`;
 			await loadFont("EnkaDotGothic24", FONT_URL);
 			theme = "dark";
 			break;
