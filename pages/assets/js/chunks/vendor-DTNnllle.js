@@ -1,11 +1,10 @@
 import { generateHydrationScript, renderToStringAsync, renderToString, ssr, createComponent as createComponent$1, Suspense, NoHydration } from 'solid-js/web';
 import 'piccolore';
 import { clsx } from 'clsx';
-import '@astrojs/internal-helpers/remote';
 import '@astrojs/internal-helpers/path';
-import 'cookie';
 import 'es-module-lexer';
 import { escape } from 'html-escaper';
+import '@astrojs/internal-helpers/remote';
 import { encodeBase64, encodeHexUpperCase, decodeBase64 } from '@oslojs/encoding';
 import { z } from 'zod';
 import 'cssesc';
@@ -178,7 +177,7 @@ class AstroError extends Error {
     this.frame = codeFrame(source, location);
   }
   static is(err) {
-    return err.type === "AstroError";
+    return err?.type === "AstroError";
   }
 }
 
@@ -263,7 +262,7 @@ function createComponent(arg1, moduleId, propagation) {
   }
 }
 
-const ASTRO_VERSION = "5.16.0";
+const ASTRO_VERSION = "5.16.15";
 const NOOP_MIDDLEWARE_HEADER = "X-Astro-Noop";
 
 function createAstroGlobFn() {
@@ -1117,6 +1116,13 @@ class SlotString extends HTMLString {
 function isSlotString(str) {
   return !!str[slotString];
 }
+function mergeSlotInstructions(target, source) {
+  if (source.instructions?.length) {
+    target ??= [];
+    target.push(...source.instructions);
+  }
+  return target;
+}
 function renderSlot(result, slotted, fallback) {
   if (!slotted && fallback) {
     return renderSlot(result, fallback);
@@ -1134,10 +1140,7 @@ async function renderSlotToString(result, slotted, fallback) {
     write(chunk) {
       if (chunk instanceof SlotString) {
         content += chunk;
-        if (chunk.instructions) {
-          instructions ??= [];
-          instructions.push(...chunk.instructions);
-        }
+        instructions = mergeSlotInstructions(instructions, chunk);
       } else if (chunk instanceof Response) return;
       else if (typeof chunk === "object" && "type" in chunk && typeof chunk.type === "string") {
         if (instructions === null) {
@@ -1407,6 +1410,14 @@ function stringifyChunk(result, chunk) {
         }
         result._metadata.hasRenderedServerIslandRuntime = true;
         return renderServerIslandRuntime();
+      }
+      case "script": {
+        const { id, content } = instruction;
+        if (result._metadata.renderedScripts.has(id)) {
+          return "";
+        }
+        result._metadata.renderedScripts.add(id);
+        return content;
       }
       default: {
         throw new Error(`Unknown chunk type: ${chunk.type}`);
@@ -2000,20 +2011,17 @@ function normalizeProps(props) {
 }
 
 async function renderScript(result, id) {
-  if (result._metadata.renderedScripts.has(id)) return;
-  result._metadata.renderedScripts.add(id);
   const inlined = result.inlinedScripts.get(id);
+  let content = "";
   if (inlined != null) {
     if (inlined) {
-      return markHTMLString(`<script type="module">${inlined}</script>`);
-    } else {
-      return "";
+      content = `<script type="module">${inlined}</script>`;
     }
+  } else {
+    const resolved = await result.resolve(id);
+    content = `<script type="module" src="${result.userAssetsBase ? (result.base === "/" ? "" : result.base) + result.userAssetsBase : ""}${resolved}"></script>`;
   }
-  const resolved = await result.resolve(id);
-  return markHTMLString(
-    `<script type="module" src="${result.userAssetsBase ? (result.base === "/" ? "" : result.base) + result.userAssetsBase : ""}${resolved}"></script>`
-  );
+  return createRenderInstruction({ type: "script", id, content });
 }
 
 const transitionNameMap = /* @__PURE__ */ new WeakMap();
@@ -7687,7 +7695,9 @@ const $$SEO = createComponent(($$result, $$props, $$slots) => {
   }
   const baseUrl = Astro2.site ?? Astro2.url;
   const defaultCanonicalUrl = new URL(Astro2.url.pathname + Astro2.url.search, baseUrl);
-  return renderTemplate`${updatedTitle ? renderTemplate`<title>${unescapeHTML(updatedTitle)}</title>` : null}${Astro2.props.charset ? renderTemplate`<meta${addAttribute(Astro2.props.charset, "charset")}>` : null}<link rel="canonical"${addAttribute(Astro2.props.canonical || defaultCanonicalUrl.href, "href")}>${Astro2.props.description ? renderTemplate`<meta name="description"${addAttribute(Astro2.props.description, "content")}>` : null}<meta name="robots"${addAttribute(`${Astro2.props.noindex ? "noindex" : "index"}, ${Astro2.props.nofollow ? "nofollow" : "follow"}`, "content")}>${Astro2.props.openGraph && renderTemplate`${renderComponent($$result, "OpenGraphBasicTags", $$OpenGraphBasicTags, { ...Astro2.props })}`}${Astro2.props.openGraph?.optional && renderTemplate`${renderComponent($$result, "OpenGraphOptionalTags", $$OpenGraphOptionalTags, { ...Astro2.props })}`}${Astro2.props.openGraph?.image && renderTemplate`${renderComponent($$result, "OpenGraphImageTags", $$OpenGraphImageTags, { ...Astro2.props })}`}${Astro2.props.openGraph?.article && renderTemplate`${renderComponent($$result, "OpenGraphArticleTags", $$OpenGraphArticleTags, { ...Astro2.props })}`}${Astro2.props.twitter && renderTemplate`${renderComponent($$result, "TwitterTags", $$TwitterTags, { ...Astro2.props })}`}${Astro2.props.extend && renderTemplate`${renderComponent($$result, "ExtendedTags", $$ExtendedTags, { ...Astro2.props })}`}${Astro2.props.languageAlternates && renderTemplate`${renderComponent($$result, "LanguageAlternatesTags", $$LanguageAlternatesTags, { ...Astro2.props })}`}`;
+  const shouldRemoveTrailingSlash = Astro2.props.removeTrailingSlashForRoot && Astro2.url.pathname === "/";
+  const canonicalHref = shouldRemoveTrailingSlash ? defaultCanonicalUrl.origin + defaultCanonicalUrl.search : defaultCanonicalUrl.href;
+  return renderTemplate`${updatedTitle ? renderTemplate`<title>${unescapeHTML(updatedTitle)}</title>` : null}${Astro2.props.charset ? renderTemplate`<meta${addAttribute(Astro2.props.charset, "charset")}>` : null}<link rel="canonical"${addAttribute(Astro2.props.canonical || canonicalHref, "href")}>${Astro2.props.description ? renderTemplate`<meta name="description"${addAttribute(Astro2.props.description, "content")}>` : null}<meta name="robots"${addAttribute(`${Astro2.props.noindex ? "noindex" : "index"}, ${Astro2.props.nofollow ? "nofollow" : "follow"}${Astro2.props.noarchive ? ", noarchive" : ""}${Astro2.props.nocache ? ", nocache" : ""}${Astro2.props.robotsExtras ? `, ${Astro2.props.robotsExtras}` : ""}`, "content")}>${Astro2.props.openGraph && renderTemplate`${renderComponent($$result, "OpenGraphBasicTags", $$OpenGraphBasicTags, { ...Astro2.props })}`}${Astro2.props.openGraph?.optional && renderTemplate`${renderComponent($$result, "OpenGraphOptionalTags", $$OpenGraphOptionalTags, { ...Astro2.props })}`}${Astro2.props.openGraph?.image && renderTemplate`${renderComponent($$result, "OpenGraphImageTags", $$OpenGraphImageTags, { ...Astro2.props })}`}${Astro2.props.openGraph?.article && renderTemplate`${renderComponent($$result, "OpenGraphArticleTags", $$OpenGraphArticleTags, { ...Astro2.props })}`}${Astro2.props.twitter && renderTemplate`${renderComponent($$result, "TwitterTags", $$TwitterTags, { ...Astro2.props })}`}${Astro2.props.extend && renderTemplate`${renderComponent($$result, "ExtendedTags", $$ExtendedTags, { ...Astro2.props })}`}${Astro2.props.languageAlternates && renderTemplate`${renderComponent($$result, "LanguageAlternatesTags", $$LanguageAlternatesTags, { ...Astro2.props })}`}`;
 }, "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-seo/src/SEO.astro", void 0);
 
 const $$Astro = createAstro("https://hi2ma-bu4.github.io/");
