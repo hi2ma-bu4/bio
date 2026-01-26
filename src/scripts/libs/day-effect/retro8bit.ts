@@ -1,6 +1,12 @@
 let observer: MutationObserver | null = null;
 let loadedImages = new Map<HTMLImageElement, EventListener>();
 const originalBgMap = new WeakMap<HTMLElement, string | null>();
+const colorCache = new Map<string, [number, number, number]>();
+
+let colorCanvas: HTMLCanvasElement | null = null;
+let colorCtx: CanvasRenderingContext2D | null = null;
+
+const DIFF_THRESHOLD = 80;
 
 function captureOriginalBackground(el: HTMLElement): void {
 	if (originalBgMap.has(el)) return;
@@ -34,12 +40,47 @@ function colorDistance(a: [number, number, number], b: [number, number, number])
 	return Math.sqrt(dr * dr + dg * dg + db * db);
 }
 
+function normalizeToRGB(color: string): [number, number, number] | null {
+	const cached = colorCache.get(color);
+	if (cached) return cached;
+
+	if (!colorCtx) return null;
+
+	colorCtx.clearRect(0, 0, 1, 1);
+	colorCtx.fillStyle = "#000";
+	colorCtx.fillStyle = color;
+	colorCtx.fillRect(0, 0, 1, 1);
+
+	const d = colorCtx.getImageData(0, 0, 1, 1).data;
+	const rgb: [number, number, number] = [d[0], d[1], d[2]];
+
+	colorCache.set(color, rgb);
+	return rgb;
+}
+
+function isColorDifferent(a: string, b: string): boolean {
+	const ra = normalizeToRGB(a);
+	const rb = normalizeToRGB(b);
+	if (!ra || !rb) return false;
+
+	const dr = ra[0] - rb[0];
+	const dg = ra[1] - rb[1];
+	const db = ra[2] - rb[2];
+
+	return dr * dr + dg * dg + db * db >= DIFF_THRESHOLD * DIFF_THRESHOLD;
+}
+
 export function startRetro8bit(): void {
 	const DOT_SIZE = 4;
 	const EXCLUDE_CLASS = "no-retro";
 	const BG_COLOR = "#000000";
 	const MAIN_COLOR = "#00FF00";
 	const SUB_COLOR = "#008000";
+
+	colorCanvas = document.createElement("canvas");
+	colorCanvas.width = colorCanvas.height = 1;
+
+	colorCtx = colorCanvas.getContext("2d", { willReadFrequently: true });
 
 	// --- スタイル ---
 	let style = document.getElementById("retro8bit-style") as HTMLStyleElement | null;
@@ -73,12 +114,8 @@ export function startRetro8bit(): void {
 		const parentBg = getOriginalBg(el.parentElement);
 
 		let needsBorder = false;
-		if (childBg && parentBg && childBg !== parentBg) {
-			const c = parseComputedRGB(childBg);
-			const p = parseComputedRGB(parentBg);
-			if (c && p && colorDistance(c, p) >= 80) {
-				needsBorder = true;
-			}
+		if (childBg && parentBg && isColorDifferent(childBg, parentBg)) {
+			needsBorder = true;
 		}
 
 		const computed = window.getComputedStyle(el);
@@ -166,6 +203,7 @@ export function destroyRetro8bit(): void {
 		observer.disconnect();
 		observer = null;
 	}
+	colorCanvas = colorCtx = null;
 
 	// 未ロード画像イベント解除
 	loadedImages.forEach((listener, img) => {
