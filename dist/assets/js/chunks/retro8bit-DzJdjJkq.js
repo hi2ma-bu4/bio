@@ -3,7 +3,7 @@ let d=null,s=new Map;function b(){const c="no-retro";let i=document.getElementBy
                 background-color: #000000 !important;
             }
             body, body *:not(.${c}) {
-                font-family: 'Courier New', Courier, 'ＭＳ ゴシック', 'MS UI Gothic	', monospace !important;
+                font-family: 'EnkaDotGothic24', 'Courier New', Courier, 'ＭＳ ゴシック', 'MS UI Gothic	', monospace !important;
                 color: #00FF00 !important;
                 text-shadow:
                     1px 1px #008000,

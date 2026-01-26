@@ -111,7 +111,10 @@ async function initParticles() {
 		case "absentglyph": {
 			const FONT_URL = `https://hi2ma-bu4.github.io/RepoShowcase/public/absentglyph/fonts/absentglyph.ttf?v=${Date.now()}`;
 			const init = await loadFont("AbsentGlyph", FONT_URL);
-			if (init) updateFunc.push(init);
+			if (init) {
+				init();
+				updateFunc.push(init);
+			}
 			break;
 		}
 		case "fireworks": {
@@ -154,8 +157,7 @@ async function initParticles() {
 			stopFunc.push(destroyRetro8bit);
 			updateFunc.push(startRetro8bit);
 			const FONT_URL = `https://hi2ma-bu4.github.io/RepoShowcase/public/fonts/EnkaDotGothic24.ttf`;
-			const init = await loadFont("EnkaDotGothic24", FONT_URL);
-			if (init) updateFunc.push(init);
+			await loadFont("EnkaDotGothic24", FONT_URL);
 			theme = "dark";
 			break;
 		}
