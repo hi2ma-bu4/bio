@@ -6,6 +6,7 @@ import { nowYearlyEvent } from "./libs/match-yearly-range";
 import { getQueryParams } from "./libs/query";
 import { styledLog, type LogPart } from "./libs/styledConsole";
 import { themeChangeLock, updateAllToggleButtonsUI, type themeType } from "./libs/theme-utils";
+import { loadFont } from "./libs/ui-utils";
 
 const stopFunc: (() => void)[] = [];
 const updateFunc: (() => void)[] = [];
@@ -109,18 +110,8 @@ async function initParticles() {
 		}
 		case "absentglyph": {
 			const FONT_URL = `https://hi2ma-bu4.github.io/RepoShowcase/public/absentglyph/fonts/absentglyph.ttf?v=${Date.now()}`;
-			const font = new FontFace("AbsentGlyph", `url(${FONT_URL}) format("truetype")`);
-			font.load().then((f) => {
-				document.fonts.add(f);
-
-				function init() {
-					const style = document.createElement("style");
-					style.textContent = `html, body, * {font-family: "AbsentGlyph", sans-serif !important;}`;
-					document.head.appendChild(style);
-				}
-				init();
-				updateFunc.push(init);
-			});
+			const init = await loadFont("AbsentGlyph", FONT_URL);
+			if (init) updateFunc.push(init);
 			break;
 		}
 		case "fireworks": {
@@ -162,6 +153,9 @@ async function initParticles() {
 			startRetro8bit();
 			stopFunc.push(destroyRetro8bit);
 			updateFunc.push(startRetro8bit);
+			const FONT_URL = `https://hi2ma-bu4.github.io/RepoShowcase/public/fonts/EnkaDotGothic24.ttf`;
+			const init = await loadFont("EnkaDotGothic24", FONT_URL);
+			if (init) updateFunc.push(init);
 			theme = "dark";
 			break;
 		}

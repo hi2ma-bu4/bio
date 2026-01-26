@@ -113,3 +113,47 @@ export function addEscapeListener(onClose: () => void) {
 		document.removeEventListener("keydown", _handler);
 	};
 }
+
+export async function loadFont(fontName: string, fontUrl: string, querySelector: string = "html, body, *"): Promise<(() => void) | null> {
+	const ext = fontUrl.split(".").pop()?.split("?").shift()?.toLowerCase();
+
+	let fontFormat;
+	switch (ext) {
+		case "woff2":
+			fontFormat = "woff2";
+			break;
+		case "woff":
+			fontFormat = "woff";
+			break;
+		case "ttf":
+			fontFormat = "truetype";
+			break;
+		case "otf":
+			fontFormat = "opentype";
+			break;
+		case "eot":
+			fontFormat = "embedded-opentype";
+			break;
+		case "svg":
+			fontFormat = "svg";
+			break;
+		default:
+			throw new Error(`Unsupported font format: ${ext}`);
+	}
+	const font = new FontFace(fontName, `url("${fontUrl}") format("${fontFormat}")`);
+
+	try {
+		const f: FontFace = await font.load();
+		document.fonts.add(f);
+
+		function init() {
+			const style = document.createElement("style");
+			style.textContent = `${querySelector} {font-family: "${fontName}", var(--base-font) !important;}`;
+			document.head.appendChild(style);
+		}
+		return init;
+	} catch (e) {
+		console.warn("font load err", e);
+	}
+	return null;
+}
