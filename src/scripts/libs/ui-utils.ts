@@ -149,6 +149,7 @@ export async function loadFont(fontName: string, fontUrl: string, querySelector:
 		function init() {
 			const style = document.createElement("style");
 			style.textContent = `${querySelector} {font-family: "${fontName}", var(--base-font) !important;}`;
+			style.id = `loadFont-${fontName}`;
 			document.head.appendChild(style);
 		}
 		return init;

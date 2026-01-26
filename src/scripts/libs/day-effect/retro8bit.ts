@@ -1,9 +1,45 @@
 let observer: MutationObserver | null = null;
 let loadedImages = new Map<HTMLImageElement, EventListener>();
+const originalBgMap = new WeakMap<HTMLElement, string | null>();
+
+function captureOriginalBackground(el: HTMLElement): void {
+	if (originalBgMap.has(el)) return;
+
+	let cur: HTMLElement | null = el;
+	while (cur) {
+		const bg = getComputedStyle(cur).backgroundColor;
+		if (bg !== "transparent" && bg !== "rgba(0, 0, 0, 0)") {
+			originalBgMap.set(el, bg);
+			return;
+		}
+		cur = cur.parentElement;
+	}
+	originalBgMap.set(el, null);
+}
+
+function getOriginalBg(el: HTMLElement | null): string | null {
+	return el ? (originalBgMap.get(el) ?? null) : null;
+}
+
+function parseComputedRGB(color: string): [number, number, number] | null {
+	const m = color.match(/rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)/);
+	if (!m) return null;
+	return [Number(m[1]), Number(m[2]), Number(m[3])];
+}
+
+function colorDistance(a: [number, number, number], b: [number, number, number]): number {
+	const dr = a[0] - b[0];
+	const dg = a[1] - b[1];
+	const db = a[2] - b[2];
+	return Math.sqrt(dr * dr + dg * dg + db * db);
+}
 
 export function startRetro8bit(): void {
 	const DOT_SIZE = 4;
 	const EXCLUDE_CLASS = "no-retro";
+	const BG_COLOR = "#000000";
+	const MAIN_COLOR = "#00FF00";
+	const SUB_COLOR = "#008000";
 
 	// --- スタイル ---
 	let style = document.getElementById("retro8bit-style") as HTMLStyleElement | null;
@@ -12,16 +48,16 @@ export function startRetro8bit(): void {
 		style.id = "retro8bit-style";
 		style.innerHTML = `
             body {
-                background-color: #000000 !important;
+                background-color: ${BG_COLOR} !important;
             }
             body, body *:not(.${EXCLUDE_CLASS}) {
                 font-family: 'EnkaDotGothic24', 'Courier New', Courier, 'ＭＳ ゴシック', 'MS UI Gothic	', monospace !important;
-                color: #00FF00 !important;
+                color: ${MAIN_COLOR} !important;
                 text-shadow:
-                    1px 1px #008000,
-                    -1px -1px #008000,
-                    1px -1px #008000,
-                    -1px 1px #008000 !important;
+                    1px 1px ${SUB_COLOR},
+                    -1px -1px ${SUB_COLOR},
+                    1px -1px ${SUB_COLOR},
+                    -1px 1px ${SUB_COLOR} !important;
             }
         `;
 		document.head.appendChild(style);
@@ -29,9 +65,30 @@ export function startRetro8bit(): void {
 
 	function retroizeElement(el: HTMLElement): void {
 		if (el.classList.contains(EXCLUDE_CLASS)) return;
+
+		captureOriginalBackground(el);
+		if (el.parentElement) captureOriginalBackground(el.parentElement);
+
+		const childBg = getOriginalBg(el);
+		const parentBg = getOriginalBg(el.parentElement);
+
+		let needsBorder = false;
+		if (childBg && parentBg && childBg !== parentBg) {
+			const c = parseComputedRGB(childBg);
+			const p = parseComputedRGB(parentBg);
+			if (c && p && colorDistance(c, p) >= 80) {
+				needsBorder = true;
+			}
+		}
+
 		const computed = window.getComputedStyle(el);
-		if (computed.borderStyle !== "none" && computed.borderWidth !== "0px") el.style.borderColor = "#00FF00";
-		if (computed.backgroundColor !== "rgba(0, 0, 0, 0)" && computed.backgroundColor !== "transparent") el.style.backgroundColor = "#000000";
+		if (computed.borderStyle !== "none" && computed.borderWidth !== "0px") el.style.borderColor = MAIN_COLOR;
+		if (computed.backgroundColor !== "rgba(0, 0, 0, 0)" && computed.backgroundColor !== "transparent") el.style.backgroundColor = BG_COLOR;
+
+		if (needsBorder) {
+			el.style.border = `1px solid ${MAIN_COLOR}`;
+			el.style.boxSizing = "border-box";
+		}
 	}
 
 	function retroizeImage(img: HTMLImageElement): void {
@@ -87,9 +144,11 @@ export function startRetro8bit(): void {
 		mutations.forEach((mutation) => {
 			mutation.addedNodes.forEach((node) => {
 				if (!(node instanceof HTMLElement)) return;
+				captureOriginalBackground(node);
 				retroizeElement(node);
 				if (node instanceof HTMLImageElement) retroizeImage(node);
 				node.querySelectorAll<HTMLElement>("*").forEach((child) => {
+					captureOriginalBackground(node);
 					retroizeElement(child);
 					if (child instanceof HTMLImageElement) retroizeImage(child);
 				});
