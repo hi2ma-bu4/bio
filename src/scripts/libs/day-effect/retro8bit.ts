@@ -6,7 +6,7 @@ const colorCache = new Map<string, [number, number, number]>();
 let colorCanvas: HTMLCanvasElement | null = null;
 let colorCtx: CanvasRenderingContext2D | null = null;
 
-const DIFF_THRESHOLD = 80;
+const DIFF_THRESHOLD = 25;
 
 function captureOriginalBackground(el: HTMLElement): void {
 	if (originalBgMap.has(el)) return;
