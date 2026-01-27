@@ -157,11 +157,11 @@
 
 	/* 背景エフェクト */
 	#bg-canvas {
-		@apply fixed inset-0 w-dvw h-dvh -z-1 pointer-events-none;
+		@apply fixed inset-0 w-svw h-svh -z-1 pointer-events-none;
 	}
 
 	#back-canvas-mini {
-		@apply fixed top-0 left-1/2 w-dvw h-dvh object-contain -z-1 pointer-events-none opacity-40 -translate-x-1/2;
+		@apply fixed top-0 left-1/2 w-svw h-svh object-contain -z-1 pointer-events-none opacity-40 -translate-x-1/2;
 		image-rendering: pixelated;
 	}
 }

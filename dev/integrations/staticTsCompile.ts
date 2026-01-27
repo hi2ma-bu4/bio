@@ -6,6 +6,8 @@ import { mkdir, readdir, readFile, writeFile } from "node:fs/promises";
 import { extname, join, relative } from "node:path";
 import { minify, type MinifyOptions } from "terser";
 
+const PUBLIC_ENV_KEYS = ["DEBUG_GTAG", "GTAG_ID", "GA4_TAG"] as const;
+
 const manifest: Record<string, string> = {};
 
 export default function compileAndMinifyTS({ srcDir, outDir = "dist/assets/static/", terserSetting }: { srcDir: string; outDir?: string; terserSetting?: MinifyOptions }): AstroIntegration {
@@ -23,6 +25,13 @@ export default function compileAndMinifyTS({ srcDir, outDir = "dist/assets/stati
 				const files = await readdir(srcDir, { withFileTypes: true });
 				const targets = files.filter((f) => f.isFile() && extname(f.name) === ".ts").map((f) => join(srcDir, f.name));
 
+				const defines: Record<string, string> = {};
+
+				for (const key of PUBLIC_ENV_KEYS) {
+					defines[`import.meta.env.${key}`] = JSON.stringify(process.env[key] ?? "");
+				}
+				ctx.logger.info(`load env:${Object.entries(defines).length}`);
+
 				const tasks: Promise<void>[] = [];
 
 				for (const file of targets) {
@@ -38,6 +47,7 @@ export default function compileAndMinifyTS({ srcDir, outDir = "dist/assets/stati
 								format: "iife",
 								target: "es2020",
 								minify: false,
+								define: defines,
 							});
 
 							const jsCode = build.outputFiles![0].text;
@@ -49,7 +59,7 @@ export default function compileAndMinifyTS({ srcDir, outDir = "dist/assets/stati
 									compress: true,
 									mangle: true,
 									ecma: 2020,
-								}
+								},
 							);
 
 							if (!minified.code) {
@@ -57,18 +67,24 @@ export default function compileAndMinifyTS({ srcDir, outDir = "dist/assets/stati
 								return;
 							}
 
-							// 3. 圧縮後コードのハッシュ生成
-							const hash = createHash("sha256").update(minified.code).digest("hex").slice(0, 10);
+							let outPath;
+							if (/\.ignore\.ts$/.test(file)) {
+								const rel = relative(srcDir, file).replace(/\.ignore\.ts$/, "");
+								const name = `${rel}.js`;
+								outPath = join(outDir, name);
+							} else {
+								// 3. 圧縮後コードのハッシュ生成
+								const hash = createHash("sha256").update(minified.code).digest("hex").slice(0, 10);
 
-							// 4. 出力ファイル名へハッシュ付け
-							const rel = relative(srcDir, file).replace(/\.ts$/, "");
-							const name = `${rel}-${hash}.js`;
-							const outPath = join(outDir, name);
-							manifest[rel + ".js"] = name;
+								// 4. 出力ファイル名へハッシュ付け
+								const rel = relative(srcDir, file).replace(/\.ts$/, "");
+								const name = `${rel}-${hash}.js`;
+								outPath = join(outDir, name);
+								manifest[rel + ".js"] = name;
+							}
 							await writeFile(outPath, minified.code, "utf8");
-
 							ctx.logger.info(`✔ 出力: ${outPath}`);
-						})()
+						})(),
 					);
 				}
 
