@@ -52,6 +52,8 @@ async function initParticles() {
 				break;
 			case "harvest-moon":
 				break;
+			case "genshin-anniversary":
+				preset = "genshin";
 			case "halloween":
 				break;
 			case "labor-thanksgiving":
@@ -149,6 +151,11 @@ async function initParticles() {
 			const { loadAutumnLeavesPreset } = await import("./libs/tsparticles/autumn-leaves");
 			loadPreset = loadAutumnLeavesPreset;
 			pageThemeClass = "theme-amber";
+			break;
+		}
+		case "genshin": {
+			const FONT_URL = `/bio/fonts/hyWenHei.ttf`;
+			await loadFont("hyWenHei", FONT_URL);
 			break;
 		}
 		case "8-bit": {

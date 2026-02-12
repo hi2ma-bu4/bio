@@ -143,6 +143,8 @@ export default defineConfig({
 			},
 			workbox: {
 				globPatterns: ["**/*.{ico,css,js,png,jpg,webp,svg,ttf,svg,woff,woff2}"],
+				globIgnores: ["**/hyWenHei.ttf"],
+				maximumFileSizeToCacheInBytes: 2 * 1024 * 1024,
 				runtimeCaching: [
 					// Google Fonts
 					{

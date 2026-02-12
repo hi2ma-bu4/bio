@@ -101,6 +101,11 @@ const yearlyRanges = [
 		end: { month: 9, day: 13 },
 	},
 	{
+		id: "genshin-anniversary",
+		start: { month: 9, day: 28 },
+		end: { month: 9, day: 28 },
+	},
+	{
 		id: "halloween",
 		start: { month: 10, day: 31 },
 		end: { month: 10, day: 31 },
