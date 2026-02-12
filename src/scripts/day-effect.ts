@@ -155,7 +155,11 @@ async function initParticles() {
 		}
 		case "genshin": {
 			const FONT_URL = `/bio/fonts/hyWenHei.ttf`;
-			await loadFont("hyWenHei", FONT_URL);
+			const init = await loadFont("hyWenHei", FONT_URL);
+			if (init) {
+				init();
+				updateFunc.push(init);
+			}
 			break;
 		}
 		case "8-bit": {
