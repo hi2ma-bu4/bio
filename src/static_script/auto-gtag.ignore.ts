@@ -53,7 +53,6 @@ export {};
 	const path = location.pathname;
 
 	gtag("config", import.meta.env.GTAG_ID);
-	gtag("config", import.meta.env.GA4_TAG);
 
 	loadGtag(import.meta.env.GTAG_ID);
 
