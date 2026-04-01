@@ -84,6 +84,13 @@ async function initParticles() {
 			initializePhysicsEngine();
 			break;
 		}
+		case "random": {
+			const { startRandomEffect, stopRandomEffect } = await import("./libs/day-effect/random");
+			startRandomEffect();
+			stopFunc.push(stopRandomEffect);
+			updateFunc.push(startRandomEffect);
+			break;
+		}
 		case "tetris": {
 			const { Tetris } = await import("./libs/day-effect/tetris");
 
