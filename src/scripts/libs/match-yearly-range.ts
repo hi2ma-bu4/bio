@@ -96,6 +96,11 @@ const yearlyRanges = [
 		end: { month: 8, day: 31 },
 	},
 	{
+		id: "lottery-day",
+		start: { month: 9, day: 2 },
+		end: { month: 9, day: 2 },
+	},
+	{
 		id: "programmers-day",
 		start: { month: 9, day: 12 },
 		end: { month: 9, day: 13 },

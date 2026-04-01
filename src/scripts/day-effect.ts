@@ -52,6 +52,8 @@ async function initParticles() {
 				break;
 			case "harvest-moon":
 				break;
+			case "lottery-day":
+				preset = "random";
 			case "genshin-anniversary":
 				preset = "genshin";
 			case "halloween":
