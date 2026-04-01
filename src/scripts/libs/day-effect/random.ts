@@ -1,5 +1,12 @@
 type AttributeName = "title" | "placeholder";
-type RandomizeString = (source: string) => string;
+type RandomizeString = () => string;
+
+interface RandomBucketSlot {
+	bucket: readonly string[];
+	originalIndex: number;
+}
+
+type RandomSlot = string | RandomBucketSlot;
 
 interface RenderState {
 	original: string;
@@ -17,10 +24,14 @@ const VALUE_INPUT_TYPES = new Set(["button", "submit", "reset"]);
 const CANDIDATE_RANGES: ReadonlyArray<readonly [number, number]> = [
 	[0x21, 0x7e],
 	[0xa1, 0xff],
+	[0x100, 0x24f],
+	[0x250, 0x2af],
 	[0x3001, 0x303f],
 	[0x3041, 0x309f],
 	[0x30a1, 0x30ff],
+	[0x370, 0x4ff],
 	[0x4e00, 0x4eff],
+	[0x1e00, 0x1eff],
 	[0xff01, 0xff60],
 	[0xff61, 0xff9f],
 ];
@@ -44,10 +55,6 @@ function isWhitespace(char: string): boolean {
 	return /\s/u.test(char);
 }
 
-function randomItem<T>(items: readonly T[]): T | undefined {
-	return items[Math.floor(Math.random() * items.length)];
-}
-
 function resolveFontValue(style: CSSStyleDeclaration): string {
 	return style.font || `${style.fontStyle} ${style.fontVariant} ${style.fontWeight} ${style.fontSize} / ${style.lineHeight} ${style.fontFamily}`;
 }
@@ -66,7 +73,7 @@ function isValueManagedInput(element: Element): element is HTMLInputElement {
 
 class WidthProfile {
 	private readonly context: CanvasRenderingContext2D | null;
-	private readonly widthBuckets = new Map<string, string[]>();
+	private readonly widthBuckets = new Map<string, readonly string[]>();
 	private readonly widthCache = new Map<string, string>();
 
 	constructor(font: string) {
@@ -78,25 +85,40 @@ class WidthProfile {
 		this.buildWidthBuckets();
 	}
 
-	randomizeString = (source: string): string => {
-		return Array.from(source, (char) => this.randomizeChar(char)).join("");
-	};
+	createRandomizer(source: string): RandomizeString {
+		const slots = Array.from(source, (char) => this.createSlot(char));
+		const buffer = new Array<string>(slots.length);
+
+		return () => {
+			for (let i = 0; i < slots.length; i += 1) {
+				const slot = slots[i];
+				buffer[i] = typeof slot === "string" ? slot : this.pickFromBucket(slot);
+			}
+			return buffer.join("");
+		};
+	}
 
 	private buildWidthBuckets(): void {
+		const mutableBuckets = new Map<string, string[]>();
+
 		for (const char of CANDIDATE_CHARS) {
 			const widthKey = this.measureWidthKey(char);
 			if (!widthKey) continue;
 
-			const bucket = this.widthBuckets.get(widthKey);
+			const bucket = mutableBuckets.get(widthKey);
 			if (bucket) {
 				bucket.push(char);
 			} else {
-				this.widthBuckets.set(widthKey, [char]);
+				mutableBuckets.set(widthKey, [char]);
 			}
+		}
+
+		for (const [widthKey, bucket] of mutableBuckets) {
+			this.widthBuckets.set(widthKey, bucket);
 		}
 	}
 
-	private randomizeChar(char: string): string {
+	private createSlot(char: string): RandomSlot {
 		if (isWhitespace(char)) return char;
 
 		const widthKey = this.measureWidthKey(char);
@@ -104,16 +126,25 @@ class WidthProfile {
 
 		const bucket = this.widthBuckets.get(widthKey);
 		if (!bucket || bucket.length === 0) return char;
-		if (bucket.length === 1) return bucket[0] ?? char;
+		if (bucket.length === 1 && bucket[0] === char) return char;
 
-		let next = randomItem(bucket) ?? char;
-		if (next === char) {
-			const currentIndex = bucket.indexOf(char);
-			if (currentIndex >= 0) {
-				next = bucket[(currentIndex + 1 + Math.floor(Math.random() * (bucket.length - 1))) % bucket.length] ?? char;
-			}
+		return {
+			bucket,
+			originalIndex: bucket.indexOf(char),
+		};
+	}
+
+	private pickFromBucket(slot: RandomBucketSlot): string {
+		const { bucket, originalIndex } = slot;
+		if (bucket.length === 0) return "";
+		if (bucket.length === 1) return bucket[0] ?? "";
+
+		let index = Math.floor(Math.random() * bucket.length);
+		if (index === originalIndex) {
+			index = (index + 1 + Math.floor(Math.random() * (bucket.length - 1))) % bucket.length;
 		}
-		return next;
+
+		return bucket[index] ?? bucket[0] ?? "";
 	}
 
 	private measureWidthKey(char: string): string | null {
@@ -198,7 +229,7 @@ class RandomEffectController {
 				this.textNodes.delete(node);
 				continue;
 			}
-			const rendered = state.randomize(state.original);
+			const rendered = state.randomize();
 			state.lastRendered = rendered;
 			node.textContent = rendered;
 		}
@@ -212,13 +243,13 @@ class RandomEffectController {
 			for (const attributeName of Object.keys(state.attributes) as AttributeName[]) {
 				const attributeState = state.attributes[attributeName];
 				if (!attributeState) continue;
-				const rendered = attributeState.randomize(attributeState.original);
+				const rendered = attributeState.randomize();
 				attributeState.lastRendered = rendered;
 				element.setAttribute(attributeName, rendered);
 			}
 
 			if (state.value && isValueManagedInput(element)) {
-				const rendered = state.value.randomize(state.value.original);
+				const rendered = state.value.randomize();
 				state.value.lastRendered = rendered;
 				element.value = rendered;
 			}
@@ -226,9 +257,9 @@ class RandomEffectController {
 
 		if (this.titleState) {
 			if (document.title !== this.titleState.lastRendered) {
-				this.titleState.original = document.title;
+				this.titleState = this.createRenderState(document.title, document.body ?? document.documentElement);
 			}
-			const rendered = this.titleState.randomize(this.titleState.original);
+			const rendered = this.titleState.randomize();
 			this.titleState.lastRendered = rendered;
 			document.title = rendered;
 		}
@@ -394,7 +425,7 @@ class RandomEffectController {
 		return {
 			original,
 			lastRendered: original,
-			randomize: widthProfile.randomizeString,
+			randomize: widthProfile.createRandomizer(original),
 		};
 	}
 
