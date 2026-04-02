@@ -40,6 +40,9 @@ async function initParticles() {
 			case "april-fool":
 				preset = "gravity";
 				break;
+			case "error-day":
+				preset = "bsod";
+				break;
 			case "golden-week":
 				break;
 			case "rainy-season":

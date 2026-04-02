@@ -48,6 +48,16 @@ const yearlyRanges = [
 	{
 		id: "sakura",
 		start: { month: 4, day: 2 },
+		end: { month: 4, day: 3 },
+	},
+	{
+		id: "error-day",
+		start: { month: 4, day: 4 },
+		end: { month: 4, day: 4 },
+	},
+	{
+		id: "sakura",
+		start: { month: 4, day: 5 },
 		end: { month: 4, day: 10 },
 	},
 	{
