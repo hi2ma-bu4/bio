@@ -337,9 +337,8 @@ class BsodController {
 
 		try {
 			await toCanvas(canvas, payload, {
-				errorCorrectionLevel: "M",
+				errorCorrectionLevel: "low",
 				margin: 1,
-				width: 300,
 				color: {
 					dark: "#FFFFFFFF",
 					light: "#0078D700",
