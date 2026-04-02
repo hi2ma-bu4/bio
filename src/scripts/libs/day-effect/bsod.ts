@@ -286,7 +286,7 @@ class BsodController {
 				<p class="bsod-screen__lead">Your PC ran into a problem and needs to restart. We're just collecting some error info, and then we'll restart for you.</p>
 				<p class="bsod-screen__progress"><span data-bsod-progress>0</span>% complete</p>
 				<div class="bsod-screen__footer">
-					<canvas class="bsod-screen__qr" data-bsod-qr width="300" height="300"></canvas>
+					<canvas class="bsod-screen__qr" data-bsod-qr width="140" height="140"></canvas>
 					<div class="bsod-screen__meta">
 						<p>For more information about this issue and possible fixes, visit https://www.windows.com/stopcode</p>
 						<p>If you call a support person, give them this info:</p>
@@ -339,6 +339,7 @@ class BsodController {
 			await toCanvas(canvas, payload, {
 				errorCorrectionLevel: "low",
 				margin: 1,
+				width: 140,
 				color: {
 					dark: "#FFFFFFFF",
 					light: "#0078D700",
