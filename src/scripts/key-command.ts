@@ -1,10 +1,10 @@
 import { isbot } from "isbot";
 
+import { createEffectLifecycle } from "./libs/effect-lifecycle";
 import { FlowKeys } from "./libs/flowkeys/dist/FlowKeys";
 import { showToast } from "./libs/ui-toast";
 
-const stopFunc: (() => void)[] = [];
-const updateFunc: (() => void)[] = [];
+const lifecycle = createEffectLifecycle();
 
 function initKeyCommand() {
 	const fk = new FlowKeys(window);
@@ -21,12 +21,12 @@ function initKeyCommand() {
 				document.body.addEventListener("click", domOnBomb);
 			}
 			init();
-			stopFunc.push(() => {
+			lifecycle.addStop(() => {
 				document.body.removeEventListener("click", domOnBomb);
 			});
-			updateFunc.push(init);
+			lifecycle.addUpdate(init);
 		},
-		{ once: true }
+		{ once: true },
 	);
 
 	fk.register(
@@ -38,8 +38,8 @@ function initKeyCommand() {
 			mirror.toggle();
 			let toggleFlag = true;
 
-			stopFunc.push(() => mirror.destroy());
-			updateFunc.push(() => {
+			lifecycle.addStop(() => mirror.destroy());
+			lifecycle.addUpdate(() => {
 				mirror.init();
 				if (toggleFlag) mirror.toggle();
 			});
@@ -48,15 +48,8 @@ function initKeyCommand() {
 				toggleFlag = !toggleFlag;
 			});
 		},
-		{ once: true }
+		{ once: true },
 	);
-}
-
-function stop() {
-	stopFunc.forEach((fn) => fn?.());
-}
-function update() {
-	updateFunc.forEach((fn) => fn?.());
 }
 
 // クローラー以外の場合のみ動作
@@ -66,6 +59,6 @@ if (!isbot(navigator.userAgent) && !/android|iphone|ipad|mobile/i.test(navigator
 	} else {
 		initKeyCommand();
 	}
-	document.addEventListener("astro:before-preparation", stop);
-	document.addEventListener("astro:after-swap", update);
+	document.addEventListener("astro:before-preparation", () => lifecycle.stop());
+	document.addEventListener("astro:after-swap", () => lifecycle.update());
 }

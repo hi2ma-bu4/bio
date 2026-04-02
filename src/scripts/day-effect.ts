@@ -2,14 +2,14 @@ import type { Engine } from "@tsparticles/engine";
 import { isbot } from "isbot";
 
 import { ID_BACK_CANVAS_MINI } from "../config";
+import { createEffectLifecycle } from "./libs/effect-lifecycle";
 import { nowYearlyEvent } from "./libs/match-yearly-range";
 import { getQueryParams } from "./libs/query";
 import { styledLog, type LogPart } from "./libs/styledConsole";
 import { themeChangeLock, updateAllToggleButtonsUI, type themeType } from "./libs/theme-utils";
 import { loadFont } from "./libs/ui-utils";
 
-const stopFunc: (() => void)[] = [];
-const updateFunc: (() => void)[] = [];
+const lifecycle = createEffectLifecycle();
 
 async function initParticles() {
 	let preset: string | null = null;
@@ -62,6 +62,7 @@ async function initParticles() {
 				preset = "genshin";
 				break;
 			case "halloween":
+				preset = "lifegame";
 				break;
 			case "labor-thanksgiving":
 				preset = "8-bit";
@@ -94,8 +95,8 @@ async function initParticles() {
 		case "random": {
 			const { startRandomEffect, stopRandomEffect } = await import("./libs/day-effect/random");
 			startRandomEffect();
-			stopFunc.push(stopRandomEffect);
-			updateFunc.push(startRandomEffect);
+			lifecycle.addStop(stopRandomEffect);
+			lifecycle.addUpdate(startRandomEffect);
 			break;
 		}
 		case "tetris": {
@@ -129,7 +130,7 @@ async function initParticles() {
 			const init = await loadFont("AbsentGlyph", FONT_URL);
 			if (init) {
 				init();
-				updateFunc.push(init);
+				lifecycle.addUpdate(init);
 			}
 			break;
 		}
@@ -153,11 +154,11 @@ async function initParticles() {
 				pseudoDebugKit.setHighlight(true);
 			}
 			init();
-			stopFunc.push(() => {
+			lifecycle.addStop(() => {
 				pseudoDebugKit.disable();
 				pseudoDebugKit.destroy();
 			});
-			updateFunc.push(init);
+			lifecycle.addUpdate(init);
 			theme = "light";
 			break;
 		}
@@ -172,15 +173,23 @@ async function initParticles() {
 			const init = await loadFont("hyWenHei", FONT_URL);
 			if (init) {
 				init();
-				updateFunc.push(init);
+				lifecycle.addUpdate(init);
 			}
+			break;
+		}
+		case "lifegame": {
+			const { startLifeGameEffect, stopLifeGameEffect } = await import("./libs/day-effect/lifegame");
+			startLifeGameEffect();
+			lifecycle.addStop(stopLifeGameEffect);
+			lifecycle.addUpdate(startLifeGameEffect);
+			theme = "dark";
 			break;
 		}
 		case "8-bit": {
 			const { startRetro8bit, destroyRetro8bit } = await import("./libs/day-effect/retro8bit");
 			startRetro8bit();
-			stopFunc.push(destroyRetro8bit);
-			updateFunc.push(startRetro8bit);
+			lifecycle.addStop(destroyRetro8bit);
+			lifecycle.addUpdate(startRetro8bit);
 			const FONT_URL = `/bio/fonts/EnkaDotGothic24/EnkaDotGothic24.ttf`;
 			await loadFont("EnkaDotGothic24", FONT_URL);
 			theme = "dark";
@@ -189,8 +198,8 @@ async function initParticles() {
 		case "bsod": {
 			const { startBsodEffect, stopBsodEffect } = await import("./libs/day-effect/bsod");
 			startBsodEffect({ force: true });
-			stopFunc.push(stopBsodEffect);
-			updateFunc.push(startBsodEffect);
+			lifecycle.addStop(stopBsodEffect);
+			lifecycle.addUpdate(startBsodEffect);
 			break;
 		}
 		case "snow":
@@ -206,8 +215,8 @@ async function initParticles() {
 			// 1% の確率でエフェクトを表示
 			const { startBsodEffect, stopBsodEffect } = await import("./libs/day-effect/bsod");
 			startBsodEffect();
-			stopFunc.push(stopBsodEffect);
-			updateFunc.push(startBsodEffect);
+			lifecycle.addStop(stopBsodEffect);
+			lifecycle.addUpdate(startBsodEffect);
 			break;
 		}
 	}
@@ -251,15 +260,7 @@ function initLog() {
 		styledLog(logs);
 	}
 	init();
-	updateFunc.push(init);
-}
-
-function stop() {
-	stopFunc.forEach((fn) => fn?.());
-}
-
-function update() {
-	updateFunc.forEach((fn) => fn?.());
+	lifecycle.addUpdate(init);
 }
 
 // クローラー以外の場合のみ動作
@@ -270,6 +271,6 @@ if (!isbot(navigator.userAgent)) {
 		initParticles();
 	}
 	initLog();
-	document.addEventListener("astro:before-preparation", stop);
-	document.addEventListener("astro:after-swap", update);
+	document.addEventListener("astro:before-preparation", () => lifecycle.stop());
+	document.addEventListener("astro:after-swap", () => lifecycle.update());
 }
