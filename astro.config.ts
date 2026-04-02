@@ -59,6 +59,7 @@ const browserTargets = browserslistToTargets(browserslist("> 3% in JP"));
 const PREFIX_RULES = [
 	{ keyword: "@tsparticles", name: "@tsparticles" },
 	{ keyword: "matter-js", name: "matter-js" },
+	{ keyword: "qrcode", name: "qrcode" },
 	{ keyword: "node_modules", name: "vendor" },
 	{ keyword: "pseudo-debugkit", name: "pseudo-debugkit" },
 ];
