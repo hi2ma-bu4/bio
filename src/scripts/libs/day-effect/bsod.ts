@@ -69,6 +69,7 @@ const FAILURE_SCENARIOS: FailureScenario[] = [
 	{ stopCode: "TOO_MANY_TABS_OPEN", failedModule: getExecutableName(detectBrowser()), bucketId: "0xRAM_GONE" },
 	{ stopCode: "RECURSIVE_EXISTENTIAL_CRISIS", failedModule: "mind.sys", bucketId: "0xWHY_LOOP" },
 	{ stopCode: "OUT_OF_COFFEE_EXCEPTION", failedModule: "caffeine.sys", bucketId: "0xEMPTY_CUP" },
+	{ stopCode: "REALITY_ACCESS_DENIED", failedModule: "dreams.dll", bucketId: "0xNO_ESCAPE" },
 ];
 
 const URLS = ["github.com/hi2ma-bu4", "github.com/hi2ma-bu4/bio/", "davidshimjs.github.io/qrcodejs/", "badapple.stream/", "www.google.com/teapot"];
@@ -93,25 +94,34 @@ const STYLE_TEXT = `
 	inset: 0;
 	z-index: 2147483647;
 	display: flex;
-	min-height: 100svh;
+	min-height: 100dvh;
 	width: 100%;
 	align-items: flex-start;
 	justify-content: center;
-	overflow: hidden;
+	overflow-x: hidden;
+	overflow-y: auto;
 	background: #0078d7;
 	color: #fff;
 	font-family: "Segoe UI", "Yu Gothic UI", "Meiryo", sans-serif;
+	-webkit-text-size-adjust: 100%;
+	overscroll-behavior: contain;
 }
 
 .bsod-screen__content {
+	box-sizing: border-box;
 	display: flex;
-	width: min(92vw, 68rem);
+	min-height: 100dvh;
+	width: min(100%, 68rem);
 	flex-direction: column;
-	padding: clamp(2.5rem, 6vh, 5.75rem) clamp(1.5rem, 5vw, 4rem) 3rem;
+	padding:
+		max(1.5rem, env(safe-area-inset-top))
+		clamp(1rem, 4vw, 4rem)
+		max(2rem, env(safe-area-inset-bottom))
+		max(1rem, env(safe-area-inset-left));
 }
 
 .bsod-screen__face {
-	margin: 0 0 1rem;
+	margin: 0 0 0.75rem;
 	font-size: clamp(4.75rem, 14vw, 9rem);
 	font-weight: 300;
 	line-height: 1;
@@ -170,18 +180,72 @@ const STYLE_TEXT = `
 }
 
 @media (max-width: 640px) {
+	.bsod-screen {
+		align-items: stretch;
+	}
+
 	.bsod-screen__content {
-		padding-inline: 1.25rem;
-		padding-bottom: 2.5rem;
+		width: 100%;
+		padding:
+			max(1rem, env(safe-area-inset-top))
+			max(1rem, env(safe-area-inset-right))
+			max(1.5rem, env(safe-area-inset-bottom))
+			max(1rem, env(safe-area-inset-left));
+	}
+
+	.bsod-screen__face {
+		margin-bottom: 0.4rem;
+		font-size: clamp(3.25rem, 18vw, 5.25rem);
+	}
+
+	.bsod-screen__lead {
+		max-width: none;
+		font-size: clamp(1rem, 4.8vw, 1.35rem);
+		line-height: 1.38;
+	}
+
+	.bsod-screen__progress {
+		margin-top: 1.1rem;
+		font-size: clamp(1rem, 4.2vw, 1.2rem);
 	}
 
 	.bsod-screen__footer {
-		gap: 1.25rem;
+		margin-top: 1.5rem;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 0.9rem;
+	}
+
+	.bsod-screen__qr {
+		height: 5.75rem;
+		width: 5.75rem;
 	}
 
 	.bsod-screen__meta {
+		max-width: none;
 		font-size: 0.88rem;
-		line-height: 1.6;
+		line-height: 1.52;
+		word-break: break-word;
+	}
+
+	.bsod-screen__meta p {
+		margin-bottom: 0.35rem;
+	}
+
+	.bsod-screen__hint {
+		margin-top: 0.8rem !important;
+		font-size: 0.82rem;
+	}
+}
+
+@media (max-width: 380px) {
+	.bsod-screen__content {
+		padding-inline: max(0.85rem, env(safe-area-inset-left));
+	}
+
+	.bsod-screen__meta {
+		font-size: 0.8rem;
+		line-height: 1.45;
 	}
 }
 `;
@@ -336,10 +400,11 @@ class BsodController {
 		});
 
 		try {
+			const qrWidth = window.innerWidth <= 640 ? 92 : 140;
 			await toCanvas(canvas, payload, {
 				errorCorrectionLevel: "low",
 				margin: 1,
-				width: 140,
+				width: qrWidth,
 				color: {
 					dark: "#FFFFFFFF",
 					light: "#0078D700",
