@@ -12,7 +12,7 @@ const stopFunc: (() => void)[] = [];
 const updateFunc: (() => void)[] = [];
 
 async function initParticles() {
-	let preset: string = "";
+	let preset: string | null = null;
 	let pageThemeClass: string = "";
 
 	const params = getQueryParams(["effect"]);
@@ -183,18 +183,31 @@ async function initParticles() {
 			theme = "dark";
 			break;
 		}
+		case "bsod": {
+			const { startBsodEffect, stopBsodEffect } = await import("./libs/day-effect/bsod");
+			startBsodEffect({ force: true });
+			stopFunc.push(stopBsodEffect);
+			updateFunc.push(startBsodEffect);
+			break;
+		}
 		case "snow":
 			const { loadSnowPreset } = await import("./libs/tsparticles/snow");
 			loadPreset = loadSnowPreset;
 			theme = "dark";
 			break;
-		default:
-			return;
-	}
+		default: {
+			if (!preset || Math.random() >= 0.01) {
+				return;
+			}
 
-	// DOM が ready になってからロード
-	const el = document.getElementById("bg-canvas");
-	if (!el) return;
+			// 1% の確率でエフェクトを表示
+			const { startBsodEffect, stopBsodEffect } = await import("./libs/day-effect/bsod");
+			startBsodEffect();
+			stopFunc.push(stopBsodEffect);
+			updateFunc.push(startBsodEffect);
+			break;
+		}
+	}
 
 	if (theme) {
 		themeChangeLock(true, theme);
@@ -208,6 +221,10 @@ async function initParticles() {
 	}
 
 	if (loadPreset) {
+		// DOM が ready になってからロード
+		const el = document.getElementById("bg-canvas");
+		if (!el) return;
+
 		const { tsParticles } = await import("@tsparticles/engine");
 		await loadPreset(tsParticles);
 		await tsParticles.load({
