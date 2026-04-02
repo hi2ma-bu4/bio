@@ -17,6 +17,8 @@ class LifeGameEffect {
 	private pixels = this.imageData.data;
 	private frameId: number | null = null;
 	private lastStepTime = 0;
+	private lastChangeTime = 0;
+	private aliveCount = 0;
 	private pointerCell: { x: number; y: number } | null = null;
 
 	constructor(private readonly container: HTMLElement) {
@@ -153,6 +155,8 @@ class LifeGameEffect {
 	}
 
 	private step(): void {
+		let aliveCounter = 0;
+
 		for (let y = 0; y < this.rows; y += 1) {
 			const north = y === 0 ? this.rows - 1 : y - 1;
 			const south = y === this.rows - 1 ? 0 : y + 1;
@@ -169,11 +173,25 @@ class LifeGameEffect {
 
 				// HighLife (B36/S23)
 				this.nextGrid[index] = alive ? (neighbors === 2 || neighbors === 3 ? 1 : 0) : neighbors === 3 || neighbors === 6 ? 1 : 0;
+
+				if (this.nextGrid[index] === 1) aliveCounter++;
 			}
 		}
 
 		this.applyPointerInfluence(this.nextGrid);
 		[this.grid, this.nextGrid] = [this.nextGrid, this.grid];
+
+		// 変化検知
+		if (aliveCounter !== this.aliveCount) {
+			this.aliveCount = aliveCounter;
+			this.lastChangeTime = performance.now();
+		} else {
+			// 5秒停止でリセット
+			if (performance.now() - this.lastChangeTime > 5000) {
+				this.seedRandom(this.grid);
+				this.lastChangeTime = performance.now();
+			}
+		}
 	}
 
 	private applyPointerInfluence(target: Uint8Array): void {
@@ -198,13 +216,13 @@ class LifeGameEffect {
 		this.context.fillStyle = "rgba(10, 3, 18, 0.18)";
 		this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
-		const t = time * 0.0018;
+		const t = time * 0.002;
 		for (let i = 0; i < this.grid.length; i += 1) {
 			const pixelIndex = i * 4;
 			if (this.grid[i] === 1) {
-				this.pixels[pixelIndex] = Math.round(214 + Math.sin(t + i * 0.0015) * 32);
-				this.pixels[pixelIndex + 1] = Math.round(102 + Math.sin(t * 1.25 + i * 0.0012) * 54);
-				this.pixels[pixelIndex + 2] = Math.round(28 + Math.sin(t * 0.85 + i * 0.0018) * 24);
+				this.pixels[pixelIndex] = 128 + Math.sin(t) * 127;
+				this.pixels[pixelIndex + 1] = 128 + Math.sin(t + 2) * 127;
+				this.pixels[pixelIndex + 2] = 128 + Math.sin(t + 4) * 127;
 				this.pixels[pixelIndex + 3] = 255;
 			} else {
 				this.pixels[pixelIndex + 3] = 0;
