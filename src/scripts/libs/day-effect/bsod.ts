@@ -400,11 +400,10 @@ class BsodController {
 		});
 
 		try {
-			const qrWidth = window.innerWidth <= 640 ? 92 : 140;
 			await toCanvas(canvas, payload, {
 				errorCorrectionLevel: "low",
 				margin: 1,
-				width: qrWidth,
+				width: 140,
 				color: {
 					dark: "#FFFFFFFF",
 					light: "#0078D700",
