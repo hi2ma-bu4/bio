@@ -24,16 +24,57 @@ const BSOD_SHORT_DELAY = 120;
 const OVERLAY_ID = "bsod-screen";
 const STYLE_ID = "bsod-screen-style";
 
+function detectBrowser() {
+	const ua = navigator.userAgent;
+
+	if (ua.includes("Edg/")) return "msedge";
+	if (ua.includes("Chrome/") && !ua.includes("Edg/")) return "chrome";
+	if (ua.includes("Firefox/")) return "firefox";
+	if (ua.includes("Safari/") && !ua.includes("Chrome/")) return "safari";
+
+	return "browser";
+}
+
+function detectOS(): string {
+	const ua = navigator.userAgent;
+
+	if (ua.includes("Windows NT")) return "windows";
+	if (ua.includes("Mac OS X")) return "mac";
+	if (ua.includes("Linux")) return "linux";
+
+	return "unknown";
+}
+
+function getExecutableName(base: string): string {
+	const os = detectOS();
+
+	switch (os) {
+		case "windows":
+			return `${base}.exe`;
+		case "mac":
+			// macは実際は.appだけどネタ的にはこれが自然
+			return `${base}.app`;
+		case "linux":
+			// Linuxは拡張子つけないのがそれっぽい
+			return base;
+		default:
+			return base;
+	}
+}
+
 const FAILURE_SCENARIOS: FailureScenario[] = [
-	{ stopCode: "CRITICAL_PROCESS_DIED", failedModule: "ntoskrnl.exe", bucketId: "0x0EF_2E9D" },
-	{ stopCode: "MEMORY_MANAGEMENT", failedModule: "win32kfull.sys", bucketId: "0x1A_7C12" },
-	{ stopCode: "SYSTEM_SERVICE_EXCEPTION", failedModule: "dxgkrnl.sys", bucketId: "0x3B_B8F4" },
-	{ stopCode: "KMODE_EXCEPTION_NOT_HANDLED", failedModule: "fltmgr.sys", bucketId: "0x1E_50D9" },
-	{ stopCode: "PAGE_FAULT_IN_NONPAGED_AREA", failedModule: "storport.sys", bucketId: "0x50_C53A" },
+	{ stopCode: "AI_TAKING_OVER", failedModule: "skynet.sys", bucketId: "0xRUN_NOW" },
+	{ stopCode: "UNEXPECTED_MEME_EXCEPTION", failedModule: "internet.sys", bucketId: "0xMEME_404" },
+	{ stopCode: "USER_ATTEMPTED_THINKING", failedModule: "logic.dll", bucketId: "0x0000_ID10T" },
+	{ stopCode: "TOO_MANY_TABS_OPEN", failedModule: getExecutableName(detectBrowser()), bucketId: "0xRAM_GONE" },
+	{ stopCode: "RECURSIVE_EXISTENTIAL_CRISIS", failedModule: "mind.sys", bucketId: "0xWHY_LOOP" },
+	{ stopCode: "OUT_OF_COFFEE_EXCEPTION", failedModule: "caffeine.sys", bucketId: "0xEMPTY_CUP" },
 ];
 
+const URLS = ["github.com/hi2ma-bu4", "github.com/hi2ma-bu4/bio/", "davidshimjs.github.io/qrcodejs/", "badapple.stream/", "www.google.com/teapot"];
+
 const QR_PAYLOAD_FACTORIES: Array<(ctx: PayloadContext) => string> = [
-	(ctx) => `https://www.windows.com/stopcode?code=${ctx.stopCode}&id=${ctx.sessionId}`,
+	(ctx) => "https://" + URLS[(Math.random() * URLS.length) | 0],
 	(ctx) =>
 		JSON.stringify({
 			stopCode: ctx.stopCode,
@@ -43,15 +84,7 @@ const QR_PAYLOAD_FACTORIES: Array<(ctx: PayloadContext) => string> = [
 			timestamp: ctx.timestamp,
 		}),
 	(ctx) => `STOPCODE:${ctx.stopCode};WHAT_FAILED:${ctx.failedModule};BUCKET:${ctx.bucketId};SESSION:${ctx.sessionId}`,
-	(ctx) =>
-		[
-			"WindowsStopDiagnostic",
-			`Code=${ctx.stopCode}`,
-			`Module=${ctx.failedModule}`,
-			`FailureBucket=${ctx.bucketId}`,
-			`Ticket=${ctx.sessionId}`,
-			`Seed=${ctx.progressSeed}`,
-		].join("\n"),
+	(ctx) => ["WindowsStopDiagnostic", `Code=${ctx.stopCode}`, `Module=${ctx.failedModule}`, `FailureBucket=${ctx.bucketId}`, `Ticket=${ctx.sessionId}`, `Seed=${ctx.progressSeed}`].join("\n"),
 ];
 
 const STYLE_TEXT = `
@@ -74,7 +107,7 @@ const STYLE_TEXT = `
 	display: flex;
 	width: min(92vw, 68rem);
 	flex-direction: column;
-	padding: clamp(2.5rem, 9vh, 5.75rem) clamp(1.5rem, 5vw, 4rem) 3rem;
+	padding: clamp(2.5rem, 6vh, 5.75rem) clamp(1.5rem, 5vw, 4rem) 3rem;
 }
 
 .bsod-screen__face {
@@ -253,7 +286,7 @@ class BsodController {
 				<p class="bsod-screen__lead">Your PC ran into a problem and needs to restart. We're just collecting some error info, and then we'll restart for you.</p>
 				<p class="bsod-screen__progress"><span data-bsod-progress>0</span>% complete</p>
 				<div class="bsod-screen__footer">
-					<canvas class="bsod-screen__qr" data-bsod-qr width="140" height="140"></canvas>
+					<canvas class="bsod-screen__qr" data-bsod-qr width="300" height="300"></canvas>
 					<div class="bsod-screen__meta">
 						<p>For more information about this issue and possible fixes, visit https://www.windows.com/stopcode</p>
 						<p>If you call a support person, give them this info:</p>
@@ -306,7 +339,7 @@ class BsodController {
 			await toCanvas(canvas, payload, {
 				errorCorrectionLevel: "M",
 				margin: 1,
-				width: 140,
+				width: 300,
 				color: {
 					dark: "#FFFFFFFF",
 					light: "#0078D700",
@@ -336,8 +369,7 @@ class BsodController {
 
 	private advanceProgress(): void {
 		if (this.destroyed) return;
-		const increment =
-			this.progress < 24 ? randomInt(1, 4) : this.progress < 72 ? randomInt(1, 3) : randomInt(1, 2);
+		const increment = this.progress < 24 ? randomInt(1, 4) : this.progress < 72 ? randomInt(1, 3) : randomInt(1, 2);
 		this.progress = Math.min(100, this.progress + increment);
 		if (this.progressLabel) {
 			this.progressLabel.textContent = String(this.progress);
