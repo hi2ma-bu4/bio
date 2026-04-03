@@ -207,7 +207,6 @@ async function initParticles() {
 		case "virus": {
 			const { startVirusEffect, stopVirusEffect } = await import("./libs/day-effect/virus");
 			attachManagedEffect(startVirusEffect, stopVirusEffect);
-			theme = "dark";
 			break;
 		}
 		case "8-bit": {
