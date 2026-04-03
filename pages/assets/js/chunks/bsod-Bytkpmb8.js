@@ -167,7 +167,7 @@ import{b as w}from"./qrcode-BfZzSBbH.js";let c=null,f=0;function E(){f=window.sc
 				<div class="bsod-screen__footer">
 					<canvas class="bsod-screen__qr" data-bsod-qr width="140" height="140"></canvas>
 					<div class="bsod-screen__meta">
-						<p>For more information about this issue and possible fixes, visit https://www.windows.com/stopcode</p>
+						<p>For more information about this issue and possible fixes, visit https://github.com/hi2ma-bu4/bio/issues</p>
 						<p>If you call a support person, give them this info:</p>
 						<p>Stop code: ${this.scenario.stopCode}</p>
 						<p>What failed: ${this.scenario.failedModule}</p>
