@@ -126,6 +126,11 @@ const yearlyRanges = [
 		end: { month: 10, day: 31 },
 	},
 	{
+		id: "virus-day",
+		start: { month: 11, day: 7 },
+		end: { month: 11, day: 7 },
+	},
+	{
 		id: "autumn-leaves",
 		start: { month: 11, day: 10 },
 		end: { month: 11, day: 22 },

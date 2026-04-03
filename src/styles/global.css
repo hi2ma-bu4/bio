@@ -112,6 +112,14 @@
 		@apply bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200 scroll-smooth;
 	}
 
+	::view-transition-old(root) {
+		animation: bio-old-page 360ms cubic-bezier(0.22, 1, 0.36, 1) both;
+	}
+
+	::view-transition-new(root) {
+		animation: bio-new-page 320ms cubic-bezier(0.16, 1, 0.3, 1) both;
+	}
+
 	/* スムーズな色の移行 */
 	body,
 	header,
@@ -133,6 +141,13 @@
 	/* スクロールロック用ユーティリティ */
 	.no-scroll {
 		@apply w-full overflow-hidden touch-none;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		::view-transition-old(root),
+		::view-transition-new(root) {
+			animation-duration: 1ms;
+		}
 	}
 }
 
@@ -163,5 +178,80 @@
 	#back-canvas-mini {
 		@apply fixed top-0 left-1/2 w-svw h-svh object-contain -z-1 pointer-events-none opacity-40 -translate-x-1/2;
 		image-rendering: pixelated;
+	}
+
+	[data-page-afterimage] {
+		filter: blur(0px) saturate(1);
+		transform: translate3d(0, 0, 0) scale(1);
+	}
+
+	[data-page-afterimage].is-active {
+		animation: bio-fallback-afterimage 380ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+	}
+}
+
+@keyframes bio-old-page {
+	0% {
+		opacity: 1;
+		filter: none;
+		transform: translate3d(0, 0, 0) scale(1);
+	}
+
+	60% {
+		opacity: 0.22;
+		filter: blur(1.5px) saturate(1.04);
+	}
+
+	100% {
+		opacity: 0;
+		filter: blur(9px) saturate(1.12);
+		transform: translate3d(0, 0, 0) scale(1.012);
+	}
+}
+
+@keyframes bio-new-page {
+	0% {
+		opacity: 0.82;
+		transform: translate3d(0, 8px, 0) scale(0.996);
+		filter: saturate(0.96);
+	}
+
+	100% {
+		opacity: 1;
+		transform: translate3d(0, 0, 0) scale(1);
+		filter: saturate(1);
+	}
+}
+
+@keyframes bio-fallback-afterimage {
+	0% {
+		opacity: 0.22;
+		filter: blur(0px) saturate(1);
+		transform: translate3d(0, 0, 0) scale(1);
+	}
+
+	70% {
+		opacity: 0.1;
+		filter: blur(2px) saturate(1.06);
+	}
+
+	100% {
+		opacity: 0;
+		filter: blur(7px) saturate(1.1);
+		transform: translate3d(0, 0, 0) scale(1.01);
+	}
+}
+
+@media (max-width: 767px) {
+	::view-transition-old(root) {
+		animation-duration: 280ms;
+	}
+
+	::view-transition-new(root) {
+		animation-duration: 240ms;
+	}
+
+	[data-page-afterimage].is-active {
+		animation-duration: 300ms;
 	}
 }

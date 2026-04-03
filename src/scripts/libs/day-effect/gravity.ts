@@ -12,6 +12,23 @@ interface PhysicsBox {
 const defaultSelectors: string[] = ["p", "h1", "h2", "h3", "h4", "h5", "h6", "span", "a", "img", "span", "button", "input", "li", "i", "dialog"];
 const DRAG_THRESHOLD: number = 5; // ピクセル
 
+interface ElementSnapshot {
+	position: string;
+	left: string;
+	top: string;
+	margin: string;
+	width: string;
+	height: string;
+	zIndex: string;
+	boxSizing: string;
+	touchAction: string;
+	transform: string;
+}
+
+interface GravityElementWithCleanup extends HTMLElement {
+	__gravityCleanup__?: () => void;
+}
+
 // --- ユーティリティ関数 ---
 
 /**
@@ -41,47 +58,91 @@ function hasDirectTextContent(element: HTMLElement, minLength: number = 3): bool
 function attachSmartClick(el: HTMLElement): void {
 	let startX: number = 0;
 	let startY: number = 0;
+	let moved = false;
+	let pointerType = "mouse";
+	let suppressNativeClickUntil = 0;
 
-	el.addEventListener("mousedown", (e: MouseEvent) => {
+	const isInteractiveElement = (): boolean => {
+		if (el.tabIndex >= 0) return true;
+		const role = el.getAttribute("role");
+		if (role === "button" || role === "link" || role === "menuitem" || role === "checkbox" || role === "radio" || role === "switch") return true;
+
+		return ["A", "BUTTON", "INPUT", "SELECT", "TEXTAREA", "SUMMARY", "LABEL"].includes(el.tagName);
+	};
+
+	const shouldTreatAsTap = (x: number, y: number): boolean => {
+		const dx = x - startX;
+		const dy = y - startY;
+		const dist = Math.sqrt(dx * dx + dy * dy);
+		return dist <= DRAG_THRESHOLD;
+	};
+
+	const handlePointerDown = (e: PointerEvent) => {
 		startX = e.clientX;
 		startY = e.clientY;
-	});
+		moved = false;
+		pointerType = e.pointerType || "mouse";
+	};
+	const handlePointerMove = (e: PointerEvent) => {
+		if (moved) return;
+		moved = !shouldTreatAsTap(e.clientX, e.clientY);
+	};
+	const handlePointerUp = () => {
+		if (pointerType === "mouse" || moved || !isInteractiveElement()) return;
 
-	el.addEventListener(
-		"click",
-		(e: MouseEvent) => {
-			const dx: number = e.clientX - startX;
-			const dy: number = e.clientY - startY;
-			const dist: number = Math.sqrt(dx * dx + dy * dy);
-
-			if (dist > DRAG_THRESHOLD) {
-				// ドラッグと判定されたら機能をブロック
-				e.preventDefault();
-				e.stopPropagation();
-				return false;
+		suppressNativeClickUntil = performance.now() + 450;
+		window.setTimeout(() => {
+			if (document.contains(el)) {
+				el.click();
 			}
-			// クリックと判定されたら機能を許可
-		},
-		true
-	);
+		}, 0);
+	};
+	const handlePointerCancel = () => {
+		moved = true;
+	};
+	const handleClick = (e: MouseEvent) => {
+		if (performance.now() < suppressNativeClickUntil && e.detail !== 0) {
+			e.preventDefault();
+			e.stopPropagation();
+			return false;
+		}
+
+		if (moved || !shouldTreatAsTap(e.clientX, e.clientY)) {
+			// ドラッグと判定されたら機能をブロック
+			e.preventDefault();
+			e.stopPropagation();
+			return false;
+		}
+		// クリックと判定されたら機能を許可
+	};
+
+	el.addEventListener("pointerdown", handlePointerDown, { passive: true });
+	el.addEventListener("pointermove", handlePointerMove, { passive: true });
+	el.addEventListener("pointerup", handlePointerUp, { passive: true });
+	el.addEventListener("pointercancel", handlePointerCancel, { passive: true });
+	el.addEventListener("click", handleClick, true);
+
+	(el as GravityElementWithCleanup).__gravityCleanup__ = () => {
+		el.removeEventListener("pointerdown", handlePointerDown);
+		el.removeEventListener("pointermove", handlePointerMove);
+		el.removeEventListener("pointerup", handlePointerUp);
+		el.removeEventListener("pointercancel", handlePointerCancel);
+		el.removeEventListener("click", handleClick, true);
+	};
 }
 
 // --- メイン関数 ---
+let activeCleanup: (() => void) | null = null;
 
 /**
  * 物理エンジンの初期化とDOM要素への適用を行う関数 (TS Module Export)
  * @param selectors - 物理化対象のCSSセレクタ（例: 'p, h1', または ['p', '.custom-box']）
  */
 export function initializePhysicsEngine(selectors: string[] | string = defaultSelectors): void {
-	// グローバルな実行フラグのチェック (モジュール環境では非推奨だが、以前の動作を維持するため)
-	if ((window as any).hasGravityScriptRun) {
-		console.warn("Gravity script is already running. Stopping initialization.");
-		return;
-	}
-	(window as any).hasGravityScriptRun = true;
+	stopPhysicsEngine();
 
 	// Matter.jsのモジュールエイリアス
-	const { Engine, Runner, World, Bodies, Mouse, MouseConstraint } = Matter;
+	const { Engine, Runner, World, Bodies, Mouse, MouseConstraint, Composite } = Matter;
 
 	const engine: Matter.Engine = Engine.create();
 	const world: Matter.World = engine.world;
@@ -104,7 +165,6 @@ export function initializePhysicsEngine(selectors: string[] | string = defaultSe
 		});
 	} catch (e) {
 		console.error("Invalid CSS selector provided:", e);
-		(window as any).hasGravityScriptRun = false;
 		return;
 	}
 
@@ -125,6 +185,7 @@ export function initializePhysicsEngine(selectors: string[] | string = defaultSe
 	});
 
 	const boxes: PhysicsBox[] = [];
+	const originalStyles = new Map<HTMLElement, ElementSnapshot>();
 
 	elements.forEach((el) => {
 		const rect: DOMRect = el.getBoundingClientRect();
@@ -139,6 +200,19 @@ export function initializePhysicsEngine(selectors: string[] | string = defaultSe
 			density: 0.001,
 		});
 
+		originalStyles.set(el, {
+			position: el.style.position,
+			left: el.style.left,
+			top: el.style.top,
+			margin: el.style.margin,
+			width: el.style.width,
+			height: el.style.height,
+			zIndex: el.style.zIndex,
+			boxSizing: el.style.boxSizing,
+			touchAction: el.style.touchAction,
+			transform: el.style.transform,
+		});
+
 		// スタイル適用
 		el.style.position = "fixed";
 		el.style.left = "0px";
@@ -148,7 +222,7 @@ export function initializePhysicsEngine(selectors: string[] | string = defaultSe
 		el.style.height = `${h}px`;
 		el.style.zIndex = "1000";
 		el.style.boxSizing = "border-box";
-		el.style.touchAction = "none";
+		el.style.touchAction = "manipulation";
 		el.setAttribute("draggable", "false");
 
 		// スマートクリック判定を付与
@@ -184,8 +258,9 @@ export function initializePhysicsEngine(selectors: string[] | string = defaultSe
 
 	// --- ループ処理 ---
 	const runner: Matter.Runner = Runner.create();
+	let frameId: number | null = null;
 
-	(function renderLoop(): void {
+	const renderLoop = (): void => {
 		Runner.tick(runner, engine, 1000 / 60);
 
 		boxes.forEach((box) => {
@@ -198,6 +273,45 @@ export function initializePhysicsEngine(selectors: string[] | string = defaultSe
 			el.style.transform = `translate3d(${x}px, ${y}px, 0) rotate(${b.angle}rad)`;
 		});
 
-		requestAnimationFrame(renderLoop);
-	})();
+		frameId = requestAnimationFrame(renderLoop);
+	};
+	frameId = requestAnimationFrame(renderLoop);
+
+	activeCleanup = () => {
+		if (frameId != null) {
+			cancelAnimationFrame(frameId);
+			frameId = null;
+		}
+
+		Runner.stop(runner);
+		World.remove(world, mouseConstraint);
+		Composite.clear(world, false);
+		engine.events = {};
+
+		for (const box of boxes) {
+			const snapshot = originalStyles.get(box.element);
+			if (!snapshot) continue;
+
+			box.element.style.position = snapshot.position;
+			box.element.style.left = snapshot.left;
+			box.element.style.top = snapshot.top;
+			box.element.style.margin = snapshot.margin;
+			box.element.style.width = snapshot.width;
+			box.element.style.height = snapshot.height;
+			box.element.style.zIndex = snapshot.zIndex;
+			box.element.style.boxSizing = snapshot.boxSizing;
+			box.element.style.touchAction = snapshot.touchAction;
+			box.element.style.transform = snapshot.transform;
+
+			const cleanup = (box.element as GravityElementWithCleanup).__gravityCleanup__;
+			cleanup?.();
+			delete (box.element as GravityElementWithCleanup).__gravityCleanup__;
+		}
+
+		activeCleanup = null;
+	};
+}
+
+export function stopPhysicsEngine(): void {
+	activeCleanup?.();
 }

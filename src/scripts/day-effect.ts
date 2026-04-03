@@ -11,6 +11,21 @@ import { loadFont } from "./libs/ui-utils";
 
 const lifecycle = createEffectLifecycle();
 
+function attachManagedEffect(start: () => void, stop: () => void): void {
+	start();
+	lifecycle.addStop(stop);
+	lifecycle.addUpdate(start);
+}
+
+function syncPageTheme(pageThemeClass: string): void {
+	if (!pageThemeClass) return;
+
+	document.body.classList.add(pageThemeClass);
+	document.addEventListener("astro:before-swap", (event) => {
+		(event as Event & { newDocument: Document }).newDocument.body.classList.add(pageThemeClass);
+	});
+}
+
 async function initParticles() {
 	let preset: string | null = null;
 	let pageThemeClass: string = "";
@@ -42,6 +57,9 @@ async function initParticles() {
 				break;
 			case "error-day":
 				preset = "bsod";
+				break;
+			case "virus-day":
+				preset = "virus";
 				break;
 			case "golden-week":
 				break;
@@ -87,16 +105,19 @@ async function initParticles() {
 			loadPreset = loadSakuraPreset;
 			break;
 		}
+		case "bsod": {
+			const { startBsodEffect, stopBsodEffect } = await import("./libs/day-effect/bsod");
+			attachManagedEffect(() => startBsodEffect({ force: true }), stopBsodEffect);
+			break;
+		}
 		case "gravity": {
-			const { initializePhysicsEngine } = await import("./libs/day-effect/gravity");
-			initializePhysicsEngine();
+			const { initializePhysicsEngine, stopPhysicsEngine } = await import("./libs/day-effect/gravity");
+			attachManagedEffect(initializePhysicsEngine, stopPhysicsEngine);
 			break;
 		}
 		case "random": {
 			const { startRandomEffect, stopRandomEffect } = await import("./libs/day-effect/random");
-			startRandomEffect();
-			lifecycle.addStop(stopRandomEffect);
-			lifecycle.addUpdate(startRandomEffect);
+			attachManagedEffect(startRandomEffect, stopRandomEffect);
 			break;
 		}
 		case "tetris": {
@@ -179,27 +200,22 @@ async function initParticles() {
 		}
 		case "lifegame": {
 			const { startLifeGameEffect, stopLifeGameEffect } = await import("./libs/day-effect/lifegame");
-			startLifeGameEffect();
-			lifecycle.addStop(stopLifeGameEffect);
-			lifecycle.addUpdate(startLifeGameEffect);
+			attachManagedEffect(startLifeGameEffect, stopLifeGameEffect);
+			theme = "dark";
+			break;
+		}
+		case "virus": {
+			const { startVirusEffect, stopVirusEffect } = await import("./libs/day-effect/virus");
+			attachManagedEffect(startVirusEffect, stopVirusEffect);
 			theme = "dark";
 			break;
 		}
 		case "8-bit": {
 			const { startRetro8bit, destroyRetro8bit } = await import("./libs/day-effect/retro8bit");
-			startRetro8bit();
-			lifecycle.addStop(destroyRetro8bit);
-			lifecycle.addUpdate(startRetro8bit);
+			attachManagedEffect(startRetro8bit, destroyRetro8bit);
 			const FONT_URL = `/bio/fonts/EnkaDotGothic24/EnkaDotGothic24.ttf`;
 			await loadFont("EnkaDotGothic24", FONT_URL);
 			theme = "dark";
-			break;
-		}
-		case "bsod": {
-			const { startBsodEffect, stopBsodEffect } = await import("./libs/day-effect/bsod");
-			startBsodEffect({ force: true });
-			lifecycle.addStop(stopBsodEffect);
-			lifecycle.addUpdate(startBsodEffect);
 			break;
 		}
 		case "snow":
@@ -225,12 +241,7 @@ async function initParticles() {
 		themeChangeLock(true, theme);
 		updateAllToggleButtonsUI();
 	}
-	if (pageThemeClass) {
-		document.body.classList.add(pageThemeClass);
-		document.addEventListener("astro:before-swap", (event) => {
-			event.newDocument.body.classList.add(pageThemeClass);
-		});
-	}
+	syncPageTheme(pageThemeClass);
 
 	if (loadPreset) {
 		// DOM が ready になってからロード
