@@ -6,6 +6,8 @@ interface PhysicsBox {
 	body: Matter.Body;
 	w: number;
 	h: number;
+	spawnX: number;
+	offscreenSince: number | null;
 }
 
 interface PhysicsRect {
@@ -18,6 +20,8 @@ interface PhysicsRect {
 // --- 定数 ---
 const defaultSelectors: string[] = ["p", "h1", "h2", "h3", "h4", "h5", "h6", "span", "a", "img", "span", "button", "input", "li", "i", "dialog"];
 const DRAG_THRESHOLD: number = 5; // ピクセル
+const RESPAWN_DELAY_MS: number = 1500;
+const RESPAWN_TOP_OFFSET: number = 96;
 
 interface ElementSnapshot {
 	position: string;
@@ -312,7 +316,7 @@ export function initializePhysicsEngine(selectors: string[] | string = defaultSe
 	stopPhysicsEngine();
 
 	// Matter.jsのモジュールエイリアス
-	const { Engine, Runner, World, Bodies, Mouse, MouseConstraint, Composite } = Matter;
+	const { Engine, Runner, World, Bodies, Body, Mouse, MouseConstraint, Composite } = Matter;
 
 	const engine: Matter.Engine = Engine.create();
 	const world: Matter.World = engine.world;
@@ -329,110 +333,6 @@ export function initializePhysicsEngine(selectors: string[] | string = defaultSe
 	const selectorArray: string[] = Array.isArray(selectors) ? selectors : [selectors];
 	const selectorString: string = selectorArray.join(", ");
 
-	let rawElements: HTMLElement[] = [];
-	try {
-		document.querySelectorAll(selectorString).forEach((el) => {
-			if (!(el instanceof HTMLElement)) return;
-			if (isRenderableElement(el, viewport)) {
-				rawElements.push(el);
-			}
-		});
-	} catch (e) {
-		selectionLockStyle.remove();
-		console.error("Invalid CSS selector provided:", e);
-		return;
-	}
-
-	// フィルタリング (親テキスト優先ロジック)
-	const filteredElements: HTMLElement[] = rawElements.filter((parent) => {
-		const hasText: boolean = hasDirectTextContent(parent);
-		const hasTargetChild: boolean = rawElements.some((child) => parent !== child && parent.contains(child));
-
-		if (isInteractiveElement(parent)) {
-			return true;
-		}
-
-		if (hasText) {
-			// 1. 親が直接テキストを持っている場合: 親を物理化
-			return true;
-		} else if (hasTargetChild) {
-			// 2. 親がテキストを持たず、ターゲットとなる子要素を持っている場合: 親は除外
-			return false;
-		}
-		// 3. その他の要素: 物理化
-		return true;
-	});
-
-	const selectedElements = new Set(filteredElements);
-	const elements: HTMLElement[] = [...filteredElements]
-		.sort((a, b) => getElementDepth(a) - getElementDepth(b))
-		.filter((element) => {
-			let ancestor = element.parentElement;
-			while (ancestor) {
-				if (selectedElements.has(ancestor)) {
-					return false;
-				}
-				ancestor = ancestor.parentElement;
-			}
-			return true;
-		});
-
-	const boxes: PhysicsBox[] = [];
-	const originalStyles = new Map<HTMLElement, ElementSnapshot>();
-
-	elements.forEach((el) => {
-		const physicsRect = getPhysicsRect(el);
-		const w: number = physicsRect.width;
-		const h: number = physicsRect.height;
-		const x: number = physicsRect.left + w / 2;
-		const y: number = physicsRect.top + h / 2;
-
-		const body: Matter.Body = Bodies.rectangle(x, y, w, h, {
-			restitution: 0.6,
-			friction: 0.5,
-			density: 0.001,
-		});
-
-		originalStyles.set(el, {
-			position: el.style.position,
-			left: el.style.left,
-			top: el.style.top,
-			margin: el.style.margin,
-			width: el.style.width,
-			height: el.style.height,
-			zIndex: el.style.zIndex,
-			boxSizing: el.style.boxSizing,
-			touchAction: el.style.touchAction,
-			transition: el.style.transition,
-			willChange: el.style.willChange,
-			transform: el.style.transform,
-		});
-
-		// スタイル適用
-		el.style.position = "fixed";
-		el.style.left = "0px";
-		el.style.top = "0px";
-		el.style.margin = "0";
-		el.style.width = `${w}px`;
-		el.style.height = `${h}px`;
-		el.style.zIndex = "1000";
-		el.style.boxSizing = "border-box";
-		el.style.touchAction = "manipulation";
-		el.style.transition = "none";
-		el.style.willChange = "transform";
-		el.setAttribute("draggable", "false");
-
-		// スマートクリック判定を付与
-		attachSmartClick(el);
-
-		// 初期位置
-		el.style.transform = `translate3d(${body.position.x - w / 2}px, ${body.position.y - h / 2}px, 0)`;
-
-		World.add(world, body);
-
-		boxes.push({ element: el, body: body, w, h });
-	});
-
 	// --- 壁と床 ---
 	const wallThick: number = 200;
 	const ceilingHeight = height * 5;
@@ -447,13 +347,261 @@ export function initializePhysicsEngine(selectors: string[] | string = defaultSe
 	const mouse: Matter.Mouse = Mouse.create(document.body);
 	const mouseConstraint: Matter.MouseConstraint = MouseConstraint.create(engine, {
 		mouse: mouse,
-		constraint: { stiffness: 0.2, render: { visible: false } },
+		constraint: { stiffness: 0.85, render: { visible: false } },
 	});
 	World.add(world, mouseConstraint);
 
 	// スクロール無効化
 	mouse.element.removeEventListener("mousewheel", (mouse as any).mousewheel);
 	mouse.element.removeEventListener("DOMMouseScroll", (mouse as any).mousewheel);
+
+	const boxes: PhysicsBox[] = [];
+	const boxByElement = new Map<HTMLElement, PhysicsBox>();
+	const originalStyles = new Map<HTMLElement, ElementSnapshot>();
+	let mutationObserver: MutationObserver | null = null;
+	let syncFrameId: number | null = null;
+
+	const getTargetElements = (): HTMLElement[] => {
+		const currentViewport = getViewportRect();
+		const rawElements: HTMLElement[] = [];
+
+		document.querySelectorAll(selectorString).forEach((el) => {
+			if (!(el instanceof HTMLElement)) return;
+			if (isRenderableElement(el, currentViewport)) {
+				rawElements.push(el);
+			}
+		});
+
+		const filteredElements: HTMLElement[] = rawElements.filter((parent) => {
+			const hasText: boolean = hasDirectTextContent(parent);
+			const hasTargetChild: boolean = rawElements.some((child) => parent !== child && parent.contains(child));
+
+			if (isInteractiveElement(parent)) {
+				return true;
+			}
+
+			if (hasText) {
+				return true;
+			}
+			if (hasTargetChild) {
+				return false;
+			}
+			return true;
+		});
+
+		const selectedElements = new Set(filteredElements);
+		return [...filteredElements]
+			.sort((a, b) => getElementDepth(a) - getElementDepth(b))
+			.filter((element) => {
+				let ancestor = element.parentElement;
+				while (ancestor) {
+					if (selectedElements.has(ancestor)) {
+						return false;
+					}
+					ancestor = ancestor.parentElement;
+				}
+				return true;
+			});
+	};
+
+	const syncElementTransform = (box: PhysicsBox): void => {
+		const x: number = box.body.position.x - box.w / 2;
+		const y: number = box.body.position.y - box.h / 2;
+		box.element.style.transform = `translate3d(${x}px, ${y}px, 0) rotate(${box.body.angle}rad)`;
+	};
+
+	const cleanupElement = (element: HTMLElement): void => {
+		const cleanup = (element as GravityElementWithCleanup).__gravityCleanup__;
+		cleanup?.();
+		delete (element as GravityElementWithCleanup).__gravityCleanup__;
+	};
+
+	const restoreElementStyles = (element: HTMLElement): void => {
+		const snapshot = originalStyles.get(element);
+		if (!snapshot) {
+			cleanupElement(element);
+			return;
+		}
+
+		element.style.position = snapshot.position;
+		element.style.left = snapshot.left;
+		element.style.top = snapshot.top;
+		element.style.margin = snapshot.margin;
+		element.style.width = snapshot.width;
+		element.style.height = snapshot.height;
+		element.style.zIndex = snapshot.zIndex;
+		element.style.boxSizing = snapshot.boxSizing;
+		element.style.touchAction = snapshot.touchAction;
+		element.style.transition = snapshot.transition;
+		element.style.willChange = snapshot.willChange;
+		element.style.transform = snapshot.transform;
+
+		cleanupElement(element);
+		originalStyles.delete(element);
+	};
+
+	const removeBox = (element: HTMLElement): void => {
+		const box = boxByElement.get(element);
+		if (!box) return;
+
+		if (mouseConstraint.body === box.body) {
+			mouseConstraint.body = null;
+			mouseConstraint.constraint.bodyB = null;
+		}
+
+		World.remove(world, box.body);
+		boxByElement.delete(element);
+
+		const index = boxes.indexOf(box);
+		if (index >= 0) {
+			boxes.splice(index, 1);
+		}
+
+		restoreElementStyles(element);
+	};
+
+	const getSpawnX = (centerX: number, widthPx: number): number => {
+		const minX = widthPx / 2;
+		const maxX = Math.max(minX, window.innerWidth - widthPx / 2);
+		return Math.min(Math.max(centerX, minX), maxX);
+	};
+
+	const addBox = (element: HTMLElement, spawnFromTop: boolean): void => {
+		if (boxByElement.has(element)) return;
+
+		const physicsRect = getPhysicsRect(element);
+		const w: number = physicsRect.width;
+		const h: number = physicsRect.height;
+		const x: number = physicsRect.left + w / 2;
+		const y: number = physicsRect.top + h / 2;
+
+		const body: Matter.Body = Bodies.rectangle(x, y, w, h, {
+			restitution: 0.6,
+			friction: 0.5,
+			density: 0.001,
+		});
+
+		originalStyles.set(element, {
+			position: element.style.position,
+			left: element.style.left,
+			top: element.style.top,
+			margin: element.style.margin,
+			width: element.style.width,
+			height: element.style.height,
+			zIndex: element.style.zIndex,
+			boxSizing: element.style.boxSizing,
+			touchAction: element.style.touchAction,
+			transition: element.style.transition,
+			willChange: element.style.willChange,
+			transform: element.style.transform,
+		});
+
+		element.style.position = "fixed";
+		element.style.left = "0px";
+		element.style.top = "0px";
+		element.style.margin = "0";
+		element.style.width = `${w}px`;
+		element.style.height = `${h}px`;
+		element.style.zIndex = "1000";
+		element.style.boxSizing = "border-box";
+		element.style.touchAction = "manipulation";
+		element.style.transition = "none";
+		element.style.willChange = "transform";
+		element.setAttribute("draggable", "false");
+
+		attachSmartClick(element);
+
+		const box: PhysicsBox = {
+			element,
+			body,
+			w,
+			h,
+			spawnX: getSpawnX(x, w),
+			offscreenSince: null,
+		};
+
+		if (spawnFromTop) {
+			Body.setPosition(body, { x: box.spawnX, y: 0 - h / 2 - RESPAWN_TOP_OFFSET });
+			Body.setVelocity(body, { x: 0, y: 0 });
+			Body.setAngle(body, 0);
+			Body.setAngularVelocity(body, 0);
+		}
+
+		syncElementTransform(box);
+		World.add(world, body);
+
+		boxes.push(box);
+		boxByElement.set(element, box);
+	};
+
+	const syncManagedElements = (spawnFromTop: boolean): void => {
+		let nextElements: HTMLElement[] = [];
+		try {
+			nextElements = getTargetElements();
+		} catch (e) {
+			console.error("Failed to refresh gravity targets:", e);
+			return;
+		}
+
+		const nextSet = new Set(nextElements);
+		Array.from(boxByElement.keys()).forEach((element) => {
+			if (!nextSet.has(element)) {
+				removeBox(element);
+			}
+		});
+
+		nextElements.forEach((element) => {
+			if (!boxByElement.has(element)) {
+				addBox(element, spawnFromTop);
+			}
+		});
+	};
+
+	const scheduleManagedElementsSync = (): void => {
+		if (syncFrameId != null) return;
+		syncFrameId = window.requestAnimationFrame(() => {
+			syncFrameId = null;
+			syncManagedElements(true);
+		});
+	};
+
+	const respawnBox = (box: PhysicsBox): void => {
+		Body.setPosition(box.body, { x: getSpawnX(box.spawnX, box.w), y: 0 - box.h / 2 - RESPAWN_TOP_OFFSET });
+		Body.setVelocity(box.body, { x: 0, y: 0 });
+		Body.setAngle(box.body, 0);
+		Body.setAngularVelocity(box.body, 0);
+		box.offscreenSince = null;
+		syncElementTransform(box);
+	};
+
+	const isOutsideActiveBounds = (box: PhysicsBox): boolean => {
+		if (mouseConstraint.body === box.body) return false;
+
+		const left = box.body.position.x - box.w / 2;
+		const right = box.body.position.x + box.w / 2;
+		const top = box.body.position.y - box.h / 2;
+		const bottom = box.body.position.y + box.h / 2;
+
+		return right < 0 - wallThick || left > width + wallThick || bottom < 0 - ceilingHeight || top > height + wallThick;
+	};
+
+	try {
+		syncManagedElements(false);
+	} catch (e) {
+		selectionLockStyle.remove();
+		console.error("Invalid CSS selector provided:", e);
+		return;
+	}
+
+	mutationObserver = new MutationObserver(() => {
+		scheduleManagedElementsSync();
+	});
+	mutationObserver.observe(document.body, {
+		childList: true,
+		subtree: true,
+		attributes: true,
+		attributeFilter: ["class", "hidden", "open", "aria-hidden", "inert"],
+	});
 
 	// --- ループ処理 ---
 	const runner: Matter.Runner = Runner.create();
@@ -463,13 +611,22 @@ export function initializePhysicsEngine(selectors: string[] | string = defaultSe
 		Runner.tick(runner, engine, 1000 / 60);
 
 		boxes.forEach((box) => {
-			const b: Matter.Body = box.body;
-			const el: HTMLElement = box.element;
-			const x: number = b.position.x - box.w / 2;
-			const y: number = b.position.y - box.h / 2;
+			if (!box.element.isConnected || !document.contains(box.element)) {
+				removeBox(box.element);
+				return;
+			}
 
-			// CSS Transformで同期
-			el.style.transform = `translate3d(${x}px, ${y}px, 0) rotate(${b.angle}rad)`;
+			if (isOutsideActiveBounds(box)) {
+				if (box.offscreenSince == null) {
+					box.offscreenSince = performance.now();
+				} else if (performance.now() - box.offscreenSince >= RESPAWN_DELAY_MS) {
+					respawnBox(box);
+				}
+			} else {
+				box.offscreenSince = null;
+			}
+
+			syncElementTransform(box);
 		});
 
 		frameId = requestAnimationFrame(renderLoop);
@@ -477,38 +634,23 @@ export function initializePhysicsEngine(selectors: string[] | string = defaultSe
 	frameId = requestAnimationFrame(renderLoop);
 
 	activeCleanup = () => {
+		if (syncFrameId != null) {
+			cancelAnimationFrame(syncFrameId);
+			syncFrameId = null;
+		}
 		if (frameId != null) {
 			cancelAnimationFrame(frameId);
 			frameId = null;
 		}
 
+		mutationObserver?.disconnect();
+		mutationObserver = null;
 		Runner.stop(runner);
+		Array.from(boxByElement.keys()).forEach((element) => removeBox(element));
 		World.remove(world, mouseConstraint);
 		Composite.clear(world, false);
 		Engine.clear(engine);
 		selectionLockStyle.remove();
-
-		for (const box of boxes) {
-			const snapshot = originalStyles.get(box.element);
-			if (!snapshot) continue;
-
-			box.element.style.position = snapshot.position;
-			box.element.style.left = snapshot.left;
-			box.element.style.top = snapshot.top;
-			box.element.style.margin = snapshot.margin;
-			box.element.style.width = snapshot.width;
-			box.element.style.height = snapshot.height;
-			box.element.style.zIndex = snapshot.zIndex;
-			box.element.style.boxSizing = snapshot.boxSizing;
-			box.element.style.touchAction = snapshot.touchAction;
-			box.element.style.transition = snapshot.transition;
-			box.element.style.willChange = snapshot.willChange;
-			box.element.style.transform = snapshot.transform;
-
-			const cleanup = (box.element as GravityElementWithCleanup).__gravityCleanup__;
-			cleanup?.();
-			delete (box.element as GravityElementWithCleanup).__gravityCleanup__;
-		}
 
 		activeCleanup = null;
 	};
