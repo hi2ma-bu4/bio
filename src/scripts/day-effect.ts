@@ -228,7 +228,7 @@ async function initParticles() {
 			theme = "dark";
 			break;
 		default: {
-			if (!preset || Math.random() >= 0.01) {
+			if (preset || Math.random() >= 0.01) {
 				return;
 			}
 
@@ -245,7 +245,7 @@ async function initParticles() {
 	}
 	syncPageTheme(pageThemeClass);
 
-	if (loadPreset) {
+	if (loadPreset && preset) {
 		// DOM が ready になってからロード
 		const el = document.getElementById("bg-canvas");
 		if (!el) return;
