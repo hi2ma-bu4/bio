@@ -16,7 +16,7 @@ interface PhysicsRect {
 }
 
 // --- 定数 ---
-const defaultSelectors: string[] = ["p", "h1", "h2", "h3", "h4", "h5", "h6", "span", "a", "img", "span", "button", "input", "li", "i", "dialog"];
+const defaultSelectors: string[] = ["div", "p", "h1", "h2", "h3", "h4", "h5", "h6", "span", "a", "img", "span", "button", "input", "li", "i", "dialog"];
 const DRAG_THRESHOLD: number = 5; // ピクセル
 
 interface ElementSnapshot {
@@ -101,6 +101,23 @@ function hasVisualBoxDecoration(style: CSSStyleDeclaration): boolean {
 		parseFloat(style.paddingLeft) > 0;
 
 	return hasBackground || hasBorder || hasPadding || style.boxShadow !== "none";
+}
+
+function hasContainerDecoration(style: CSSStyleDeclaration): boolean {
+	const backgroundColor = style.backgroundColor;
+	const hasBackground = backgroundColor !== "transparent" && backgroundColor !== "rgba(0, 0, 0, 0)";
+	const hasBorder =
+		parseFloat(style.borderTopWidth) > 0 ||
+		parseFloat(style.borderRightWidth) > 0 ||
+		parseFloat(style.borderBottomWidth) > 0 ||
+		parseFloat(style.borderLeftWidth) > 0;
+	const hasRadius =
+		parseFloat(style.borderTopLeftRadius) > 0 ||
+		parseFloat(style.borderTopRightRadius) > 0 ||
+		parseFloat(style.borderBottomRightRadius) > 0 ||
+		parseFloat(style.borderBottomLeftRadius) > 0;
+
+	return hasBackground || hasBorder || hasRadius || style.boxShadow !== "none";
 }
 
 function getRowCount(rects: DOMRect[]): number {
@@ -352,8 +369,13 @@ export function initializePhysicsEngine(selectors: string[] | string = defaultSe
 	const filteredElements: HTMLElement[] = rawElements.filter((parent) => {
 		const hasText: boolean = hasDirectTextContent(parent);
 		const hasTargetChild: boolean = rawElements.some((child) => parent !== child && parent.contains(child));
+		const style = window.getComputedStyle(parent);
 
 		if (isInteractiveElement(parent)) {
+			return true;
+		}
+
+		if (hasContainerDecoration(style) && hasTargetChild) {
 			return true;
 		}
 
@@ -436,7 +458,8 @@ export function initializePhysicsEngine(selectors: string[] | string = defaultSe
 
 	// --- 壁と床 ---
 	const wallThick: number = 200;
-	const ceiling: Matter.Body = Bodies.rectangle(width / 2, 0 - wallThick / 2, width, wallThick, { isStatic: true });
+	const ceilingHeight = height * 5;
+	const ceiling: Matter.Body = Bodies.rectangle(width / 2, 0 - ceilingHeight - wallThick / 2, width, wallThick, { isStatic: true });
 	const ground: Matter.Body = Bodies.rectangle(width / 2, height + wallThick / 2, width, wallThick, { isStatic: true });
 	const leftWall: Matter.Body = Bodies.rectangle(0 - wallThick / 2, height / 2, wallThick, height * 5, { isStatic: true });
 	const rightWall: Matter.Body = Bodies.rectangle(width + wallThick / 2, height / 2, wallThick, height * 5, { isStatic: true });
