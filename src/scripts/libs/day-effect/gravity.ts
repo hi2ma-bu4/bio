@@ -36,6 +36,13 @@ interface GravityElementWithCleanup extends HTMLElement {
 	__gravityCleanup__?: () => void;
 }
 
+interface ViewportRect {
+	left: number;
+	top: number;
+	right: number;
+	bottom: number;
+}
+
 // --- ユーティリティ関数 ---
 
 /**
@@ -124,6 +131,48 @@ function getUnionRect(rects: DOMRect[]): PhysicsRect | null {
 		width: right - left,
 		height: bottom - top,
 	};
+}
+
+function getViewportRect(): ViewportRect {
+	return {
+		left: 0,
+		top: 0,
+		right: window.innerWidth,
+		bottom: window.innerHeight,
+	};
+}
+
+function intersectsViewport(rect: DOMRect, viewport: ViewportRect): boolean {
+	return rect.right > viewport.left && rect.left < viewport.right && rect.bottom > viewport.top && rect.top < viewport.bottom;
+}
+
+function isAriaHidden(element: HTMLElement): boolean {
+	let current: HTMLElement | null = element;
+	while (current) {
+		if (current.getAttribute("aria-hidden") === "true") return true;
+		if (current.hidden) return true;
+		if (current.hasAttribute("inert")) return true;
+		if (current instanceof HTMLDialogElement && !current.open) return true;
+		current = current.parentElement;
+	}
+	return false;
+}
+
+function isRenderableElement(element: HTMLElement, viewport: ViewportRect): boolean {
+	if (!element.isConnected) return false;
+	if (isAriaHidden(element)) return false;
+
+	const style = window.getComputedStyle(element);
+	if (style.display === "none") return false;
+	if (style.visibility === "hidden" || style.visibility === "collapse") return false;
+	if (style.opacity === "0") return false;
+	if (style.contentVisibility === "hidden") return false;
+
+	const rect = element.getBoundingClientRect();
+	if (rect.width <= 5 || rect.height <= 5) return false;
+	if (!intersectsViewport(rect, viewport)) return false;
+
+	return true;
 }
 
 function getPhysicsRect(element: HTMLElement): PhysicsRect {
@@ -271,6 +320,11 @@ export function initializePhysicsEngine(selectors: string[] | string = defaultSe
 	const world: Matter.World = engine.world;
 	const width: number = window.innerWidth;
 	const height: number = window.innerHeight;
+	const viewport = getViewportRect();
+	const selectionLockStyle = document.createElement("style");
+	selectionLockStyle.setAttribute("data-gravity-selection-lock", "true");
+	selectionLockStyle.textContent = "html, body, body * { user-select: none !important; -webkit-user-select: none !important; }";
+	document.head.appendChild(selectionLockStyle);
 
 	// --- ターゲット要素の収集とフィルタリング ---
 
@@ -281,12 +335,12 @@ export function initializePhysicsEngine(selectors: string[] | string = defaultSe
 	try {
 		document.querySelectorAll(selectorString).forEach((el) => {
 			if (!(el instanceof HTMLElement)) return;
-			const rect: DOMRect = el.getBoundingClientRect();
-			if (rect.width > 5 && rect.height > 5 && el.style.display !== "none" && el.style.visibility !== "hidden") {
+			if (isRenderableElement(el, viewport)) {
 				rawElements.push(el);
 			}
 		});
 	} catch (e) {
+		selectionLockStyle.remove();
 		console.error("Invalid CSS selector provided:", e);
 		return;
 	}
@@ -424,6 +478,7 @@ export function initializePhysicsEngine(selectors: string[] | string = defaultSe
 		World.remove(world, mouseConstraint);
 		Composite.clear(world, false);
 		Engine.clear(engine);
+		selectionLockStyle.remove();
 
 		for (const box of boxes) {
 			const snapshot = originalStyles.get(box.element);
