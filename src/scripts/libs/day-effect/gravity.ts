@@ -107,6 +107,11 @@ function attachSmartClick(el: HTMLElement): void {
 			return false;
 		}
 
+		// キーボード操作や el.click() による合成クリックは座標を持たないため、そのまま許可する。
+		if (e.detail === 0) {
+			return;
+		}
+
 		if (moved || !shouldTreatAsTap(e.clientX, e.clientY)) {
 			// ドラッグと判定されたら機能をブロック
 			e.preventDefault();
@@ -286,7 +291,7 @@ export function initializePhysicsEngine(selectors: string[] | string = defaultSe
 		Runner.stop(runner);
 		World.remove(world, mouseConstraint);
 		Composite.clear(world, false);
-		engine.events = {};
+		Engine.clear(engine);
 
 		for (const box of boxes) {
 			const snapshot = originalStyles.get(box.element);

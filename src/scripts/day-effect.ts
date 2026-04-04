@@ -11,10 +11,14 @@ import { loadFont } from "./libs/ui-utils";
 
 const lifecycle = createEffectLifecycle();
 
-function attachManagedEffect(start: () => void, stop: () => void): void {
-	start();
-	lifecycle.addStop(stop);
-	lifecycle.addUpdate(start);
+function attachManagedEffect(start: () => void | null, stop: () => void | null): void {
+	start?.();
+	if (stop) {
+		lifecycle.addStop(stop);
+	}
+	if (start) {
+		lifecycle.addUpdate(start);
+	}
 }
 
 function syncPageTheme(pageThemeClass: string): void {
