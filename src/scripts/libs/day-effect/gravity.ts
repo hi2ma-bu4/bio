@@ -8,6 +8,13 @@ interface PhysicsBox {
 	h: number;
 }
 
+interface PhysicsRect {
+	left: number;
+	top: number;
+	width: number;
+	height: number;
+}
+
 // --- 定数 ---
 const defaultSelectors: string[] = ["p", "h1", "h2", "h3", "h4", "h5", "h6", "span", "a", "img", "span", "button", "input", "li", "i", "dialog"];
 const DRAG_THRESHOLD: number = 5; // ピクセル
@@ -49,6 +56,117 @@ function hasDirectTextContent(element: HTMLElement, minLength: number = 3): bool
 		}
 	}
 	return false;
+}
+
+function getElementDepth(element: HTMLElement): number {
+	let depth = 0;
+	let current: HTMLElement | null = element.parentElement;
+	while (current) {
+		depth += 1;
+		current = current.parentElement;
+	}
+	return depth;
+}
+
+function hasVisualBoxDecoration(style: CSSStyleDeclaration): boolean {
+	const backgroundColor = style.backgroundColor;
+	const hasBackground = backgroundColor !== "transparent" && backgroundColor !== "rgba(0, 0, 0, 0)";
+	const hasBorder =
+		parseFloat(style.borderTopWidth) > 0 ||
+		parseFloat(style.borderRightWidth) > 0 ||
+		parseFloat(style.borderBottomWidth) > 0 ||
+		parseFloat(style.borderLeftWidth) > 0;
+	const hasPadding =
+		parseFloat(style.paddingTop) > 0 ||
+		parseFloat(style.paddingRight) > 0 ||
+		parseFloat(style.paddingBottom) > 0 ||
+		parseFloat(style.paddingLeft) > 0;
+
+	return hasBackground || hasBorder || hasPadding || style.boxShadow !== "none";
+}
+
+function getRowCount(rects: DOMRect[]): number {
+	const rows: number[] = [];
+
+	rects.forEach((rect) => {
+		const centerY = rect.top + rect.height / 2;
+		const rowIndex = rows.findIndex((rowCenter) => Math.abs(rowCenter - centerY) <= 4);
+		if (rowIndex >= 0) {
+			rows[rowIndex] = (rows[rowIndex] + centerY) / 2;
+			return;
+		}
+
+		rows.push(centerY);
+	});
+
+	return rows.length;
+}
+
+function getUnionRect(rects: DOMRect[]): PhysicsRect | null {
+	if (rects.length === 0) return null;
+
+	let left = rects[0].left;
+	let top = rects[0].top;
+	let right = rects[0].right;
+	let bottom = rects[0].bottom;
+
+	for (let i = 1; i < rects.length; i++) {
+		const rect = rects[i];
+		left = Math.min(left, rect.left);
+		top = Math.min(top, rect.top);
+		right = Math.max(right, rect.right);
+		bottom = Math.max(bottom, rect.bottom);
+	}
+
+	return {
+		left,
+		top,
+		width: right - left,
+		height: bottom - top,
+	};
+}
+
+function getPhysicsRect(element: HTMLElement): PhysicsRect {
+	const rect = element.getBoundingClientRect();
+	const fallbackRect: PhysicsRect = {
+		left: rect.left,
+		top: rect.top,
+		width: rect.width,
+		height: rect.height,
+	};
+
+	if (!hasDirectTextContent(element)) return fallbackRect;
+	if (["A", "BUTTON", "INPUT", "SELECT", "TEXTAREA", "IMG", "DIALOG"].includes(element.tagName)) return fallbackRect;
+
+	const style = window.getComputedStyle(element);
+	if (hasVisualBoxDecoration(style)) return fallbackRect;
+
+	const range = document.createRange();
+	range.selectNodeContents(element);
+
+	const textRects = Array.from(range.getClientRects()).filter((clientRect) => clientRect.width > 1 && clientRect.height > 1);
+	if (textRects.length === 0) return fallbackRect;
+	if (getRowCount(textRects) !== 1) return fallbackRect;
+
+	const unionRect = getUnionRect(textRects);
+	if (!unionRect) return fallbackRect;
+
+	const right = Math.min(rect.right, unionRect.left + unionRect.width);
+	const bottom = Math.min(rect.bottom, unionRect.top + unionRect.height);
+	const left = Math.max(rect.left, unionRect.left);
+	const top = Math.max(rect.top, unionRect.top);
+	const width = right - left;
+	const height = bottom - top;
+
+	if (width <= 5 || height <= 5) return fallbackRect;
+	if (rect.width - width < 8 && rect.height - height < 4) return fallbackRect;
+
+	return {
+		left,
+		top,
+		width,
+		height,
+	};
 }
 
 /**
@@ -174,7 +292,7 @@ export function initializePhysicsEngine(selectors: string[] | string = defaultSe
 	}
 
 	// フィルタリング (親テキスト優先ロジック)
-	const elements: HTMLElement[] = rawElements.filter((parent) => {
+	const filteredElements: HTMLElement[] = rawElements.filter((parent) => {
 		const hasText: boolean = hasDirectTextContent(parent);
 		const hasTargetChild: boolean = rawElements.some((child) => parent !== child && parent.contains(child));
 
@@ -189,15 +307,29 @@ export function initializePhysicsEngine(selectors: string[] | string = defaultSe
 		return true;
 	});
 
+	const selectedElements = new Set(filteredElements);
+	const elements: HTMLElement[] = [...filteredElements]
+		.sort((a, b) => getElementDepth(a) - getElementDepth(b))
+		.filter((element) => {
+			let ancestor = element.parentElement;
+			while (ancestor) {
+				if (selectedElements.has(ancestor)) {
+					return false;
+				}
+				ancestor = ancestor.parentElement;
+			}
+			return true;
+		});
+
 	const boxes: PhysicsBox[] = [];
 	const originalStyles = new Map<HTMLElement, ElementSnapshot>();
 
 	elements.forEach((el) => {
-		const rect: DOMRect = el.getBoundingClientRect();
-		const w: number = rect.width;
-		const h: number = rect.height;
-		const x: number = rect.left + w / 2;
-		const y: number = rect.top + h / 2;
+		const physicsRect = getPhysicsRect(el);
+		const w: number = physicsRect.width;
+		const h: number = physicsRect.height;
+		const x: number = physicsRect.left + w / 2;
+		const y: number = physicsRect.top + h / 2;
 
 		const body: Matter.Body = Bodies.rectangle(x, y, w, h, {
 			restitution: 0.6,
