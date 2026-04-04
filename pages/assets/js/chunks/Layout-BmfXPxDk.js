@@ -1,4 +1,4 @@
-import { c as createAstro, a as createComponent, m as maybeRenderHead, s as spreadAttributes, r as renderTemplate, ek as addAttribute, el as renderComponent, es as createTransitionScope, et as $$Sun, eu as $$Moon, eo as renderScript, ev as $$Bars3, en as $$XMark, ep as defineScriptVars, ew as renderHead, ex as renderSlot, ey as $$SEO, ez as $$ClientRouter, eA as $$GoogleFontsOptimizer } from './vendor-DTNnllle.js';
+import { c as createAstro, a as createComponent, m as maybeRenderHead, s as spreadAttributes, r as renderTemplate, ek as addAttribute, es as createTransitionScope, el as renderComponent, et as $$Sun, eu as $$Moon, ev as $$Bars3, en as $$XMark, eo as renderScript, ep as defineScriptVars, ew as $$SEO, ex as $$ClientRouter, ey as $$GoogleFontsOptimizer, ez as renderHead, eA as renderSlot } from './vendor-BD1JvjEv.js';
 import 'piccolore';
 import 'clsx';
 /* empty css               */
