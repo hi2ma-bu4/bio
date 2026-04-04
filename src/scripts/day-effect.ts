@@ -11,12 +11,13 @@ import { loadFont } from "./libs/ui-utils";
 
 const lifecycle = createEffectLifecycle();
 
-function attachManagedEffect(start: () => void | null, stop: () => void | null): void {
+function attachManagedEffect(start: () => void | null, stop: () => void | null, options: { restartOnSwap?: boolean } = {}): void {
+	const { restartOnSwap = true } = options;
 	start?.();
 	if (stop) {
 		lifecycle.addStop(stop);
 	}
-	if (start) {
+	if (start && restartOnSwap) {
 		lifecycle.addUpdate(start);
 	}
 }
@@ -111,7 +112,7 @@ async function initParticles() {
 		}
 		case "bsod": {
 			const { startBsodEffect, stopBsodEffect } = await import("./libs/day-effect/bsod");
-			attachManagedEffect(() => startBsodEffect({ force: true }), stopBsodEffect);
+			attachManagedEffect(startBsodEffect, stopBsodEffect, { restartOnSwap: false });
 			break;
 		}
 		case "gravity": {
@@ -233,9 +234,7 @@ async function initParticles() {
 
 			// 1% の確率でエフェクトを表示
 			const { startBsodEffect, stopBsodEffect } = await import("./libs/day-effect/bsod");
-			startBsodEffect();
-			lifecycle.addStop(stopBsodEffect);
-			lifecycle.addUpdate(startBsodEffect);
+			attachManagedEffect(startBsodEffect, stopBsodEffect, { restartOnSwap: false });
 			break;
 		}
 	}
