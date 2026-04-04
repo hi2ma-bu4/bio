@@ -75,6 +75,17 @@ function getElementDepth(element: HTMLElement): number {
 	return depth;
 }
 
+function isInteractiveElement(element: HTMLElement): boolean {
+	if (element.tabIndex >= 0) return true;
+
+	const role = element.getAttribute("role");
+	if (role === "button" || role === "link" || role === "menuitem" || role === "checkbox" || role === "radio" || role === "switch") {
+		return true;
+	}
+
+	return ["A", "BUTTON", "INPUT", "SELECT", "TEXTAREA", "SUMMARY", "LABEL", "DIALOG"].includes(element.tagName);
+}
+
 function hasVisualBoxDecoration(style: CSSStyleDeclaration): boolean {
 	const backgroundColor = style.backgroundColor;
 	const hasBackground = backgroundColor !== "transparent" && backgroundColor !== "rgba(0, 0, 0, 0)";
@@ -170,7 +181,7 @@ function isRenderableElement(element: HTMLElement, viewport: ViewportRect): bool
 
 	const rect = element.getBoundingClientRect();
 	if (rect.width <= 5 || rect.height <= 5) return false;
-	if (!intersectsViewport(rect, viewport)) return false;
+	if (!intersectsViewport(rect, viewport) && ["fixed", "absolute", "sticky"].includes(style.position)) return false;
 
 	return true;
 }
@@ -229,14 +240,6 @@ function attachSmartClick(el: HTMLElement): void {
 	let pointerType = "mouse";
 	let suppressNativeClickUntil = 0;
 
-	const isInteractiveElement = (): boolean => {
-		if (el.tabIndex >= 0) return true;
-		const role = el.getAttribute("role");
-		if (role === "button" || role === "link" || role === "menuitem" || role === "checkbox" || role === "radio" || role === "switch") return true;
-
-		return ["A", "BUTTON", "INPUT", "SELECT", "TEXTAREA", "SUMMARY", "LABEL"].includes(el.tagName);
-	};
-
 	const shouldTreatAsTap = (x: number, y: number): boolean => {
 		const dx = x - startX;
 		const dy = y - startY;
@@ -255,7 +258,7 @@ function attachSmartClick(el: HTMLElement): void {
 		moved = !shouldTreatAsTap(e.clientX, e.clientY);
 	};
 	const handlePointerUp = () => {
-		if (pointerType === "mouse" || moved || !isInteractiveElement()) return;
+		if (pointerType === "mouse" || moved || !isInteractiveElement(el)) return;
 
 		suppressNativeClickUntil = performance.now() + 450;
 		window.setTimeout(() => {
@@ -350,6 +353,10 @@ export function initializePhysicsEngine(selectors: string[] | string = defaultSe
 		const hasText: boolean = hasDirectTextContent(parent);
 		const hasTargetChild: boolean = rawElements.some((child) => parent !== child && parent.contains(child));
 
+		if (isInteractiveElement(parent)) {
+			return true;
+		}
+
 		if (hasText) {
 			// 1. 親が直接テキストを持っている場合: 親を物理化
 			return true;
@@ -429,11 +436,12 @@ export function initializePhysicsEngine(selectors: string[] | string = defaultSe
 
 	// --- 壁と床 ---
 	const wallThick: number = 200;
+	const ceiling: Matter.Body = Bodies.rectangle(width / 2, 0 - wallThick / 2, width, wallThick, { isStatic: true });
 	const ground: Matter.Body = Bodies.rectangle(width / 2, height + wallThick / 2, width, wallThick, { isStatic: true });
 	const leftWall: Matter.Body = Bodies.rectangle(0 - wallThick / 2, height / 2, wallThick, height * 5, { isStatic: true });
 	const rightWall: Matter.Body = Bodies.rectangle(width + wallThick / 2, height / 2, wallThick, height * 5, { isStatic: true });
 
-	World.add(world, [ground, leftWall, rightWall]);
+	World.add(world, [ceiling, ground, leftWall, rightWall]);
 
 	// --- マウス操作 ---
 	const mouse: Matter.Mouse = Mouse.create(document.body);
