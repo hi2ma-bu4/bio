@@ -3,8 +3,9 @@ import Layout from "../layouts/Layout.astro";
 import WorkCard, { type Props as Work } from "../components/WorkCard.astro";
 import WorkModal from "../components/WorkModal.astro";
 import { BASE_DIR } from "../config";
+import type { WorkItemData } from "../types/work-item";
 
-export type worksDataType = Work & { longDescription: string; othUrls?: string[] };
+export type worksDataType = WorkItemData & Work;
 
 // 作品データ
 const worksData: worksDataType[] = [

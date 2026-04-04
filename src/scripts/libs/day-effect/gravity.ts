@@ -445,7 +445,6 @@ export function initializePhysicsEngine(selectors: string[] | string = defaultSe
 		if (!box) return;
 
 		if (mouseConstraint.body === box.body) {
-			mouseConstraint.body = null;
 			mouseConstraint.constraint.bodyB = null;
 		}
 

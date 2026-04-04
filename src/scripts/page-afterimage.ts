@@ -80,8 +80,11 @@ function activateAfterimage(): void {
 	}, CLEANUP_DELAY);
 }
 
-if (typeof document !== "undefined" && !("startViewTransition" in document)) {
-	document.addEventListener("astro:before-preparation", prepareAfterimage);
-	document.addEventListener("astro:before-swap", (event) => transferSnapshot(event as AstroBeforeSwapEvent));
-	document.addEventListener("astro:after-swap", activateAfterimage);
+if (typeof document !== "undefined") {
+	const supportsViewTransition = "startViewTransition" in (document as Document & { startViewTransition?: unknown });
+	if (!supportsViewTransition) {
+		document.addEventListener("astro:before-preparation", prepareAfterimage);
+		document.addEventListener("astro:before-swap", (event: Event) => transferSnapshot(event as AstroBeforeSwapEvent));
+		document.addEventListener("astro:after-swap", activateAfterimage);
+	}
 }

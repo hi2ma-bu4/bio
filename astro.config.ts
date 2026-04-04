@@ -17,6 +17,7 @@ import type { PreRenderedAsset, PreRenderedChunk } from "rollup";
 import { type MinifyOptions } from "terser";
 import generateDarkIcons from "./dev/integrations/generateDarkIcons";
 import staticTsCompile from "./dev/integrations/staticTsCompile";
+import typecheckIntegration from "./dev/integrations/typecheck";
 
 const BASE_DIR = process.env.BASE_DIR ?? "/";
 const SITE_TITLE = process.env.SITE_TITLE ?? "snowsSite";
@@ -93,6 +94,7 @@ export default defineConfig({
 			outDir: "dist/assets/js/static/",
 			terserSetting: terserOpt,
 		}),
+		typecheckIntegration(),
 		solidJs(),
 		AstroPWA({
 			mode: "production",
@@ -211,7 +213,7 @@ export default defineConfig({
 				optimize: {
 					minify: true,
 				},
-			}) as any,
+			}),
 		],
 		optimizeDeps: {
 			exclude: [],

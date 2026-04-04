@@ -1,7 +1,7 @@
 // 作品モーダルの制御（共通ユーティリティを使用）
 import { OverlayScrollbars } from "overlayscrollbars";
 
-import type { worksDataType } from "../pages/works.astro";
+import type { WorkItemData } from "../types/work-item";
 import { addEscapeListener, createFocusTrap, lockBodyScroll, unlockBodyScroll } from "./libs/ui-utils";
 
 function initWorkModal() {
@@ -38,7 +38,7 @@ function initWorkModal() {
 			const workId = (trigger as HTMLElement).dataset.workId;
 			if (!workId) return;
 
-			const workData: worksDataType = workItems[workId];
+			const workData: WorkItemData = workItems[workId];
 			if (workData && modal) {
 				// コンテンツの動的挿入
 				const content = template.content.cloneNode(true) as DocumentFragment;
