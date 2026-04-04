@@ -29,6 +29,8 @@ interface ElementSnapshot {
 	zIndex: string;
 	boxSizing: string;
 	touchAction: string;
+	transition: string;
+	willChange: string;
 	transform: string;
 }
 
@@ -89,16 +91,8 @@ function isInteractiveElement(element: HTMLElement): boolean {
 function hasVisualBoxDecoration(style: CSSStyleDeclaration): boolean {
 	const backgroundColor = style.backgroundColor;
 	const hasBackground = backgroundColor !== "transparent" && backgroundColor !== "rgba(0, 0, 0, 0)";
-	const hasBorder =
-		parseFloat(style.borderTopWidth) > 0 ||
-		parseFloat(style.borderRightWidth) > 0 ||
-		parseFloat(style.borderBottomWidth) > 0 ||
-		parseFloat(style.borderLeftWidth) > 0;
-	const hasPadding =
-		parseFloat(style.paddingTop) > 0 ||
-		parseFloat(style.paddingRight) > 0 ||
-		parseFloat(style.paddingBottom) > 0 ||
-		parseFloat(style.paddingLeft) > 0;
+	const hasBorder = parseFloat(style.borderTopWidth) > 0 || parseFloat(style.borderRightWidth) > 0 || parseFloat(style.borderBottomWidth) > 0 || parseFloat(style.borderLeftWidth) > 0;
+	const hasPadding = parseFloat(style.paddingTop) > 0 || parseFloat(style.paddingRight) > 0 || parseFloat(style.paddingBottom) > 0 || parseFloat(style.paddingLeft) > 0;
 
 	return hasBackground || hasBorder || hasPadding || style.boxShadow !== "none";
 }
@@ -409,6 +403,8 @@ export function initializePhysicsEngine(selectors: string[] | string = defaultSe
 			zIndex: el.style.zIndex,
 			boxSizing: el.style.boxSizing,
 			touchAction: el.style.touchAction,
+			transition: el.style.transition,
+			willChange: el.style.willChange,
 			transform: el.style.transform,
 		});
 
@@ -422,6 +418,8 @@ export function initializePhysicsEngine(selectors: string[] | string = defaultSe
 		el.style.zIndex = "1000";
 		el.style.boxSizing = "border-box";
 		el.style.touchAction = "manipulation";
+		el.style.transition = "none";
+		el.style.willChange = "transform";
 		el.setAttribute("draggable", "false");
 
 		// スマートクリック判定を付与
@@ -503,6 +501,8 @@ export function initializePhysicsEngine(selectors: string[] | string = defaultSe
 			box.element.style.zIndex = snapshot.zIndex;
 			box.element.style.boxSizing = snapshot.boxSizing;
 			box.element.style.touchAction = snapshot.touchAction;
+			box.element.style.transition = snapshot.transition;
+			box.element.style.willChange = snapshot.willChange;
 			box.element.style.transform = snapshot.transform;
 
 			const cleanup = (box.element as GravityElementWithCleanup).__gravityCleanup__;
