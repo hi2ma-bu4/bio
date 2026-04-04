@@ -15,7 +15,7 @@ function initKeyCommand() {
 		["B", "O", "M", "B"],
 		async () => {
 			showToast("💣BombMode: Enabled!");
-			const { domOnBomb } = await import("./libs/key-command/boom-on-click");
+			const { domOnBomb } = await import("./libs/key-command/boom");
 
 			function init() {
 				document.body.addEventListener("click", domOnBomb);
@@ -47,6 +47,15 @@ function initKeyCommand() {
 				mirror.toggle();
 				toggleFlag = !toggleFlag;
 			});
+		},
+		{ once: true },
+	);
+
+	fk.register(
+		["H", "T", "M", "L"],
+		async () => {
+			const { renderPageAsHtml } = await import("./libs/key-command/html");
+			await renderPageAsHtml();
 		},
 		{ once: true },
 	);
