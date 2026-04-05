@@ -10,6 +10,52 @@ const RENDER_HOVER_CLASS = "__html-render-hover__";
 const RENDER_ID_ATTR = "data-render-hover-id";
 const RENDER_BASE_STYLE_ATTR = "data-render-base-style";
 const RENDER_HOVER_STYLE_ATTR = "data-render-hover-style";
+const RENDER_OVERLAY_ID = "__html-render-overlay__";
+const RENDER_PRE_ID = "__html-render-pre__";
+const ROOT_RENDER_ATTRIBUTES = ["class", "style", "data-theme", "lang", "dir"];
+const CONTENT_RENDER_ATTRIBUTES = [
+	"class",
+	"style",
+	"id",
+	"hidden",
+	"open",
+	"src",
+	"srcset",
+	"href",
+	"title",
+	"alt",
+	"value",
+	"checked",
+	"selected",
+	"disabled",
+	"role",
+	"type",
+	"download",
+	"target",
+	"rel",
+	"aria-label",
+	"aria-hidden",
+	"tabindex",
+];
+
+type AstroBeforeSwapEvent = Event & {
+	newDocument: Document;
+};
+
+type HtmlRenderState = {
+	disposed: boolean;
+	elementById: Map<string, Element>;
+	observer: MutationObserver;
+	overlay: HTMLDivElement;
+	pre: HTMLPreElement;
+	renderQueued: boolean;
+	rendering: boolean;
+	renderTimer: number | null;
+};
+
+let renderState: HtmlRenderState | null = null;
+let isHtmlModeActive = false;
+let isRenderLifecycleBound = false;
 
 function addStyle(
 	css: string,
@@ -204,6 +250,7 @@ function buildStyleAttr(baseCss: string): string {
 function serializeNode(
 	node: ChildNode,
 	hoverStyles: WeakMap<Element, string>,
+	elementIds: WeakMap<Element, string>,
 	parentStyle: CSSStyleDeclaration | null = null,
 ): string {
 	switch (node.nodeType) {
@@ -219,6 +266,8 @@ function serializeNode(
 			const style = getComputedStyle(element);
 			const baseCss = buildStyle(style, parentStyle);
 			const hoverCss = hoverStyles.get(element) ?? "";
+			const renderId = elementIds.get(element) ?? "";
+			const renderIdAttr = renderId ? ` ${RENDER_ID_ATTR}="${renderId}"` : "";
 			const displayAttrs = pickAllAttrs(element);
 			const interactiveAttrs = tag === "a" ? pickAnchorAttrs(element) : displayAttrs;
 			const previewAttrs = buildPreviewAttrs(baseCss, hoverCss);
@@ -227,12 +276,12 @@ function serializeNode(
 			if (tag === "svg" && element instanceof SVGElement) {
 				const svgHtml = sanitizeSvg(element);
 				const svgEscaped = escapeHtml(element.outerHTML);
-				return `<span${interactiveAttrs}${previewAttrs}${styleAttr}>${svgHtml}<span>${svgEscaped}</span></span>`;
+				return `<span${renderIdAttr}${previewAttrs}${styleAttr}>${svgHtml}<span>${svgEscaped}</span></span>`;
 			}
 
 			let inner = "";
 			for (const child of Array.from(element.childNodes)) {
-				inner += serializeNode(child, hoverStyles, style);
+				inner += serializeNode(child, hoverStyles, elementIds, style);
 			}
 
 			const open = `&lt;${tag}${displayAttrs}&gt;`;
@@ -240,14 +289,10 @@ function serializeNode(
 			const content = open + inner + close;
 
 			if (tag === "a") {
-				return `<a${interactiveAttrs}${previewAttrs}${styleAttr}>${content}</a>`;
+				return `<a${renderIdAttr}${interactiveAttrs}${previewAttrs}${styleAttr}>${content}</a>`;
 			}
 
-			if (baseCss || hoverCss) {
-				return `<span${previewAttrs}${styleAttr}>${content}</span>`;
-			}
-
-			return content;
+			return `<span${renderIdAttr}${previewAttrs}${styleAttr}>${content}</span>`;
 		}
 
 		default:
@@ -327,13 +372,76 @@ function getViewportSize(): { width: number; height: number } {
 	};
 }
 
-async function collectHoverStyles(): Promise<WeakMap<Element, string>> {
-	const elements = Array.from(document.body.querySelectorAll("*"));
-	if (!elements.length) return new WeakMap();
+function getSourceOverlay(): HTMLDivElement | null {
+	return document.getElementById(RENDER_OVERLAY_ID) as HTMLDivElement | null;
+}
+
+function isSourceNode(node: Node): boolean {
+	const overlay = getSourceOverlay();
+	return !overlay || (node !== overlay && !overlay.contains(node));
+}
+
+function getSourceElements(): Element[] {
+	return Array.from(document.body.querySelectorAll("*")).filter(isSourceNode);
+}
+
+function getSourceBodyChildNodes(): ChildNode[] {
+	return Array.from(document.body.childNodes).filter(isSourceNode);
+}
+
+function shouldScheduleRenderForMutation(mutation: MutationRecord): boolean {
+	if (mutation.type === "characterData") {
+		return isSourceNode(mutation.target);
+	}
+
+	if (mutation.type === "childList") {
+		if (!isSourceNode(mutation.target)) return false;
+		return (
+			Array.from(mutation.addedNodes).some(isSourceNode) ||
+			Array.from(mutation.removedNodes).some(isSourceNode)
+		);
+	}
+
+	if (mutation.type !== "attributes") return false;
+	if (!isSourceNode(mutation.target)) return false;
+	if (!(mutation.target instanceof Element)) return false;
+	if (!mutation.attributeName) return false;
+
+	const rootTarget = mutation.target === document.documentElement || mutation.target === document.body;
+	if (rootTarget) {
+		return ROOT_RENDER_ATTRIBUTES.includes(mutation.attributeName);
+	}
+
+	return CONTENT_RENDER_ATTRIBUTES.includes(mutation.attributeName);
+}
+
+function buildElementIdMaps(elements: Element[]): {
+	elementById: Map<string, Element>;
+	elementIds: WeakMap<Element, string>;
+} {
+	const elementById = new Map<string, Element>();
+	const elementIds = new WeakMap<Element, string>();
 
 	elements.forEach((element, index) => {
-		element.setAttribute(RENDER_ID_ATTR, String(index));
+		const renderId = String(index);
+		elementIds.set(element, renderId);
+		elementById.set(renderId, element);
+		element.setAttribute(RENDER_ID_ATTR, renderId);
 	});
+
+	return { elementById, elementIds };
+}
+
+function clearElementRenderIds(elements: Element[]): void {
+	for (const element of elements) {
+		element.removeAttribute(RENDER_ID_ATTR);
+	}
+}
+
+async function collectHoverStyles(
+	elements: Element[],
+): Promise<WeakMap<Element, string>> {
+	if (!elements.length) return new WeakMap();
 
 	const iframe = document.createElement("iframe");
 	const { width, height } = getViewportSize();
@@ -414,9 +522,6 @@ async function collectHoverStyles(): Promise<WeakMap<Element, string>> {
 		return hoverStyles;
 	}
 	finally {
-		for (const element of elements) {
-			element.removeAttribute(RENDER_ID_ATTR);
-		}
 		iframe.remove();
 	}
 }
@@ -444,15 +549,234 @@ function attachHoverPreview(root: ParentNode): void {
 	}
 }
 
-export async function renderPageAsHtml(): Promise<void> {
-	await waitForPageLoad();
-	const hoverStyles = await collectHoverStyles();
+function updateOverlayStyle(overlay: HTMLDivElement, pre: HTMLPreElement): void {
+	const bodyStyle = getComputedStyle(document.body);
+	const rootStyle = getComputedStyle(document.documentElement);
+	overlay.style.position = "fixed";
+	overlay.style.inset = "0";
+	overlay.style.zIndex = "2147483647";
+	overlay.style.overflow = "auto";
+	overlay.style.backgroundColor = resolveOverlayBackgroundColor(bodyStyle, rootStyle);
+	overlay.style.color = bodyStyle.color;
+	overlay.style.padding = "16px";
 
-	let output = "";
-	for (const node of Array.from(document.body.childNodes)) {
-		output += serializeNode(node, hoverStyles);
+	pre.style.margin = "0";
+	pre.style.whiteSpace = "normal";
+	pre.style.lineBreak = "anywhere";
+	pre.style.overflowWrap = "anywhere";
+	pre.style.font = bodyStyle.font;
+	pre.style.color = bodyStyle.color;
+}
+
+function isTransparentColor(value: string): boolean {
+	return !value || value === "transparent" || value === "rgba(0, 0, 0, 0)";
+}
+
+function resolveOverlayBackgroundColor(
+	bodyStyle: CSSStyleDeclaration,
+	rootStyle: CSSStyleDeclaration,
+): string {
+	if (!isTransparentColor(bodyStyle.backgroundColor)) return bodyStyle.backgroundColor;
+	if (!isTransparentColor(rootStyle.backgroundColor)) return rootStyle.backgroundColor;
+	return rootStyle.colorScheme.includes("dark") ? "#000000" : "#ffffff";
+}
+
+function dispatchMirroredClick(target: Element): void {
+	if (target instanceof HTMLElement) {
+		target.click();
+		return;
 	}
 
-	document.body.innerHTML = `<pre style="white-space:normal;line-break:anywhere;overflow-wrap:anywhere;">${output}</pre>`;
-	attachHoverPreview(document.body);
+	target.dispatchEvent(
+		new MouseEvent("click", {
+			bubbles: true,
+			cancelable: true,
+			composed: true,
+			view: window,
+		}),
+	);
+}
+
+function bindOverlayInteractions(state: HtmlRenderState): void {
+	state.overlay.addEventListener("click", (event) => {
+		const target = event.target;
+		if (!(target instanceof Element)) return;
+
+		const previewTarget = target.closest(`[${RENDER_ID_ATTR}]`);
+		if (!(previewTarget instanceof Element)) return;
+
+		const renderId = previewTarget.getAttribute(RENDER_ID_ATTR);
+		if (!renderId) return;
+
+		const sourceElement = state.elementById.get(renderId);
+		if (!sourceElement) return;
+
+		event.preventDefault();
+		dispatchMirroredClick(sourceElement);
+	});
+}
+
+function disposeRenderState(state: HtmlRenderState): void {
+	state.disposed = true;
+	state.observer.disconnect();
+	if (state.renderTimer !== null) {
+		window.clearTimeout(state.renderTimer);
+		state.renderTimer = null;
+	}
+	state.overlay.remove();
+}
+
+function ensureRenderState(): HtmlRenderState {
+	if (renderState && !renderState.disposed && document.body.contains(renderState.overlay)) {
+		return renderState;
+	}
+
+	if (renderState) {
+		disposeRenderState(renderState);
+	}
+
+	renderState = createRenderState();
+	return renderState;
+}
+
+function scheduleActiveHtmlRender(): void {
+	if (!isHtmlModeActive) return;
+	const state = ensureRenderState();
+	scheduleHtmlRender(state);
+}
+
+function bindRenderLifecycle(): void {
+	if (isRenderLifecycleBound) return;
+	isRenderLifecycleBound = true;
+
+	document.addEventListener("astro:before-swap", (event) => {
+		if (!isHtmlModeActive || !renderState) return;
+		const { newDocument } = event as AstroBeforeSwapEvent;
+		if (!newDocument.body) return;
+		renderState.observer.disconnect();
+		if (renderState.renderTimer !== null) {
+			window.clearTimeout(renderState.renderTimer);
+			renderState.renderTimer = null;
+		}
+	});
+
+	document.addEventListener("astro:after-swap", () => {
+		scheduleActiveHtmlRender();
+	});
+
+	document.addEventListener("astro:page-load", () => {
+		scheduleActiveHtmlRender();
+	});
+
+	window.addEventListener("resize", () => {
+		scheduleActiveHtmlRender();
+	});
+}
+
+function createRenderState(): HtmlRenderState {
+	const overlay = document.createElement("div");
+	overlay.id = RENDER_OVERLAY_ID;
+
+	const pre = document.createElement("pre");
+	pre.id = RENDER_PRE_ID;
+	overlay.appendChild(pre);
+	document.body.appendChild(overlay);
+
+	const observer = new MutationObserver((mutations) => {
+		if (!renderState) return;
+		const hasSourceMutation = mutations.some(shouldScheduleRenderForMutation);
+		if (!hasSourceMutation) return;
+		scheduleHtmlRender(renderState);
+	});
+
+	const state: HtmlRenderState = {
+		disposed: false,
+		elementById: new Map(),
+		observer,
+		overlay,
+		pre,
+		renderQueued: false,
+		rendering: false,
+		renderTimer: null,
+	};
+
+	bindOverlayInteractions(state);
+	return state;
+}
+
+function observeSourceDom(state: HtmlRenderState): void {
+	state.observer.observe(document.documentElement, {
+		attributes: true,
+		attributeFilter: ROOT_RENDER_ATTRIBUTES,
+	});
+	state.observer.observe(document.body, {
+		attributes: true,
+		attributeFilter: CONTENT_RENDER_ATTRIBUTES,
+		characterData: true,
+		childList: true,
+		subtree: true,
+	});
+}
+
+async function renderHtmlOverlay(state: HtmlRenderState): Promise<void> {
+	if (state.disposed) return;
+	if (state.rendering) {
+		state.renderQueued = true;
+		return;
+	}
+
+	state.rendering = true;
+	state.renderQueued = false;
+	state.observer.disconnect();
+	const sourceElements = getSourceElements();
+
+	try {
+		const { elementById, elementIds } = buildElementIdMaps(sourceElements);
+		const hoverStyles = await collectHoverStyles(sourceElements);
+
+		let output = "";
+		for (const node of getSourceBodyChildNodes()) {
+			output += serializeNode(node, hoverStyles, elementIds);
+		}
+
+		state.elementById = elementById;
+		updateOverlayStyle(state.overlay, state.pre);
+		state.pre.innerHTML = output;
+		attachHoverPreview(state.pre);
+	}
+	finally {
+		clearElementRenderIds(sourceElements);
+		state.rendering = false;
+		if (!state.disposed) {
+			observeSourceDom(state);
+		}
+		if (!state.disposed && state.renderQueued) {
+			scheduleHtmlRender(state);
+		}
+	}
+}
+
+function scheduleHtmlRender(state: HtmlRenderState): void {
+	if (state.disposed) return;
+	state.renderQueued = true;
+	if (state.renderTimer !== null) {
+		window.clearTimeout(state.renderTimer);
+	}
+
+	state.renderTimer = window.setTimeout(() => {
+		state.renderTimer = null;
+		if (state.disposed) return;
+		if (state.rendering) return;
+		state.renderQueued = false;
+		void renderHtmlOverlay(state);
+	}, 48);
+}
+
+export async function renderPageAsHtml(): Promise<void> {
+	await waitForPageLoad();
+	bindRenderLifecycle();
+	isHtmlModeActive = true;
+
+	const state = ensureRenderState();
+	await renderHtmlOverlay(state);
 }
