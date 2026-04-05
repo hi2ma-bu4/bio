@@ -6,6 +6,8 @@
     "scripts": {
         "dev": "astro dev",
         "start": "astro dev",
+        "start:dev": "npm run build && npm run start:dev:server",
+        "start:dev:server": "node ./dev/start-dev.mjs",
         "build": "astro build",
         "preview": "astro preview",
         "astro": "astro"
