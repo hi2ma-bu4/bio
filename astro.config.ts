@@ -15,6 +15,7 @@ import browserslist from "browserslist";
 import { browserslistToTargets } from "lightningcss";
 import type { PreRenderedAsset, PreRenderedChunk } from "rollup";
 import { type MinifyOptions } from "terser";
+
 import generateDarkIcons from "./dev/integrations/generateDarkIcons";
 import staticTsCompile from "./dev/integrations/staticTsCompile";
 import typecheckIntegration from "./dev/integrations/typecheck";
@@ -190,7 +191,6 @@ export default defineConfig({
 			lastmod: new Date(),
 		}),
 		htmlMinifierNext({
-			html5: true,
 			collapseInlineTagWhitespace: true,
 			collapseWhitespace: true,
 			conservativeCollapse: true,
@@ -203,7 +203,7 @@ export default defineConfig({
 			processScripts: ["text/partytown"],
 			quoteCharacter: '"',
 			sortAttributes: true,
-			sortClassName: true,
+			sortClassNames: true,
 		}),
 	],
 	vite: {
@@ -213,7 +213,7 @@ export default defineConfig({
 				optimize: {
 					minify: true,
 				},
-			}),
+			}) as Plugin[],
 		],
 		optimizeDeps: {
 			exclude: [],

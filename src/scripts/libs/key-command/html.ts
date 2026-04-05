@@ -116,12 +116,13 @@ function serializeNode(node: ChildNode): string {
 			const tag = element.tagName.toLowerCase();
 			const style = getComputedStyle(element);
 			const css = buildStyle(style);
-			const attrs = tag === "a" ? pickAnchorAttrs(element) : pickAllAttrs(element);
+			const displayAttrs = pickAllAttrs(element);
+			const interactiveAttrs = tag === "a" ? pickAnchorAttrs(element) : displayAttrs;
 
 			if (tag === "svg" && element instanceof SVGElement) {
 				const svgHtml = sanitizeSvg(element);
 				const svgEscaped = escapeHtml(element.outerHTML);
-				return `<span ${attrs}>${svgHtml}<span>${svgEscaped}</span></span>`;
+				return `<span ${interactiveAttrs}>${svgHtml}<span>${svgEscaped}</span></span>`;
 			}
 
 			let inner = "";
@@ -129,12 +130,12 @@ function serializeNode(node: ChildNode): string {
 				inner += serializeNode(child);
 			}
 
-			const open = `&lt;${tag}${attrs}&gt;`;
+			const open = `&lt;${tag}${displayAttrs}&gt;`;
 			const close = `&lt;/${tag}&gt;`;
 			const content = open + inner + close;
 
 			if (tag === "a") {
-				return `<a${attrs} style="${css}">${content}</a>`;
+				return `<a${interactiveAttrs} style="${css}">${content}</a>`;
 			}
 
 			return css ? `<span style="${css}">${content}</span>` : content;
