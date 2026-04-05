@@ -7,7 +7,7 @@
     "forceConsistentCasingInFileNames": true,
     "sourceMap": true,
     "incremental": true,
-    "tsBuildInfoFile": "./cache/tsbuildinfo.json"
+    "tsBuildInfoFile": "./.cache/tsbuildinfo.json"
   },
   "include": [
     ".astro/types.d.ts",

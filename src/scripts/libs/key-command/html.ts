@@ -22,9 +22,49 @@ function addStyle(
 	return css + `${property}:${value};`;
 }
 
-function buildStyle(style: CSSStyleDeclaration): string {
+function normalizeStyleValue(property: string, value: string): string {
+	if (property === "font-family") {
+		return value.replace(/,\s*$/, "").replace(/"/g, "'");
+	}
+	return value;
+}
+
+function addInheritedStyle(
+	css: string,
+	property: string,
+	value: string,
+	parentValue?: string,
+	ignore: string[] = ["normal", "none", "auto"],
+): string {
+	const normalizedValue = normalizeStyleValue(property, value);
+	if (!normalizedValue) return css;
+	if (ignore.includes(normalizedValue)) return css;
+
+	const normalizedParentValue = parentValue ? normalizeStyleValue(property, parentValue) : "";
+	if (normalizedParentValue && normalizedParentValue === normalizedValue) return css;
+
+	return css + `${property}:${normalizedValue};`;
+}
+
+function addStyleProperty(
+	css: string,
+	style: CSSStyleDeclaration,
+	property: string,
+	ignore: string[] = ["normal", "none", "auto"],
+	parentStyle?: CSSStyleDeclaration | null,
+): string {
+	return addInheritedStyle(
+		css,
+		property,
+		style.getPropertyValue(property),
+		parentStyle?.getPropertyValue(property),
+		ignore,
+	);
+}
+
+function buildStyle(style: CSSStyleDeclaration, parentStyle: CSSStyleDeclaration | null = null): string {
 	let css = "";
-	css = addStyle(css, "color", style.color);
+	css = addInheritedStyle(css, "color", style.color, parentStyle?.color);
 	css = addStyle(css, "background-color", style.backgroundColor, ["rgba(0, 0, 0, 0)"]);
 
 	if (style.backgroundImage && style.backgroundImage !== "none") {
@@ -45,19 +85,61 @@ function buildStyle(style: CSSStyleDeclaration): string {
 	css = addStyle(css, "text-shadow", style.textShadow);
 	css = addStyle(css, "box-shadow", style.boxShadow);
 
-	css = addStyle(css, "font-style", style.fontStyle);
-	css = addStyle(css, "font-variant", style.fontVariant);
-	css = addStyle(css, "font-weight", style.fontWeight);
-	css = addStyle(css, "font-stretch", style.fontStretch);
-	css = addStyle(css, "font-size", style.fontSize);
-	css = addStyle(css, "line-height", style.lineHeight);
-	css = addStyle(css, "font-family", style.fontFamily.replace(/,\s*$/, "").replace(/"/g, "'"));
+	css = addInheritedStyle(css, "font-style", style.fontStyle, parentStyle?.fontStyle);
+	css = addInheritedStyle(css, "font-variant", style.fontVariant, parentStyle?.fontVariant);
+	css = addInheritedStyle(css, "font-weight", style.fontWeight, parentStyle?.fontWeight);
+	css = addInheritedStyle(css, "font-stretch", style.fontStretch, parentStyle?.fontStretch);
+	css = addInheritedStyle(css, "font-size", style.fontSize, parentStyle?.fontSize);
+	css = addStyleProperty(css, style, "font-size-adjust", ["normal", "none", "auto"], parentStyle);
+	css = addInheritedStyle(css, "line-height", style.lineHeight, parentStyle?.lineHeight);
+	css = addInheritedStyle(css, "font-family", style.fontFamily, parentStyle?.fontFamily);
+	css = addStyleProperty(css, style, "font-kerning", ["normal", "none", "auto"], parentStyle);
+	css = addStyleProperty(css, style, "font-optical-sizing", ["normal", "none", "auto"], parentStyle);
+	css = addStyleProperty(css, style, "font-feature-settings", ["normal", "none", "auto"], parentStyle);
+	css = addStyleProperty(css, style, "font-variation-settings", ["normal", "none", "auto"], parentStyle);
+	css = addStyleProperty(css, style, "font-palette", ["normal", "none", "auto"], parentStyle);
+	css = addStyleProperty(css, style, "font-synthesis", ["normal", "none", "auto"], parentStyle);
+	css = addStyleProperty(css, style, "font-synthesis-weight", ["normal", "none", "auto"], parentStyle);
+	css = addStyleProperty(css, style, "font-synthesis-style", ["normal", "none", "auto"], parentStyle);
+	css = addStyleProperty(css, style, "font-synthesis-small-caps", ["normal", "none", "auto"], parentStyle);
+	css = addStyleProperty(css, style, "font-synthesis-position", ["normal", "none", "auto"], parentStyle);
+	css = addStyleProperty(css, style, "font-variant-ligatures", ["normal", "none", "auto"], parentStyle);
+	css = addStyleProperty(css, style, "font-variant-caps", ["normal", "none", "auto"], parentStyle);
+	css = addStyleProperty(css, style, "font-variant-numeric", ["normal", "none", "auto"], parentStyle);
+	css = addStyleProperty(css, style, "font-variant-east-asian", ["normal", "none", "auto"], parentStyle);
+	css = addStyleProperty(css, style, "font-variant-position", ["normal", "none", "auto"], parentStyle);
 
-	css = addStyle(css, "letter-spacing", style.letterSpacing);
-	css = addStyle(css, "word-spacing", style.wordSpacing);
+	css = addInheritedStyle(css, "letter-spacing", style.letterSpacing, parentStyle?.letterSpacing);
+	css = addInheritedStyle(css, "word-spacing", style.wordSpacing, parentStyle?.wordSpacing);
 
 	css = addStyle(css, "text-decoration", style.textDecoration);
-	css = addStyle(css, "text-transform", style.textTransform);
+	css = addStyleProperty(css, style, "text-decoration-line", ["normal", "none", "auto"], parentStyle);
+	css = addStyleProperty(css, style, "text-decoration-style", ["normal", "none", "auto"], parentStyle);
+	css = addStyleProperty(css, style, "text-decoration-color", ["normal", "none", "auto"], parentStyle);
+	css = addStyleProperty(css, style, "text-decoration-thickness", ["normal", "none", "auto"], parentStyle);
+	css = addStyleProperty(css, style, "text-underline-offset", ["normal", "none", "auto"], parentStyle);
+	css = addStyleProperty(css, style, "text-underline-position", ["normal", "none", "auto"], parentStyle);
+	css = addStyleProperty(css, style, "text-decoration-skip-ink", ["normal", "none", "auto"], parentStyle);
+	css = addStyleProperty(css, style, "text-emphasis", ["normal", "none", "auto"], parentStyle);
+	css = addStyleProperty(css, style, "text-emphasis-style", ["normal", "none", "auto"], parentStyle);
+	css = addStyleProperty(css, style, "text-emphasis-color", ["normal", "none", "auto"], parentStyle);
+	css = addStyleProperty(css, style, "text-emphasis-position", ["normal", "none", "auto"], parentStyle);
+	css = addInheritedStyle(css, "text-transform", style.textTransform, parentStyle?.textTransform);
+	css = addStyleProperty(css, style, "text-rendering", ["normal", "none", "auto"], parentStyle);
+	css = addStyleProperty(css, style, "-webkit-text-fill-color", ["rgba(0, 0, 0, 0)"], parentStyle);
+	css = addStyleProperty(css, style, "-webkit-text-stroke", ["normal", "none", "auto"], parentStyle);
+	css = addStyleProperty(css, style, "-webkit-text-stroke-width", ["normal", "none", "auto"], parentStyle);
+	css = addStyleProperty(css, style, "-webkit-text-stroke-color", ["normal", "none", "auto"], parentStyle);
+	css = addStyleProperty(css, style, "cursor", ["normal", "none", "auto"], parentStyle);
+	css = addStyleProperty(css, style, "caret-color", ["normal", "none", "auto"], parentStyle);
+	css = addStyleProperty(css, style, "accent-color", ["normal", "none", "auto"], parentStyle);
+	css = addStyleProperty(css, style, "outline");
+	css = addStyleProperty(css, style, "outline-color");
+	css = addStyleProperty(css, style, "outline-style");
+	css = addStyleProperty(css, style, "outline-width");
+	css = addStyleProperty(css, style, "outline-offset");
+	css = addStyleProperty(css, style, "appearance");
+	css = addStyleProperty(css, style, "-webkit-appearance");
 
 	css = addStyle(css, "opacity", style.opacity, ["1"]);
 	css = addStyle(css, "visibility", style.visibility, ["visible"]);
@@ -119,7 +201,11 @@ function buildStyleAttr(baseCss: string): string {
 	return baseCss ? ` style="${escapeHtml(baseCss)}"` : "";
 }
 
-function serializeNode(node: ChildNode, hoverStyles: WeakMap<Element, string>): string {
+function serializeNode(
+	node: ChildNode,
+	hoverStyles: WeakMap<Element, string>,
+	parentStyle: CSSStyleDeclaration | null = null,
+): string {
 	switch (node.nodeType) {
 		case Node.TEXT_NODE:
 			return escapeHtml(node.nodeValue ?? "");
@@ -131,7 +217,7 @@ function serializeNode(node: ChildNode, hoverStyles: WeakMap<Element, string>): 
 			const element = node as Element;
 			const tag = element.tagName.toLowerCase();
 			const style = getComputedStyle(element);
-			const baseCss = buildStyle(style);
+			const baseCss = buildStyle(style, parentStyle);
 			const hoverCss = hoverStyles.get(element) ?? "";
 			const displayAttrs = pickAllAttrs(element);
 			const interactiveAttrs = tag === "a" ? pickAnchorAttrs(element) : displayAttrs;
@@ -146,7 +232,7 @@ function serializeNode(node: ChildNode, hoverStyles: WeakMap<Element, string>): 
 
 			let inner = "";
 			for (const child of Array.from(element.childNodes)) {
-				inner += serializeNode(child, hoverStyles);
+				inner += serializeNode(child, hoverStyles, style);
 			}
 
 			const open = `&lt;${tag}${displayAttrs}&gt;`;
@@ -310,8 +396,12 @@ async function collectHoverStyles(): Promise<WeakMap<Element, string>> {
 				current = current.parentElement;
 			}
 
-			const baseCss = buildStyle(getComputedStyle(element));
-			const hoverCss = buildStyle(iframeWindow.getComputedStyle(cloneElement));
+			const baseParentStyle = element.parentElement ? getComputedStyle(element.parentElement) : null;
+			const hoverParentStyle = cloneElement.parentElement
+				? iframeWindow.getComputedStyle(cloneElement.parentElement)
+				: null;
+			const baseCss = buildStyle(getComputedStyle(element), baseParentStyle);
+			const hoverCss = buildStyle(iframeWindow.getComputedStyle(cloneElement), hoverParentStyle);
 			if (hoverCss && hoverCss !== baseCss) {
 				hoverStyles.set(element, hoverCss);
 			}
