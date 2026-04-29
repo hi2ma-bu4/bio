@@ -89,7 +89,7 @@ if (!isbot(navigator.userAgent)) {
 		document.addEventListener("DOMContentLoaded", () => {
 			initKeyCommand();
 			initInfiniteBasement();
-			if (deviceType === "touchOnly") {
+			if (deviceType !== "mouseOnly") {
 			} else {
 				initMobileCommand();
 			}
@@ -97,7 +97,7 @@ if (!isbot(navigator.userAgent)) {
 	} else {
 		initKeyCommand();
 		initInfiniteBasement();
-		if (deviceType === "touchOnly") {
+		if (deviceType !== "mouseOnly") {
 			initMobileCommand();
 		}
 	}

@@ -3,14 +3,15 @@ class MobileCommandCenter {
 	private inputBuffer: string = "";
 
 	public init() {
-		const footer = document.querySelector("footer");
-		if (!footer) return;
-
+		// Use document listener for more reliable mobile tap detection
 		let tapCount = 0;
 		let lastTap = 0;
 
 		const handleTap = (e: Event) => {
 			const target = e.target as HTMLElement;
+			const footer = document.querySelector("footer");
+			if (!footer || !footer.contains(target)) return;
+
 			if (target.tagName === "A" || target.closest("a") || target.innerText.includes("hi2ma-bu4")) return;
 
 			const now = Date.now();
@@ -27,8 +28,8 @@ class MobileCommandCenter {
 			}
 		};
 
-		footer.addEventListener("touchstart", handleTap, { passive: true });
-		footer.addEventListener("click", handleTap); // Fallback for some environments
+		document.addEventListener("touchstart", handleTap, { passive: true });
+		document.addEventListener("click", handleTap);
 	}
 
 	private showKeyboard() {
@@ -52,6 +53,7 @@ class MobileCommandCenter {
 			boxShadow: "0 -10px 30px rgba(0,0,0,0.5)",
 			transition: "transform 0.3s ease-out",
 			transform: "translateY(0)",
+			boxSizing: "border-box",
 		});
 
 		const title = document.createElement("div");
@@ -76,6 +78,7 @@ class MobileCommandCenter {
 		display.style.border = "1px solid #333";
 		display.style.borderRadius = "4px";
 		display.style.fontSize = "18px";
+		display.style.boxSizing = "border-box";
 		display.textContent = "> ";
 		this.overlay.appendChild(display);
 
@@ -97,7 +100,7 @@ class MobileCommandCenter {
 			btn.style.fontSize = "16px";
 			btn.style.fontWeight = "bold";
 			btn.style.touchAction = "manipulation";
-			btn.addEventListener("touchstart", (e) => {
+			btn.addEventListener("click", (e) => {
 				e.preventDefault();
 				this.inputBuffer += key;
 				display.textContent = "> " + this.inputBuffer;
@@ -121,7 +124,7 @@ class MobileCommandCenter {
 		backBtn.style.color = "#fff";
 		backBtn.style.border = "1px solid #633";
 		backBtn.style.borderRadius = "6px";
-		backBtn.addEventListener("touchstart", (e) => {
+		backBtn.addEventListener("click", (e) => {
 			e.preventDefault();
 			this.inputBuffer = this.inputBuffer.slice(0, -1);
 			display.textContent = "> " + this.inputBuffer;
@@ -136,7 +139,7 @@ class MobileCommandCenter {
 		enterBtn.style.border = "1px solid #363";
 		enterBtn.style.borderRadius = "6px";
 		enterBtn.style.fontWeight = "bold";
-		enterBtn.addEventListener("touchstart", (e) => {
+		enterBtn.addEventListener("click", (e) => {
 			e.preventDefault();
 			this.executeCommand(this.inputBuffer);
 			this.inputBuffer = "";
@@ -151,7 +154,7 @@ class MobileCommandCenter {
 		closeBtn.style.color = "#fff";
 		closeBtn.style.border = "1px solid #444";
 		closeBtn.style.borderRadius = "6px";
-		closeBtn.addEventListener("touchstart", (e) => {
+		closeBtn.addEventListener("click", (e) => {
 			e.preventDefault();
 			this.hideKeyboard();
 		});
