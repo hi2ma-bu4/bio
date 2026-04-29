@@ -1,3 +1,4 @@
+import { deviceType } from "detect-it";
 import { isbot } from "isbot";
 
 import { getQueryParams, paramToBoolean } from "../scripts/libs/query";
@@ -47,8 +48,8 @@ const maxRowLength = Math.max(...rowArr.map((s) => s.length));
 const frameData = transpose(
 	rowArr.map((s) =>
 		//
-		slidingWindowsCircular(s.padEnd(maxRowLength, " "), maxChar, 5)
-	)
+		slidingWindowsCircular(s.padEnd(maxRowLength, " "), maxChar, 5),
+	),
 );
 frameData.forEach((f) => DomAnimator.addFrame(f));
 
@@ -66,7 +67,7 @@ function init() {
 	DomAnimator.animate(500);
 	timerId = setTimeout(
 		stop,
-		1000 * 60 * 5 // 5分後に停止
+		1000 * 60 * 5, // 5分後に停止
 	);
 }
 
@@ -76,7 +77,7 @@ function stop() {
 }
 
 // クローラー以外の場合のみ動作
-if (!isbot(navigator.userAgent) && !/android|iphone|ipad|mobile/i.test(navigator.userAgent)) {
+if (!isbot(navigator.userAgent) && deviceType !== "touchOnly") {
 	init();
 	document.addEventListener("astro:before-preparation", stop);
 }

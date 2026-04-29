@@ -90,6 +90,9 @@ async function initParticles() {
 			case "labor-thanksgiving":
 				preset = "8-bit";
 				break;
+			case "world-development-information-day":
+				preset = "parallax";
+				break;
 			case "christmas":
 				preset = "snow";
 				break;
@@ -220,6 +223,11 @@ async function initParticles() {
 			const FONT_URL = `/bio/fonts/EnkaDotGothic24/EnkaDotGothic24.ttf`;
 			await loadFont("EnkaDotGothic24", FONT_URL);
 			theme = "dark";
+			break;
+		}
+		case "parallax": {
+			const { startGyroParallax, stopGyroParallax } = await import("./libs/day-effect/parallax");
+			attachManagedEffect(startGyroParallax, stopGyroParallax);
 			break;
 		}
 		case "snow":

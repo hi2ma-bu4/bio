@@ -1,3 +1,4 @@
+import { deviceType } from "detect-it";
 import { isbot } from "isbot";
 
 import { createEffectLifecycle } from "./libs/effect-lifecycle";
@@ -59,14 +60,47 @@ function initKeyCommand() {
 		},
 		{ once: true },
 	);
+
+	fk.register(
+		["L", "E", "N", "S"],
+		async () => {
+			const { lensMode } = await import("./libs/key-command/lens");
+			lensMode.toggle();
+			lifecycle.addStop(() => lensMode.destroy());
+			lifecycle.addUpdate(() => lensMode.init());
+		},
+		{ once: true },
+	);
+}
+
+async function initMobileCommand() {
+	const { mobileCommandCenter } = await import("./libs/mobile-command");
+	mobileCommandCenter.init();
+}
+
+async function initInfiniteBasement() {
+	const { infiniteBasement } = await import("./libs/infinite-basement");
+	infiniteBasement.init();
 }
 
 // クローラー以外の場合のみ動作
-if (!isbot(navigator.userAgent) && !/android|iphone|ipad|mobile/i.test(navigator.userAgent)) {
+if (!isbot(navigator.userAgent)) {
 	if (document.readyState === "loading") {
-		document.addEventListener("DOMContentLoaded", initKeyCommand);
+		document.addEventListener("DOMContentLoaded", () => {
+			if (deviceType === "mouseOnly") {
+				initKeyCommand();
+			} else {
+				initMobileCommand();
+			}
+			initInfiniteBasement();
+		});
 	} else {
-		initKeyCommand();
+		if (deviceType === "mouseOnly") {
+			initKeyCommand();
+		} else {
+			initMobileCommand();
+		}
+		initInfiniteBasement();
 	}
 	document.addEventListener("astro:before-preparation", () => lifecycle.stop());
 	document.addEventListener("astro:after-swap", () => lifecycle.update());
