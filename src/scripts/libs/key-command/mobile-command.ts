@@ -183,8 +183,10 @@ class MobileCommandCenter {
 		const chars = cmd.split("");
 		chars.forEach((char) => {
 			window.dispatchEvent(new KeyboardEvent("keydown", { key: char.toUpperCase() }));
+			window.dispatchEvent(new KeyboardEvent("keyup", { key: char.toUpperCase() }));
 		});
 		window.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter" }));
+		window.dispatchEvent(new KeyboardEvent("keyup", { key: "Enter" }));
 	}
 }
 

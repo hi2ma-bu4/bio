@@ -74,13 +74,8 @@ function initKeyCommand() {
 }
 
 async function initMobileCommand() {
-	const { mobileCommandCenter } = await import("./libs/mobile-command");
+	const { mobileCommandCenter } = await import("./libs/key-command/mobile-command");
 	mobileCommandCenter.init();
-}
-
-async function initInfiniteBasement() {
-	const { infiniteBasement } = await import("./libs/infinite-basement");
-	infiniteBasement.init();
 }
 
 // クローラー以外の場合のみ動作
@@ -88,7 +83,6 @@ if (!isbot(navigator.userAgent)) {
 	if (document.readyState === "loading") {
 		document.addEventListener("DOMContentLoaded", () => {
 			initKeyCommand();
-			initInfiniteBasement();
 			if (deviceType !== "mouseOnly") {
 			} else {
 				initMobileCommand();
@@ -96,7 +90,6 @@ if (!isbot(navigator.userAgent)) {
 		});
 	} else {
 		initKeyCommand();
-		initInfiniteBasement();
 		if (deviceType !== "mouseOnly") {
 			initMobileCommand();
 		}

@@ -237,6 +237,8 @@ async function initParticles() {
 			break;
 		default: {
 			if (!preset || Math.random() >= 0.01) {
+				const { infiniteBasement } = await import("./libs/day-effect/infinite-basement");
+				infiniteBasement.init();
 				return;
 			}
 
