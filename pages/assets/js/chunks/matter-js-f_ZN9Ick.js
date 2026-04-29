@@ -1,4 +1,4 @@
-import{c as oe,g as pe}from"./qrcode-DfPMF1VL.js";var q={exports:{}};/*!
+import{c as oe,g as pe}from"./qrcode-BwNhwvQ0.js";var q={exports:{}};/*!
  * matter-js 0.20.0 by @liabru
  * http://brm.io/matter-js/
  * License MIT
