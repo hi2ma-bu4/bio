@@ -3,9 +3,8 @@ import { showToast } from "../ui-toast";
 class GravitationalLens {
 	private enabled: boolean = false;
 	private svgElement: SVGSVGElement | null = null;
+	private lensDiv: HTMLDivElement | null = null;
 	private filterId = "gravitational-lens-filter";
-	private displacementMap: SVGFEDisplacementMapElement | null = null;
-	private circle: SVGCircleElement | null = null;
 
 	private handleMouseMoveBound: (e: MouseEvent) => void;
 	private handleTouchMoveBound: (e: TouchEvent) => void;
@@ -22,13 +21,10 @@ class GravitationalLens {
 		this.svgElement = document.createElementNS(svgNs, "svg");
 		Object.assign(this.svgElement.style, {
 			position: "fixed",
-			top: "0",
-			left: "0",
-			width: "100%",
-			height: "100%",
+			width: "0",
+			height: "0",
 			pointerEvents: "none",
-			zIndex: "-1", // Hide the source of displacement
-			opacity: "0",
+			visibility: "hidden",
 		});
 		this.svgElement.setAttribute("aria-hidden", "true");
 
@@ -36,54 +32,44 @@ class GravitationalLens {
 		const filter = document.createElementNS(svgNs, "filter");
 		filter.id = this.filterId;
 
-		// Displacement map using the red/green channels of the source graphic (the circle)
-		this.displacementMap = document.createElementNS(svgNs, "feDisplacementMap");
-		this.displacementMap.setAttribute("in", "SourceGraphic");
-		this.displacementMap.setAttribute("in2", "SourceGraphic");
-		this.displacementMap.setAttribute("scale", "100");
-		this.displacementMap.setAttribute("xChannelSelector", "R");
-		this.displacementMap.setAttribute("yChannelSelector", "G");
+		const feTurbulence = document.createElementNS(svgNs, "feTurbulence");
+		feTurbulence.setAttribute("type", "fractalNoise");
+		feTurbulence.setAttribute("baseFrequency", "0.01");
+		feTurbulence.setAttribute("numOctaves", "2");
+		feTurbulence.setAttribute("result", "noise");
 
-		// Actually, we want to filter the BODY, using the SVG as displacement source.
-		// So 'in' should be SourceGraphic (of the body) and 'in2' should be the displacement source.
+		const feDisplacementMap = document.createElementNS(svgNs, "feDisplacementMap");
+		feDisplacementMap.setAttribute("in", "SourceGraphic");
+		feDisplacementMap.setAttribute("in2", "noise");
+		feDisplacementMap.setAttribute("scale", "40");
+		feDisplacementMap.setAttribute("xChannelSelector", "R");
+		feDisplacementMap.setAttribute("yChannelSelector", "G");
 
-		filter.appendChild(this.displacementMap);
+		filter.appendChild(feTurbulence);
+		filter.appendChild(feDisplacementMap);
 		defs.appendChild(filter);
 		this.svgElement.appendChild(defs);
-
-		// The displacement source: a circle with a radial gradient
-		// Red for X displacement, Green for Y displacement
-		const radialGradient = document.createElementNS(svgNs, "radialGradient");
-		radialGradient.id = "lens-gradient";
-
-		const stop1 = document.createElementNS(svgNs, "stop");
-		stop1.setAttribute("offset", "0%");
-		stop1.setAttribute("stop-color", "rgb(127,127,0)"); // Neutral displacement at center?
-		// Actually, feDisplacementMap uses 0.5 as neutral. 127/255 is ~0.5.
-
-		const stop2 = document.createElementNS(svgNs, "stop");
-		stop2.setAttribute("offset", "100%");
-		stop2.setAttribute("stop-color", "rgb(127,127,0)");
-
-		// Wait, a lens effect needs a gradient.
-		// Left of lens: push right (R > 0.5), Right of lens: push left (R < 0.5)
-		// Top of lens: push down (G > 0.5), Bottom of lens: push up (G < 0.5)
-
-		radialGradient.innerHTML = `
-			<stop offset="0%" stop-color="rgb(255,127,0)" />
-			<stop offset="50%" stop-color="rgb(127,255,0)" />
-			<stop offset="100%" stop-color="rgb(127,127,0)" />
-		`;
-		// This is just a placeholder, real lens gradient is a bit more complex but let's keep it simple.
-
-		defs.appendChild(radialGradient);
-
-		this.circle = document.createElementNS(svgNs, "circle");
-		this.circle.setAttribute("r", "150");
-		this.circle.setAttribute("fill", "url(#lens-gradient)");
-		this.svgElement.appendChild(this.circle);
-
 		document.body.appendChild(this.svgElement);
+
+		this.lensDiv = document.createElement("div");
+		this.lensDiv.id = "lens-element";
+		Object.assign(this.lensDiv.style, {
+			position: "fixed",
+			width: "250px",
+			height: "250px",
+			borderRadius: "50%",
+			pointerEvents: "none",
+			zIndex: "9999",
+			backdropFilter: `url(#${this.filterId})`,
+			WebkitBackdropFilter: `url(#${this.filterId})`,
+			left: "0",
+			top: "0",
+			transform: "translate(-50%, -50%)",
+			display: "none",
+			border: "1px solid rgba(0, 166, 244, 0.4)",
+			boxShadow: "0 0 30px rgba(0,0,0,0.5), inset 0 0 10px rgba(255,255,255,0.2)",
+		});
+		document.body.appendChild(this.lensDiv);
 	}
 
 	public toggle() {
@@ -98,13 +84,7 @@ class GravitationalLens {
 		if (this.enabled) return;
 		this.init();
 		this.enabled = true;
-
-		// We need to apply the filter to the container of the content
-		// Applying to body might be heavy or cause issues with fixed elements.
-		// But let's try body first.
-		document.body.style.filter = `url(#${this.filterId})`;
-
-		// To make the circle follow the mouse, we update its cx/cy
+		if (this.lensDiv) this.lensDiv.style.display = "block";
 		window.addEventListener("mousemove", this.handleMouseMoveBound);
 		window.addEventListener("touchmove", this.handleTouchMoveBound);
 		showToast("🔭GravitationalLens: Enabled!");
@@ -113,7 +93,7 @@ class GravitationalLens {
 	public disable() {
 		if (!this.enabled) return;
 		this.enabled = false;
-		document.body.style.filter = "";
+		if (this.lensDiv) this.lensDiv.style.display = "none";
 		window.removeEventListener("mousemove", this.handleMouseMoveBound);
 		window.removeEventListener("touchmove", this.handleTouchMoveBound);
 		showToast("🔭GravitationalLens: Disabled");
@@ -130,16 +110,18 @@ class GravitationalLens {
 	}
 
 	private updatePosition(x: number, y: number) {
-		if (this.circle) {
-			this.circle.setAttribute("cx", x.toString());
-			this.circle.setAttribute("cy", y.toString());
+		if (this.lensDiv) {
+			this.lensDiv.style.left = `${x}px`;
+			this.lensDiv.style.top = `${y}px`;
 		}
 	}
 
 	public destroy() {
 		this.disable();
 		this.svgElement?.remove();
+		this.lensDiv?.remove();
 		this.svgElement = null;
+		this.lensDiv = null;
 	}
 }
 
