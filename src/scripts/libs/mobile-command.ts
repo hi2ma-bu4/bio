@@ -12,7 +12,7 @@ class MobileCommandCenter {
 			const footer = document.querySelector("footer");
 			if (!footer || !footer.contains(target)) return;
 
-			if (target.tagName === "A" || target.closest("a") || target.innerText.includes("hi2ma-bu4")) return;
+			if (target.tagName === "A" || target.closest("a")) return;
 
 			const now = Date.now();
 			if (now - lastTap < 500) {
