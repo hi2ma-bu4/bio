@@ -37,7 +37,10 @@ function initHeaderScroll() {
 	updateFloatingHeaderFocus(prevIsHidden);
 
 	// 表示状態を外部で判定して渡す（衝突を避ける）
-	function updateFloatingHeaderFocus(isHidden: boolean) {
+	function updateFloatingHeaderFocus(isHidden: boolean | "until-found") {
+		if (isHidden === "until-found") {
+			isHidden = true;
+		}
 		const fh = floatingHeader as HTMLElement;
 		fh.setAttribute("aria-hidden", String(isHidden));
 

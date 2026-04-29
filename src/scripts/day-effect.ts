@@ -228,7 +228,7 @@ async function initParticles() {
 			theme = "dark";
 			break;
 		default: {
-			if (preset || Math.random() >= 0.01) {
+			if (!preset || Math.random() >= 0.01) {
 				return;
 			}
 
