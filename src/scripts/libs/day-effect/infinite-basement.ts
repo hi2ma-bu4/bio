@@ -1,3 +1,5 @@
+import { deviceType } from "detect-it";
+
 export interface BasementLog {
 	message: string;
 	color?: string;
@@ -179,10 +181,10 @@ export class InfiniteBasement {
 			this.overscrollAmount = Math.max(0, this.overscrollAmount * 0.9 - 1);
 		}
 
-		if (isAtBottom && this.overscrollAmount >= 70) {
+		if (isAtBottom && this.overscrollAmount >= 80) {
 			if (!this.overscrollStartTimestamp) {
 				this.overscrollStartTimestamp = now;
-			} else if (now - this.overscrollStartTimestamp >= 3000) {
+			} else if (now - this.overscrollStartTimestamp >= 5000) {
 				this.activateBasement();
 				return; // Stop ticking
 			}
@@ -212,7 +214,7 @@ export class InfiniteBasement {
 			display: "flex",
 			flexDirection: "column",
 			gap: "2px",
-			fontSize: "13px",
+			fontSize: deviceType === "mouseOnly" ? "13px" : "7px",
 			lineHeight: "1.2",
 			boxShadow: "inset 0 10px 20px rgba(0,0,0,1)",
 			position: "relative",

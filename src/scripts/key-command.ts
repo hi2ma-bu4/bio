@@ -84,7 +84,6 @@ if (!isbot(navigator.userAgent)) {
 		document.addEventListener("DOMContentLoaded", () => {
 			initKeyCommand();
 			if (deviceType !== "mouseOnly") {
-			} else {
 				initMobileCommand();
 			}
 		});
