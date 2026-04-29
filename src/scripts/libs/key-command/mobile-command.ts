@@ -22,7 +22,7 @@ class MobileCommandCenter {
 			}
 			lastTap = now;
 
-			if (tapCount === 3) {
+			if (tapCount === 5) {
 				tapCount = 0;
 				this.showKeyboard();
 			}
