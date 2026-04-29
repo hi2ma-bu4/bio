@@ -87,20 +87,19 @@ async function initInfiniteBasement() {
 if (!isbot(navigator.userAgent)) {
 	if (document.readyState === "loading") {
 		document.addEventListener("DOMContentLoaded", () => {
-			if (deviceType === "mouseOnly") {
-				initKeyCommand();
+			initKeyCommand();
+			initInfiniteBasement();
+			if (deviceType === "touchOnly") {
 			} else {
 				initMobileCommand();
 			}
-			initInfiniteBasement();
 		});
 	} else {
-		if (deviceType === "mouseOnly") {
-			initKeyCommand();
-		} else {
+		initKeyCommand();
+		initInfiniteBasement();
+		if (deviceType === "touchOnly") {
 			initMobileCommand();
 		}
-		initInfiniteBasement();
 	}
 	document.addEventListener("astro:before-preparation", () => lifecycle.stop());
 	document.addEventListener("astro:after-swap", () => lifecycle.update());

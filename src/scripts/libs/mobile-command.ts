@@ -9,13 +9,12 @@ class MobileCommandCenter {
 		let tapCount = 0;
 		let lastTap = 0;
 
-		footer.addEventListener("touchstart", (e) => {
-			// Check if the tap is NOT on a link or name part if possible
+		const handleTap = (e: Event) => {
 			const target = e.target as HTMLElement;
-			if (target.tagName === "A" || target.closest("a")) return;
+			if (target.tagName === "A" || target.closest("a") || target.innerText.includes("hi2ma-bu4")) return;
 
 			const now = Date.now();
-			if (now - lastTap < 400) {
+			if (now - lastTap < 500) {
 				tapCount++;
 			} else {
 				tapCount = 1;
@@ -26,68 +25,84 @@ class MobileCommandCenter {
 				tapCount = 0;
 				this.showKeyboard();
 			}
-		});
+		};
+
+		footer.addEventListener("touchstart", handleTap, { passive: true });
+		footer.addEventListener("click", handleTap); // Fallback for some environments
 	}
 
 	private showKeyboard() {
 		if (this.overlay) return;
 
 		this.overlay = document.createElement("div");
+		this.overlay.id = "mobile-command-overlay";
 		Object.assign(this.overlay.style, {
 			position: "fixed",
 			bottom: "0",
 			left: "0",
 			width: "100%",
 			padding: "20px",
-			backgroundColor: "rgba(0,0,0,0.8)",
+			backgroundColor: "rgba(10, 10, 10, 0.95)",
 			zIndex: "10000",
 			display: "flex",
 			flexDirection: "column",
 			alignItems: "center",
-			backdropFilter: "blur(10px)",
+			backdropFilter: "blur(15px)",
+			borderTop: "1px solid #00a6f4",
+			boxShadow: "0 -10px 30px rgba(0,0,0,0.5)",
+			transition: "transform 0.3s ease-out",
+			transform: "translateY(0)",
 		});
 
 		const title = document.createElement("div");
-		title.textContent = "MOBILE COMMAND CENTER";
-		title.style.color = "#00ff00";
+		title.textContent = "--- MOBILE COMMAND CENTER ---";
+		title.style.color = "#00a6f4";
 		title.style.fontFamily = "monospace";
+		title.style.fontSize = "12px";
 		title.style.marginBottom = "10px";
+		title.style.letterSpacing = "2px";
 		this.overlay.appendChild(title);
 
 		const display = document.createElement("div");
 		display.style.width = "100%";
-		display.style.height = "40px";
-		display.style.backgroundColor = "#222";
+		display.style.height = "50px";
+		display.style.backgroundColor = "#000";
 		display.style.color = "#00ff00";
 		display.style.fontFamily = "monospace";
 		display.style.display = "flex";
 		display.style.alignItems = "center";
-		display.style.padding = "0 10px";
+		display.style.padding = "0 15px";
 		display.style.marginBottom = "20px";
-		display.style.border = "1px solid #00ff00";
+		display.style.border = "1px solid #333";
+		display.style.borderRadius = "4px";
+		display.style.fontSize = "18px";
 		display.textContent = "> ";
 		this.overlay.appendChild(display);
 
 		const keyboard = document.createElement("div");
 		keyboard.style.display = "grid";
 		keyboard.style.gridTemplateColumns = "repeat(10, 1fr)";
-		keyboard.style.gap = "5px";
+		keyboard.style.gap = "6px";
 		keyboard.style.width = "100%";
 
 		const keys = "QWERTYUIOPASDFGHJKLZXCVBNM".split("");
 		keys.forEach((key) => {
 			const btn = document.createElement("button");
 			btn.textContent = key;
-			btn.style.padding = "10px 0";
-			btn.style.backgroundColor = "#444";
-			btn.style.color = "white";
-			btn.style.border = "none";
-			btn.style.borderRadius = "4px";
+			btn.style.padding = "12px 0";
+			btn.style.backgroundColor = "#222";
+			btn.style.color = "#fff";
+			btn.style.border = "1px solid #444";
+			btn.style.borderRadius = "6px";
 			btn.style.fontSize = "16px";
+			btn.style.fontWeight = "bold";
+			btn.style.touchAction = "manipulation";
 			btn.addEventListener("touchstart", (e) => {
 				e.preventDefault();
 				this.inputBuffer += key;
 				display.textContent = "> " + this.inputBuffer;
+				btn.style.backgroundColor = "#00a6f4";
+				setTimeout(() => (btn.style.backgroundColor = "#222"), 100);
 			});
 			keyboard.appendChild(btn);
 		});
@@ -95,16 +110,17 @@ class MobileCommandCenter {
 		const bottomRow = document.createElement("div");
 		bottomRow.style.gridColumn = "span 10";
 		bottomRow.style.display = "flex";
-		bottomRow.style.gap = "5px";
-		bottomRow.style.marginTop = "5px";
+		bottomRow.style.gap = "6px";
+		bottomRow.style.marginTop = "6px";
 
 		const backBtn = document.createElement("button");
 		backBtn.textContent = "DEL";
 		backBtn.style.flex = "1";
-		backBtn.style.padding = "10px";
-		backBtn.style.backgroundColor = "#633";
-		backBtn.style.color = "white";
-		backBtn.style.border = "none";
+		backBtn.style.padding = "12px";
+		backBtn.style.backgroundColor = "#422";
+		backBtn.style.color = "#fff";
+		backBtn.style.border = "1px solid #633";
+		backBtn.style.borderRadius = "6px";
 		backBtn.addEventListener("touchstart", (e) => {
 			e.preventDefault();
 			this.inputBuffer = this.inputBuffer.slice(0, -1);
@@ -114,10 +130,12 @@ class MobileCommandCenter {
 		const enterBtn = document.createElement("button");
 		enterBtn.textContent = "ENTER";
 		enterBtn.style.flex = "2";
-		enterBtn.style.padding = "10px";
-		enterBtn.style.backgroundColor = "#363";
-		enterBtn.style.color = "white";
-		enterBtn.style.border = "none";
+		enterBtn.style.padding = "12px";
+		enterBtn.style.backgroundColor = "#242";
+		enterBtn.style.color = "#fff";
+		enterBtn.style.border = "1px solid #363";
+		enterBtn.style.borderRadius = "6px";
+		enterBtn.style.fontWeight = "bold";
 		enterBtn.addEventListener("touchstart", (e) => {
 			e.preventDefault();
 			this.executeCommand(this.inputBuffer);
@@ -128,10 +146,11 @@ class MobileCommandCenter {
 		const closeBtn = document.createElement("button");
 		closeBtn.textContent = "CLOSE";
 		closeBtn.style.flex = "1";
-		closeBtn.style.padding = "10px";
-		closeBtn.style.backgroundColor = "#444";
-		closeBtn.style.color = "white";
-		closeBtn.style.border = "none";
+		closeBtn.style.padding = "12px";
+		closeBtn.style.backgroundColor = "#333";
+		closeBtn.style.color = "#fff";
+		closeBtn.style.border = "1px solid #444";
+		closeBtn.style.borderRadius = "6px";
 		closeBtn.addEventListener("touchstart", (e) => {
 			e.preventDefault();
 			this.hideKeyboard();
@@ -148,19 +167,21 @@ class MobileCommandCenter {
 
 	private hideKeyboard() {
 		if (this.overlay) {
-			this.overlay.remove();
-			this.overlay = null;
-			this.inputBuffer = "";
+			this.overlay.style.transform = "translateY(100%)";
+			setTimeout(() => {
+				this.overlay?.remove();
+				this.overlay = null;
+				this.inputBuffer = "";
+			}, 300);
 		}
 	}
 
 	private executeCommand(cmd: string) {
-		// Simulate key events for FlowKeys
 		const chars = cmd.split("");
 		chars.forEach((char) => {
 			window.dispatchEvent(new KeyboardEvent("keydown", { key: char.toUpperCase() }));
 		});
-		// Most commands in key-command.ts don't need Enter, but some might.
+		window.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter" }));
 	}
 }
 
