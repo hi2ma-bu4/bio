@@ -1,12 +1,10 @@
 import Matter from "matter-js";
+import { applyTheme, safeGet, themeChangeLock, updateAllToggleButtonsUI, type themeType } from "../theme-utils";
 
 const { Engine, Runner, Bodies, Composite, Body, Events } = Matter;
 
 interface Platform {
 	body: Matter.Body;
-	element: Element;
-	originalY: number;
-	originalX: number;
 }
 
 class MoonJumper {
@@ -16,14 +14,13 @@ class MoonJumper {
 	private rabbit: Matter.Body | null = null;
 	private rabbitEl: HTMLDivElement | null = null;
 	private heightEl: HTMLDivElement | null = null;
-	private ground: Matter.Body | null = null;
 	private leftWall: Matter.Body | null = null;
 	private rightWall: Matter.Body | null = null;
 	private platforms: Platform[] = [];
 	private clouds: { body: Matter.Body; el: HTMLDivElement }[] = [];
 	private stars: { el: HTMLDivElement; x: number; y: number; parallax: number; opacity: number }[] = [];
-	private isInfiniteMode = false;
-	private originalTheme: "light" | "dark" = "light";
+	private originalTheme: themeType = "auto";
+	private inSpace = false;
 	private lastClickTime = 0;
 	private animationFrameId: number | null = null;
 	private clickHandler: ((e: MouseEvent) => void) | null = null;
@@ -33,7 +30,7 @@ class MoonJumper {
 	public async start() {
 		if (this.container) return;
 
-		this.originalTheme = document.documentElement.classList.contains("dark") ? "dark" : "light";
+		this.originalTheme = safeGet() ?? "auto";
 
 		// 1. Scroll to bottom
 		window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
@@ -62,7 +59,7 @@ class MoonJumper {
 		this.startLoop();
 
 		this.clickHandler = (e: MouseEvent) => this.handleClick(e);
-		window.addEventListener("mousedown", this.clickHandler);
+		window.addEventListener("mousedown", this.clickHandler, true);
 
 		this.resizeHandler = () => this.handleResize();
 		window.addEventListener("resize", this.resizeHandler);
@@ -97,7 +94,7 @@ class MoonJumper {
 		const width = window.innerWidth;
 		const docHeight = document.body.scrollHeight;
 
-		this.ground = Bodies.rectangle(width / 2, docHeight + 50, width * 5, 100, {
+		const ground = Bodies.rectangle(width / 2, docHeight + 50, width * 5, 100, {
 			isStatic: true,
 			label: "ground",
 			friction: 0.5,
@@ -107,7 +104,7 @@ class MoonJumper {
 		this.leftWall = Bodies.rectangle(-50, docHeight / 2, 100, docHeight * 10, { isStatic: true });
 		this.rightWall = Bodies.rectangle(width + 50, docHeight / 2, 100, docHeight * 10, { isStatic: true });
 
-		Composite.add(this.engine.world, [this.ground, this.leftWall, this.rightWall]);
+		Composite.add(this.engine.world, [ground, this.leftWall, this.rightWall]);
 
 		Events.on(this.engine, "collisionStart", (event) => {
 			event.pairs.forEach((pair) => {
@@ -169,7 +166,7 @@ class MoonJumper {
 	private initPlatforms() {
 		const elements = Array.from(document.querySelectorAll("a, button, h1, h2, h3, .card, p, li, img, span, div.project-card"));
 		const currentScroll = window.scrollY;
-		const processedRects: DOMRect[] = [];
+		const processedRects: { left: number; right: number; top: number; bottom: number }[] = [];
 
 		elements.forEach((el) => {
 			const style = window.getComputedStyle(el);
@@ -193,29 +190,39 @@ class MoonJumper {
 			// If it doesn't have direct text and isn't an image, skip unless it's a known container
 			if (!hasText && !isImage && !el.classList.contains("card") && !el.classList.contains("project-card")) return;
 
-			const rect = el.getBoundingClientRect();
-			if (rect.width < 10 || rect.height < 10) return;
+			// Use getClientRects to support multi-line inline elements
+			const rects = Array.from(el.getClientRects());
+			rects.forEach((rect) => {
+				if (rect.width < 10 || rect.height < 10) return;
 
-			// Avoid overlapping with already processed platforms
-			const isOverlapping = processedRects.some((r) => rect.left >= r.left && rect.right <= r.right && rect.top >= r.top && rect.bottom <= r.bottom);
-			if (isOverlapping) return;
+				// Avoid overlapping with already processed platforms
+				const isOverlapping = processedRects.some((r) => rect.left >= r.left - 1 && rect.right <= r.right + 1 && rect.top >= r.top - 1 && rect.bottom <= r.bottom + 1);
+				if (isOverlapping) return;
 
-			const absY = rect.top + currentScroll;
-			const absX = rect.left + rect.width / 2;
-			const body = Bodies.rectangle(absX, absY + rect.height / 2, rect.width, rect.height, {
-				isStatic: true,
-				label: "platform",
-				friction: 0.5,
+				const absY = rect.top + currentScroll;
+				const absX = rect.left + rect.width / 2;
+				const body = Bodies.rectangle(absX, absY + rect.height / 2, rect.width, rect.height, {
+					isStatic: true,
+					label: "platform",
+					friction: 0.5,
+				});
+				Composite.add(this.engine!.world, body);
+				this.platforms.push({ body });
+				processedRects.push({
+					left: rect.left,
+					right: rect.right,
+					top: rect.top,
+					bottom: rect.bottom,
+				});
 			});
-			Composite.add(this.engine!.world, body);
-			this.platforms.push({ body, element: el, originalY: absY, originalX: absX });
-			processedRects.push(rect);
 		});
 	}
 
 	private handleClick(e: MouseEvent) {
 		if (!this.engine || !this.rabbit) return;
-		if ((e.target as HTMLElement).closest("a, button")) return;
+
+		// Only check for links/buttons if we are not in space mode (on ground)
+		if (!this.inSpace && (e.target as HTMLElement).closest("a, button")) return;
 
 		const now = Date.now();
 		// Anti-spam: 300ms cooldown
@@ -236,13 +243,17 @@ class MoonJumper {
 
 		// If in Space Mode (climbing past document top), adjust y relative to altitude
 		const viewportH = window.innerHeight;
-		if (this.rabbit && this.rabbit.position.y < viewportH * 0.1) {
+		if (this.inSpace) {
 			const altitude = viewportH * 0.1 - this.rabbit.position.y;
 			y -= altitude;
+
+			// Stop propagation to prevent hitting faded content
+			e.preventDefault();
+			e.stopPropagation();
 		}
 
 		const distToRabbit = Math.hypot(x - this.rabbit.position.x, y - this.rabbit.position.y);
-		if (distToRabbit < 50) return;
+		if (distToRabbit < 30) return;
 
 		const cloudBody = Bodies.rectangle(x, y, 80, 20, { isStatic: true, label: "cloud" });
 		Composite.add(this.engine.world, cloudBody);
@@ -291,11 +302,6 @@ class MoonJumper {
 			const pos = this.rabbit.position;
 			const viewportH = window.innerHeight;
 
-			// Camera Logic:
-			// In document range, we scroll.
-			// Beyond document top (Y < viewportH * 0.5), we need to handle virtual camera.
-			// Actually, window.scrollTo(0, negative) doesn't work.
-
 			let targetScrollY = pos.y - viewportH * 0.5;
 			if (targetScrollY < 0) {
 				targetScrollY = 0;
@@ -304,10 +310,6 @@ class MoonJumper {
 
 			const currentScrollY = window.scrollY;
 
-			// Constraints: Keep rabbit in 10% - 90% of viewport
-			// If rabbit is too high in viewport, move camera up (if possible) or push rabbit down.
-			// Since we can't scroll above 0, if pos.y < viewportH * 0.1, we have a problem.
-
 			let renderY = pos.y - currentScrollY;
 
 			// Apply viewport constraints
@@ -315,33 +317,42 @@ class MoonJumper {
 			const maxRenderY = viewportH * 0.9;
 
 			if (renderY < minRenderY) {
-				// Rabbit is above the 10% line.
-				// If we are already at scroll 0, we must force rabbit to stay at 10% line visually.
-				// This means we are effectively in "Space Mode" where the background moves instead.
 				renderY = minRenderY;
 			} else if (renderY > maxRenderY && pos.y < document.body.scrollHeight - 100) {
-				// Only constrain bottom if we are not at the very start
 				renderY = maxRenderY;
 			}
 
 			// Space Mode: When rabbit tries to go above the scrollable area
 			if (pos.y < viewportH * 0.1) {
-				this.isInfiniteMode = true;
 				const altitude = viewportH * 0.1 - pos.y;
 				const bgOpacity = Math.min(0.9, altitude / 4000);
 				this.container.style.backgroundColor = `rgba(0, 0, 20, ${bgOpacity})`;
 
-				const main = document.querySelector("main");
+				const main = document.querySelector("main") as HTMLElement;
 				if (main) {
 					main.style.opacity = `${Math.max(0, 1 - altitude / 1500)}`;
 				}
-				document.documentElement.classList.add("dark");
+
+				if (!this.inSpace) {
+					this.inSpace = true;
+					themeChangeLock(true, "dark");
+					if (this.container) this.container.style.pointerEvents = "auto";
+				}
 				this.updateStars(altitude);
 			} else {
-				this.isInfiniteMode = false;
 				this.container.style.backgroundColor = "transparent";
-				const main = document.querySelector("main");
-				if (main) main.style.opacity = "1";
+				const main = document.querySelector("main") as HTMLElement;
+				if (main) {
+					main.style.opacity = "1";
+				}
+
+				if (this.inSpace) {
+					this.inSpace = false;
+					themeChangeLock(false);
+					applyTheme(this.originalTheme);
+					updateAllToggleButtonsUI();
+					if (this.container) this.container.style.pointerEvents = "none";
+				}
 				this.hideStars();
 			}
 
@@ -432,17 +443,17 @@ class MoonJumper {
 		this.unlockScroll();
 		if (this.animationFrameId) cancelAnimationFrame(this.animationFrameId);
 		if (this.runner) Runner.stop(this.runner);
-		if (this.clickHandler) window.removeEventListener("mousedown", this.clickHandler);
+		if (this.clickHandler) window.removeEventListener("mousedown", this.clickHandler, true);
 		if (this.resizeHandler) window.removeEventListener("resize", this.resizeHandler);
 
-		const main = document.querySelector("main");
-		if (main) main.style.opacity = "1";
-
-		if (this.originalTheme === "light") {
-			document.documentElement.classList.remove("dark");
-		} else {
-			document.documentElement.classList.add("dark");
+		const main = document.querySelector("main") as HTMLElement;
+		if (main) {
+			main.style.opacity = "1";
 		}
+
+		themeChangeLock(false);
+		applyTheme(this.originalTheme);
+		updateAllToggleButtonsUI();
 
 		if (this.container) {
 			this.container.style.opacity = "0";
@@ -454,13 +465,11 @@ class MoonJumper {
 				this.rabbit = null;
 				this.rabbitEl = null;
 				this.heightEl = null;
-				this.ground = null;
 				this.leftWall = null;
 				this.rightWall = null;
 				this.platforms = [];
 				this.clouds = [];
 				this.stars = [];
-				this.isInfiniteMode = false;
 			}, 1000);
 		}
 	}
