@@ -61,7 +61,7 @@ class BugHunt {
 		});
 
 		this.injectStyles();
-		this.interval = window.setInterval(() => this.spawnBug(), 2000 + Math.random() * 5000);
+		this.interval = window.setInterval(() => this.spawnBug(), 1500 + Math.random() * 3000);
 	}
 
 	private collectTextNodes(node: Node, map: Map<Text, string>) {

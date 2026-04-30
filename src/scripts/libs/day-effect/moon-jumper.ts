@@ -54,7 +54,8 @@ class MoonJumper {
 		Runner.run(this.runner, this.engine);
 
 		const width = window.innerWidth;
-		const ground = Bodies.rectangle(width / 2, window.innerHeight + 10, width, 20, { isStatic: true });
+		const scrollY = window.scrollY;
+		const ground = Bodies.rectangle(width / 2, scrollY + window.innerHeight + 10, width, 20, { isStatic: true });
 		const leftWall = Bodies.rectangle(-10, window.innerHeight / 2, 20, window.innerHeight * 1000, { isStatic: true });
 		const rightWall = Bodies.rectangle(width + 10, window.innerHeight / 2, 20, window.innerHeight * 1000, { isStatic: true });
 
@@ -63,7 +64,7 @@ class MoonJumper {
 
 	private spawnRabbit() {
 		const x = window.innerWidth / 2;
-		const y = window.innerHeight - 50;
+		const y = window.scrollY + window.innerHeight - 100;
 		this.rabbit = Bodies.circle(x, y, 15, {
 			restitution: 0.8,
 			friction: 0.01,
@@ -176,7 +177,7 @@ class MoonJumper {
 			const height = -this.cameraY;
 			if (height > 1000 && !this.isInfiniteMode) {
 				this.isInfiniteMode = true;
-				showToast("🚀 Infinite Mode Activated!");
+				showToast("🚀 大気圏突入！さらに上を目指せ！");
 			}
 
 			if (this.isInfiniteMode) {
