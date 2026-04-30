@@ -21,12 +21,10 @@ class BugHunt {
 
 	public start() {
 		if (this.isActive) return;
-		console.log("Bug Hunt starting...");
 		this.isActive = true;
 		this.score = 0;
 
 		const elements = document.querySelectorAll("p, h1, h2, h3, h4, h5, h6, span, a, button, img");
-		console.log(`Found ${elements.length} potential elements`);
 		elements.forEach((el) => {
 			if (el instanceof HTMLElement) {
 				// Only target elements with text or images
@@ -104,7 +102,6 @@ class BugHunt {
 		if (!this.isActive) return;
 
 		const healthyOnes = this.buggyElements.filter((b) => !b.isBuggy);
-		console.log(`Spawning bug. Healthy elements: ${healthyOnes.length}`);
 		if (healthyOnes.length === 0) return;
 
 		// Spawn 1-3 bugs at once to increase intensity
@@ -175,6 +172,7 @@ class BugHunt {
 	}
 
 	private showVictory() {
+		const finalBugCount = this.buggyElements.length;
 		this.stop();
 
 		// Create a "System Cleaned" terminal overlay
@@ -187,14 +185,13 @@ class BugHunt {
 			background: #000;
 			color: #0f0;
 			padding: 20px;
-			border: 2px solid #0f0;
 			font-family: monospace;
 			z-index: 10000;
 			box-shadow: 0 0 20px #0f0;
 			min-width: 300px;
 		`;
 
-		const lines = ["> INITIALIZING SYSTEM SCAN...", "> BUGS DETECTED: 0", "> OPTIMIZING ASSETS...", "> CACHE PURGED.", "> PERFORMANCE: 100%", "> STATUS: SYSTEM PROTECTED", "", "[ THANK YOU FOR TESTING ]"];
+		const lines = ["> INITIALIZING SYSTEM SCAN...", `> BUGS DETECTED: ${finalBugCount}`, "> OPTIMIZING ASSETS...", "> CACHE PURGED.", "> PERFORMANCE: 100%", `> SCORE: ${this.score}`, "> STATUS: SYSTEM PROTECTED", "", "[ THANK YOU FOR TESTING ]"];
 
 		document.body.appendChild(overlay);
 
