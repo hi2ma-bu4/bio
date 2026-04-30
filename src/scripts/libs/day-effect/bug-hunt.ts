@@ -31,9 +31,11 @@ class BugHunt {
 				const hasText = (el.textContent || "").trim().length > 0;
 				const isImg = el.tagName === "IMG";
 
-				if (!hasText && !isImg) return;
-				const hasElement = el.children.length > 0;
-				if (hasElement && !hasText) return;
+				if (!isImg) {
+					if (!hasText) return;
+					const hasDirectText = Array.from(el.childNodes).some((c) => c.nodeType === 3 && c.textContent?.trim());
+					if (!hasDirectText) return;
+				}
 
 				const textMap = new Map<Text, string>();
 				if (hasText) {
@@ -91,7 +93,6 @@ class BugHunt {
 				position: relative;
 				z-index: 9999;
 				cursor: pointer !important;
-				outline: 2px solid rgba(255, 0, 0, 0.5);
 			}
 			.buggy-chromatic {
 				text-shadow: 2px 0 #ff0000, -2px 0 #00ffff !important;
@@ -187,6 +188,7 @@ class BugHunt {
 			background: #000;
 			color: #0f0;
 			padding: 20px;
+			border: 2px solid #0f0;
 			font-family: monospace;
 			z-index: 10000;
 			box-shadow: 0 0 20px #0f0;
