@@ -1,6 +1,6 @@
 import Matter from "matter-js";
 
-const { Engine, Runner, Bodies, Composite, Body } = Matter;
+const { Engine, Runner, Bodies, Composite, Body, Events } = Matter;
 
 interface Platform {
 	body: Matter.Body;
@@ -19,14 +19,17 @@ class MoonJumper {
 	private rightWall: Matter.Body | null = null;
 	private platforms: Platform[] = [];
 	private clouds: { body: Matter.Body; el: HTMLDivElement; absY: number }[] = [];
-	private gameShiftY = 0; // Camera shift for climbing above page
-	private lastClickTime = 0;
+	private lastScrollY = 0;
+	private totalAltitude = 0;
 	private isInfiniteMode = false;
+	private lastClickTime = 0;
 	private animationFrameId: number | null = null;
 	private clickHandler: ((e: MouseEvent) => void) | null = null;
+	private scrollHandler: (() => void) | null = null;
 
 	public start() {
 		if (this.container) return;
+		this.lastScrollY = window.scrollY;
 
 		this.container = document.createElement("div");
 		this.container.id = "moon-jumper-container";
@@ -48,6 +51,9 @@ class MoonJumper {
 
 		this.clickHandler = (e: MouseEvent) => this.handleClick(e);
 		window.addEventListener("mousedown", this.clickHandler);
+
+		this.scrollHandler = () => this.syncOnScroll();
+		window.addEventListener("scroll", this.scrollHandler);
 	}
 
 	private initPhysics() {
@@ -59,23 +65,32 @@ class MoonJumper {
 
 		const width = window.innerWidth;
 		const height = window.innerHeight;
-		const scrollY = window.scrollY;
 
-		// Initial floor and walls in absolute coordinates
-		this.ground = Bodies.rectangle(width / 2, scrollY + height + 100, width * 5, 200, { isStatic: true, label: "ground" });
-		this.leftWall = Bodies.rectangle(-50, scrollY + height / 2, 100, height * 10, { isStatic: true });
-		this.rightWall = Bodies.rectangle(width + 50, scrollY + height / 2, 100, height * 10, { isStatic: true });
+		this.ground = Bodies.rectangle(width / 2, height + 100, width * 5, 200, { isStatic: true, label: "ground", friction: 0.5 });
+		this.leftWall = Bodies.rectangle(-50, height / 2, 100, height * 10, { isStatic: true });
+		this.rightWall = Bodies.rectangle(width + 50, height / 2, 100, height * 10, { isStatic: true });
 
 		Composite.add(this.engine.world, [this.ground, this.leftWall, this.rightWall]);
+
+		Events.on(this.engine, "collisionStart", (event) => {
+			event.pairs.forEach((pair) => {
+				const labels = [pair.bodyA.label, pair.bodyB.label];
+				if (labels.includes("rabbit") && (labels.includes("cloud") || labels.includes("platform") || labels.includes("ground"))) {
+					const rabbitBody = pair.bodyA.label === "rabbit" ? pair.bodyA : pair.bodyB;
+					if (rabbitBody.velocity.y > 0) {
+						Body.setVelocity(rabbitBody, { x: rabbitBody.velocity.x, y: -16 });
+					}
+				}
+			});
+		});
 	}
 
 	private spawnRabbit() {
 		const width = window.innerWidth;
 		const height = window.innerHeight;
-		const scrollY = window.scrollY;
 
-		this.rabbit = Bodies.circle(width / 2, scrollY + height - 150, 20, {
-			restitution: 0.4,
+		this.rabbit = Bodies.circle(width / 2, height - 100, 20, {
+			restitution: 0.3,
 			friction: 0.1,
 			label: "rabbit",
 		});
@@ -91,19 +106,20 @@ class MoonJumper {
 			userSelect: "none",
 			zIndex: "1000",
 			lineHeight: "1",
+			transform: "translate(-50%, -50%)",
 		});
 
 		this.heightEl = document.createElement("div");
 		Object.assign(this.heightEl.style, {
 			position: "absolute",
-			fontSize: "14px",
+			fontSize: "16px",
 			fontWeight: "bold",
 			color: "#fff",
 			textShadow: "0 0 4px #000, 0 0 4px #000",
-			top: "40px",
+			top: "45px",
 			left: "50%",
 			transform: "translateX(-50%)",
-			fontFamily: "monospace",
+			fontFamily: "sans-serif",
 		});
 		this.rabbitEl.appendChild(this.heightEl);
 
@@ -112,14 +128,40 @@ class MoonJumper {
 
 	private initPlatforms() {
 		const elements = document.querySelectorAll("a, button, h1, h2, .card, p, li, img, span");
-		const scrollY = window.scrollY;
 		elements.forEach((el) => {
 			const rect = el.getBoundingClientRect();
-			if (rect.width > 10 && rect.height > 10 && rect.width < window.innerWidth * 0.9) {
-				const body = Bodies.rectangle(rect.left + rect.width / 2, rect.top + rect.height / 2 + scrollY, rect.width, rect.height, { isStatic: true, label: "platform" });
+			if (rect.width > 5 && rect.height > 5 && rect.width < window.innerWidth * 0.9) {
+				const body = Bodies.rectangle(rect.left + rect.width / 2, rect.top + rect.height / 2, rect.width, rect.height, {
+					isStatic: true,
+					label: "platform",
+				});
 				Composite.add(this.engine!.world, body);
 				this.platforms.push({ body, element: el });
 			}
+		});
+	}
+
+	private syncOnScroll() {
+		const scrollY = window.scrollY;
+		const deltaY = scrollY - this.lastScrollY;
+		this.lastScrollY = scrollY;
+
+		if (this.isInfiniteMode) return;
+
+		if (this.rabbit) {
+			Body.setPosition(this.rabbit, {
+				x: this.rabbit.position.x,
+				y: this.rabbit.position.y - deltaY,
+			});
+		}
+		this.clouds.forEach((c) => {
+			Body.setPosition(c.body, { x: c.body.position.x, y: c.body.position.y - deltaY });
+			c.absY -= deltaY;
+		});
+
+		this.platforms.forEach((p) => {
+			const rect = p.element.getBoundingClientRect();
+			Body.setPosition(p.body, { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 });
 		});
 	}
 
@@ -128,14 +170,14 @@ class MoonJumper {
 		if ((e.target as HTMLElement).closest("a, button")) return;
 
 		const now = Date.now();
-		if (now - this.lastClickTime < 150) return;
+		if (now - this.lastClickTime < 100) return;
 		this.lastClickTime = now;
 
-		if (this.rabbit.velocity.y < -15) return;
-
-		const scrollY = window.scrollY;
 		const x = e.clientX;
-		const y = e.clientY + scrollY - this.gameShiftY;
+		const y = e.clientY;
+
+		const distToRabbit = Math.hypot(x - this.rabbit.position.x, y - this.rabbit.position.y);
+		if (distToRabbit < 40) return;
 
 		const cloudBody = Bodies.rectangle(x, y, 80, 20, { isStatic: true, label: "cloud" });
 		Composite.add(this.engine.world, cloudBody);
@@ -145,6 +187,7 @@ class MoonJumper {
 		Object.assign(cloudEl.style, {
 			position: "absolute",
 			left: `${x}px`,
+			top: `${y}px`,
 			fontSize: "30px",
 			transform: "translate(-50%, -50%)",
 			pointerEvents: "none",
@@ -156,9 +199,10 @@ class MoonJumper {
 		const cloud = { body: cloudBody, el: cloudEl, absY: y };
 		this.clouds.push(cloud);
 
+		const dx = (x - this.rabbit.position.x) * 0.0002;
 		Body.applyForce(this.rabbit, this.rabbit.position, {
-			x: (x - this.rabbit.position.x) * 0.001,
-			y: -0.05,
+			x: Math.max(-0.005, Math.min(0.005, dx)),
+			y: 0,
 		});
 
 		setTimeout(() => {
@@ -176,50 +220,55 @@ class MoonJumper {
 			if (!this.rabbit || !this.rabbitEl || !this.container || !this.heightEl) return;
 
 			const pos = this.rabbit.position;
-			const scrollY = window.scrollY;
 			const height = window.innerHeight;
 			const width = window.innerWidth;
 
-			// Sync boundaries to current viewport (absolute coordinates)
-			if (this.ground) Body.setPosition(this.ground, { x: width / 2, y: scrollY + height + 100 });
-			if (this.leftWall) Body.setPosition(this.leftWall, { x: -50, y: pos.y });
-			if (this.rightWall) Body.setPosition(this.rightWall, { x: width + 50, y: pos.y });
-
-			// CAMERA LOGIC
-			const relativeY = pos.y - scrollY + this.gameShiftY;
-			if (relativeY < height * 0.3) {
-				this.gameShiftY += height * 0.3 - relativeY;
-			} else if (relativeY > height * 0.7 && this.gameShiftY > 0) {
-				const fall = relativeY - height * 0.7;
-				this.gameShiftY = Math.max(0, this.gameShiftY - fall);
+			let shift = 0;
+			if (pos.y < height * 0.3) {
+				shift = height * 0.3 - pos.y;
+			} else if (pos.y > height * 0.7 && this.totalAltitude > 0) {
+				shift = height * 0.7 - pos.y;
+				if (this.totalAltitude + shift < 0) shift = -this.totalAltitude;
 			}
 
-			// Visual positioning
-			this.rabbitEl.style.left = `${pos.x}px`;
-			this.rabbitEl.style.top = `${pos.y - scrollY + this.gameShiftY}px`;
-			this.rabbitEl.style.transform = `translate(-50%, -50%) rotate(${this.rabbit.angle}rad)`;
+			if (shift !== 0) {
+				this.totalAltitude += shift;
+				Body.setPosition(this.rabbit, { x: pos.x, y: pos.y + shift });
+				this.clouds.forEach((c) => {
+					Body.setPosition(c.body, { x: c.body.position.x, y: c.body.position.y + shift });
+					c.absY += shift;
+				});
+			}
 
-			const altitudeM = Math.max(0, Math.floor((this.gameShiftY + (scrollY + height - pos.y - 150)) / 10));
-			this.heightEl.textContent = `${altitudeM}m`;
-
-			this.clouds.forEach((c) => {
-				c.el.style.top = `${c.absY - scrollY + this.gameShiftY}px`;
-			});
-
-			const spaceThreshold = 2000;
-			if (this.gameShiftY > spaceThreshold) {
-				const opacity = Math.min(0.6, (this.gameShiftY - spaceThreshold) / 2000);
-				this.container.style.backgroundColor = `rgba(0, 0, 40, ${opacity})`;
+			if (this.totalAltitude > 2000 && !this.isInfiniteMode) {
 				this.isInfiniteMode = true;
+			}
+
+			if (this.isInfiniteMode) {
+				const heightAboveThreshold = Math.max(0, this.totalAltitude - 2000);
+				const opacity = Math.min(0.4, heightAboveThreshold / 2000);
+				this.container.style.backgroundColor = `rgba(0, 0, 30, ${opacity})`;
 			} else {
 				this.container.style.backgroundColor = "transparent";
 				this.isInfiniteMode = false;
 			}
 
-			// Respawn if glitch
-			if (pos.y > scrollY + height + 500) {
-				Body.setPosition(this.rabbit, { x: width / 2, y: scrollY + height - 150 });
+			this.rabbitEl.style.left = `${pos.x}px`;
+			this.rabbitEl.style.top = `${pos.y}px`;
+			this.rabbitEl.style.transform = `translate(-50%, -50%) rotate(${this.rabbit.angle}rad)`;
+			this.heightEl.textContent = `${Math.floor(this.totalAltitude / 10)}m`;
+
+			this.clouds.forEach((c) => {
+				c.el.style.top = `${c.absY}px`;
+			});
+
+			if (this.leftWall) Body.setPosition(this.leftWall, { x: -50, y: pos.y });
+			if (this.rightWall) Body.setPosition(this.rightWall, { x: width + 50, y: pos.y });
+
+			if (pos.y > height + 400) {
+				Body.setPosition(this.rabbit, { x: width / 2, y: height - 100 });
 				Body.setVelocity(this.rabbit, { x: 0, y: 0 });
+				if (!this.isInfiniteMode) this.totalAltitude = 0;
 			}
 
 			this.animationFrameId = requestAnimationFrame(update);
@@ -231,6 +280,7 @@ class MoonJumper {
 		if (this.animationFrameId) cancelAnimationFrame(this.animationFrameId);
 		if (this.runner) Runner.stop(this.runner);
 		if (this.clickHandler) window.removeEventListener("mousedown", this.clickHandler);
+		if (this.scrollHandler) window.removeEventListener("scroll", this.scrollHandler);
 
 		if (this.container) {
 			this.container.style.opacity = "0";
@@ -247,7 +297,7 @@ class MoonJumper {
 				this.rightWall = null;
 				this.platforms = [];
 				this.clouds = [];
-				this.gameShiftY = 0;
+				this.totalAltitude = 0;
 				this.isInfiniteMode = false;
 			}, 1000);
 		}
