@@ -2,3 +2,4 @@
 **/.astro/**
 
 .DS_Store
+*.log

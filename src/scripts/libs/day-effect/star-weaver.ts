@@ -1,251 +1,70 @@
-import { showToast } from "../ui-toast";
-
-interface Point {
-	x: number;
-	y: number;
-	filled: boolean;
-	element?: HTMLDivElement;
-}
-
-interface Constellation {
+interface ConstellationTemplate {
 	name: string;
-	points: { x: number; y: number }[];
-	lines: [number, number][];
+	stars: { x: number; y: number }[]; // 0 to 1 range
 }
 
-const CONSTELLATIONS: Constellation[] = [
+const CONSTELLATIONS: ConstellationTemplate[] = [
 	{
-		name: "Aries",
-		points: [
-			{ x: 20, y: 50 },
-			{ x: 35, y: 40 },
-			{ x: 45, y: 45 },
-			{ x: 50, y: 55 },
-		],
-		lines: [
-			[0, 1],
-			[1, 2],
-			[2, 3],
+		name: "Cassiopeia",
+		stars: [
+			{ x: 0.3, y: 0.2 },
+			{ x: 0.4, y: 0.4 },
+			{ x: 0.5, y: 0.3 },
+			{ x: 0.6, y: 0.5 },
+			{ x: 0.7, y: 0.3 },
 		],
 	},
 	{
-		name: "Taurus",
-		points: [
-			{ x: 70, y: 30 },
-			{ x: 60, y: 40 },
-			{ x: 50, y: 45 },
-			{ x: 40, y: 40 },
-			{ x: 45, y: 55 },
-			{ x: 55, y: 65 },
-			{ x: 30, y: 35 },
-		],
-		lines: [
-			[0, 1],
-			[1, 2],
-			[2, 3],
-			[2, 4],
-			[4, 5],
-			[3, 6],
+		name: "Big Dipper",
+		stars: [
+			{ x: 0.2, y: 0.5 },
+			{ x: 0.3, y: 0.45 },
+			{ x: 0.4, y: 0.48 },
+			{ x: 0.5, y: 0.55 },
+			{ x: 0.5, y: 0.7 },
+			{ x: 0.7, y: 0.75 },
+			{ x: 0.75, y: 0.6 },
 		],
 	},
 	{
-		name: "Gemini",
-		points: [
-			{ x: 30, y: 30 },
-			{ x: 40, y: 35 },
-			{ x: 50, y: 40 },
-			{ x: 35, y: 50 },
-			{ x: 45, y: 55 },
-			{ x: 55, y: 60 },
-		],
-		lines: [
-			[0, 1],
-			[1, 2],
-			[3, 4],
-			[4, 5],
-			[0, 3],
-			[2, 5],
+		name: "Summer Triangle",
+		stars: [
+			{ x: 0.5, y: 0.2 },
+			{ x: 0.3, y: 0.6 },
+			{ x: 0.7, y: 0.7 },
 		],
 	},
 	{
-		name: "Cancer",
-		points: [
-			{ x: 50, y: 30 },
-			{ x: 50, y: 45 },
-			{ x: 40, y: 60 },
-			{ x: 60, y: 60 },
-		],
-		lines: [
-			[0, 1],
-			[1, 2],
-			[1, 3],
+		name: "Lyra",
+		stars: [
+			{ x: 0.45, y: 0.25 },
+			{ x: 0.55, y: 0.25 },
+			{ x: 0.5, y: 0.35 },
+			{ x: 0.45, y: 0.45 },
+			{ x: 0.55, y: 0.45 },
 		],
 	},
 	{
-		name: "Leo",
-		points: [
-			{ x: 70, y: 50 },
-			{ x: 60, y: 55 },
-			{ x: 50, y: 50 },
-			{ x: 45, y: 40 },
-			{ x: 50, y: 30 },
-			{ x: 60, y: 25 },
-			{ x: 40, y: 60 },
-			{ x: 30, y: 55 },
-		],
-		lines: [
-			[0, 1],
-			[1, 2],
-			[2, 3],
-			[3, 4],
-			[4, 5],
-			[2, 6],
-			[6, 7],
-		],
-	},
-	{
-		name: "Virgo",
-		points: [
-			{ x: 30, y: 40 },
-			{ x: 40, y: 45 },
-			{ x: 50, y: 40 },
-			{ x: 60, y: 45 },
-			{ x: 50, y: 55 },
-			{ x: 55, y: 70 },
-			{ x: 45, y: 30 },
-		],
-		lines: [
-			[0, 1],
-			[1, 2],
-			[2, 3],
-			[2, 4],
-			[4, 5],
-			[2, 6],
-		],
-	},
-	{
-		name: "Libra",
-		points: [
-			{ x: 40, y: 40 },
-			{ x: 50, y: 30 },
-			{ x: 60, y: 45 },
-			{ x: 50, y: 60 },
-		],
-		lines: [
-			[0, 1],
-			[1, 2],
-			[2, 3],
-			[3, 0],
-		],
-	},
-	{
-		name: "Scorpio",
-		points: [
-			{ x: 30, y: 30 },
-			{ x: 40, y: 35 },
-			{ x: 50, y: 40 },
-			{ x: 55, y: 55 },
-			{ x: 50, y: 70 },
-			{ x: 40, y: 75 },
-			{ x: 30, y: 70 },
-		],
-		lines: [
-			[0, 1],
-			[1, 2],
-			[2, 3],
-			[3, 4],
-			[4, 5],
-			[5, 6],
-		],
-	},
-	{
-		name: "Sagittarius",
-		points: [
-			{ x: 40, y: 50 },
-			{ x: 50, y: 45 },
-			{ x: 60, y: 50 },
-			{ x: 55, y: 65 },
-			{ x: 45, y: 65 },
-			{ x: 50, y: 30 },
-			{ x: 65, y: 35 },
-		],
-		lines: [
-			[0, 1],
-			[1, 2],
-			[2, 3],
-			[3, 4],
-			[4, 0],
-			[1, 5],
-			[2, 6],
-		],
-	},
-	{
-		name: "Capricorn",
-		points: [
-			{ x: 30, y: 40 },
-			{ x: 45, y: 35 },
-			{ x: 65, y: 40 },
-			{ x: 60, y: 60 },
-			{ x: 45, y: 65 },
-			{ x: 35, y: 55 },
-		],
-		lines: [
-			[0, 1],
-			[1, 2],
-			[2, 3],
-			[3, 4],
-			[4, 5],
-			[5, 0],
-		],
-	},
-	{
-		name: "Aquarius",
-		points: [
-			{ x: 30, y: 30 },
-			{ x: 40, y: 35 },
-			{ x: 45, y: 45 },
-			{ x: 55, y: 40 },
-			{ x: 65, y: 45 },
-			{ x: 60, y: 55 },
-		],
-		lines: [
-			[0, 1],
-			[1, 2],
-			[2, 3],
-			[3, 4],
-			[4, 5],
-		],
-	},
-	{
-		name: "Pisces",
-		points: [
-			{ x: 20, y: 30 },
-			{ x: 30, y: 40 },
-			{ x: 45, y: 45 },
-			{ x: 55, y: 55 },
-			{ x: 70, y: 60 },
-			{ x: 60, y: 40 },
-			{ x: 55, y: 25 },
-		],
-		lines: [
-			[0, 1],
-			[1, 2],
-			[2, 3],
-			[3, 4],
-			[2, 5],
-			[5, 6],
+		name: "Cygnus",
+		stars: [
+			{ x: 0.5, y: 0.3 },
+			{ x: 0.5, y: 0.5 },
+			{ x: 0.5, y: 0.8 },
+			{ x: 0.3, y: 0.5 },
+			{ x: 0.7, y: 0.5 },
 		],
 	},
 ];
 
 class StarWeaver {
 	private container: HTMLDivElement | null = null;
-	private svg: SVGSVGElement | null = null;
-	private currentConstellation: Constellation | null = null;
-	private targetPoints: Point[] = [];
-	private activeStars: HTMLDivElement[] = [];
-	private isCompleted = false;
-	private spawnInterval: number | null = null;
+	private canvas: HTMLCanvasElement | null = null;
+	private ctx: CanvasRenderingContext2D | null = null;
+	private stars: { x: number; y: number; opacity: number; size: number; templateIdx?: number }[] = [];
+	private currentTemplate: ConstellationTemplate | null = null;
+	private completedNames: { name: string; x: number; y: number; life: number }[] = [];
+	private animationFrameId: number | null = null;
+	private clickHandler: ((e: MouseEvent) => void) | null = null;
 
 	public start() {
 		if (this.container) return;
@@ -255,181 +74,170 @@ class StarWeaver {
 		Object.assign(this.container.style, {
 			position: "fixed",
 			inset: "0",
+			zIndex: "9996",
 			pointerEvents: "none",
-			zIndex: "9998",
-			overflow: "hidden",
+			backgroundColor: "rgba(0, 0, 20, 0.2)",
+			transition: "background-color 2s ease",
 		});
+
+		this.canvas = document.createElement("canvas");
+		Object.assign(this.canvas.style, {
+			position: "absolute",
+			inset: "0",
+			pointerEvents: "auto",
+		});
+		this.container.appendChild(this.canvas);
 		document.body.appendChild(this.container);
 
-		this.svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-		Object.assign(this.svg.style, {
-			position: "absolute",
-			inset: "0",
-			width: "100%",
-			height: "100%",
-		});
-		this.container.appendChild(this.svg);
+		this.resize();
+		this.ctx = this.canvas.getContext("2d");
 
-		this.initConstellation();
-		this.startSpawning();
+		this.clickHandler = (e: MouseEvent) => this.addStar(e.clientX, e.clientY);
+		this.canvas.addEventListener("mousedown", this.clickHandler);
+		window.addEventListener("resize", () => this.resize());
+
+		this.loop();
 	}
 
-	private initConstellation() {
-		this.currentConstellation = CONSTELLATIONS[Math.floor(Math.random() * CONSTELLATIONS.length)];
-		this.targetPoints = this.currentConstellation.points.map((p) => ({ ...p, filled: false }));
-
-		// Draw guide lines
-		this.currentConstellation.lines.forEach(([i, j]) => {
-			const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
-			line.setAttribute("x1", `${this.targetPoints[i].x}%`);
-			line.setAttribute("y1", `${this.targetPoints[i].y}%`);
-			line.setAttribute("x2", `${this.targetPoints[j].x}%`);
-			line.setAttribute("y2", `${this.targetPoints[j].y}%`);
-			line.setAttribute("stroke", "rgba(255, 255, 255, 0.1)");
-			line.setAttribute("stroke-width", "1");
-			this.svg?.appendChild(line);
-		});
-
-		// Draw guide points
-		this.targetPoints.forEach((p) => {
-			const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-			circle.setAttribute("cx", `${p.x}%`);
-			circle.setAttribute("cy", `${p.y}%`);
-			circle.setAttribute("r", "3");
-			circle.setAttribute("fill", "rgba(255, 255, 255, 0.2)");
-			this.svg?.appendChild(circle);
-		});
-	}
-
-	private startSpawning() {
-		this.spawnInterval = window.setInterval(() => {
-			if (this.isCompleted) return;
-			this.spawnStar();
-		}, 1000);
-	}
-
-	private spawnStar() {
-		const star = document.createElement("div");
-		const size = Math.random() * 10 + 10;
-		const startX = Math.random() * 100;
-
-		Object.assign(star.style, {
-			position: "absolute",
-			left: `${startX}%`,
-			top: "-20px",
-			width: `${size}px`,
-			height: `${size}px`,
-			backgroundColor: "#fff",
-			clipPath: "polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)",
-			boxShadow: "0 0 10px #fff",
-			cursor: "pointer",
-			pointerEvents: "auto",
-			transition: "top 10s linear, left 1s ease-out, transform 0.5s ease-out",
-		});
-
-		star.addEventListener("click", () => this.catchStar(star));
-		this.container?.appendChild(star);
-		this.activeStars.push(star);
-
-		requestAnimationFrame(() => {
-			star.style.top = "110vh";
-		});
-
-		setTimeout(() => {
-			if (star.parentElement) {
-				star.remove();
-				this.activeStars = this.activeStars.filter((s) => s !== star);
-			}
-		}, 10000);
-	}
-
-	private catchStar(star: HTMLDivElement) {
-		if (this.isCompleted) return;
-
-		const starRect = star.getBoundingClientRect();
-		const starX = ((starRect.left + starRect.width / 2) / window.innerWidth) * 100;
-		const starY = ((starRect.top + starRect.height / 2) / window.innerHeight) * 100;
-
-		// Find closest empty point
-		let closestDist = Infinity;
-		let closestPoint: Point | null = null;
-
-		this.targetPoints.forEach((p) => {
-			if (p.filled) return;
-			const dx = p.x - starX;
-			const dy = p.y - starY;
-			const dist = dx * dx + dy * dy;
-			if (dist < closestDist) {
-				closestDist = dist;
-				closestPoint = p;
-			}
-		});
-
-		if (closestPoint) {
-			const p = closestPoint as Point;
-			p.filled = true;
-			p.element = star;
-
-			star.style.transition = "all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1)";
-			star.style.left = `${p.x}%`;
-			star.style.top = `${p.y}%`;
-			star.style.transform = "translate(-50%, -50%) scale(1.2)";
-			star.style.boxShadow = "0 0 20px #fff, 0 0 40px #00f";
-			star.style.pointerEvents = "none";
-
-			this.checkCompletion();
+	private resize() {
+		if (this.canvas) {
+			this.canvas.width = window.innerWidth;
+			this.canvas.height = window.innerHeight;
 		}
 	}
 
-	private checkCompletion() {
-		if (this.targetPoints.every((p) => p.filled)) {
-			this.isCompleted = true;
-			this.completeEffect();
+	private addStar(x: number, y: number) {
+		if (!this.currentTemplate) {
+			this.currentTemplate = CONSTELLATIONS[Math.floor(Math.random() * CONSTELLATIONS.length)];
+		}
+
+		let finalX = x;
+		let finalY = y;
+		let templateIdx = -1;
+
+		// Snapping logic
+		const snapDist = 40;
+		for (let i = 0; i < this.currentTemplate.stars.length; i++) {
+			const tx = this.currentTemplate.stars[i].x * window.innerWidth;
+			const ty = this.currentTemplate.stars[i].y * window.innerHeight;
+			const d = Math.hypot(x - tx, y - ty);
+
+			if (d < snapDist) {
+				// Check if already filled
+				if (!this.stars.some((s) => s.templateIdx === i)) {
+					finalX = tx;
+					finalY = ty;
+					templateIdx = i;
+					break;
+				}
+			}
+		}
+
+		this.stars.push({
+			x: finalX,
+			y: finalY,
+			opacity: 1,
+			size: templateIdx !== -1 ? 5 : Math.random() * 2 + 1,
+			templateIdx: templateIdx !== -1 ? templateIdx : undefined,
+		});
+
+		if (this.stars.length > 100) this.stars.shift();
+
+		// Check completion
+		if (this.currentTemplate) {
+			const filledCount = this.stars.filter((s) => s.templateIdx !== undefined).length;
+			if (filledCount === this.currentTemplate.stars.length) {
+				this.completedNames.push({
+					name: this.currentTemplate.name,
+					x: finalX,
+					y: finalY - 40,
+					life: 1,
+				});
+				this.currentTemplate = null; // Pick new one on next click
+				// Fade out non-template stars
+				this.stars = this.stars.filter((s) => s.templateIdx !== undefined);
+			}
 		}
 	}
 
-	private completeEffect() {
-		showToast(`🌠 Constellation ${this.currentConstellation?.name} Completed!`);
+	private loop() {
+		if (!this.ctx || !this.canvas) return;
 
-		// Brighten lines
-		const lines = this.svg?.querySelectorAll("line");
-		lines?.forEach((line) => {
-			line.setAttribute("stroke", "rgba(255, 255, 255, 0.8)");
-			line.setAttribute("stroke-width", "2");
-			line.style.filter = "drop-shadow(0 0 5px #fff)";
-			line.style.transition = "all 1s ease-out";
+		this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+		// Draw hints for current template
+		if (this.currentTemplate) {
+			this.ctx.fillStyle = "rgba(255, 255, 255, 0.1)";
+			this.currentTemplate.stars.forEach((s) => {
+				const tx = s.x * window.innerWidth;
+				const ty = s.y * window.innerHeight;
+				this.ctx!.beginPath();
+				this.ctx!.arc(tx, ty, 3, 0, Math.PI * 2);
+				this.ctx!.fill();
+			});
+		}
+
+		// Draw connections
+		this.ctx.beginPath();
+		this.ctx.strokeStyle = "rgba(100, 150, 255, 0.3)";
+		this.ctx.lineWidth = 1;
+		for (let i = 0; i < this.stars.length; i++) {
+			for (let j = i + 1; j < this.stars.length; j++) {
+				const starA = this.stars[i];
+				const starB = this.stars[j];
+				const d = Math.hypot(starA.x - starB.x, starA.y - starB.y);
+
+				// Connect if both are template stars or if they are close
+				const bothTemplate = starA.templateIdx !== undefined && starB.templateIdx !== undefined;
+				const connectDist = bothTemplate ? 300 : 150;
+
+				if (d < connectDist) {
+					this.ctx.moveTo(starA.x, starA.y);
+					this.ctx.lineTo(starB.x, starB.y);
+				}
+			}
+		}
+		this.ctx.stroke();
+
+		// Draw stars
+		this.stars.forEach((star) => {
+			this.ctx!.beginPath();
+			const baseOpacity = star.templateIdx !== undefined ? 0.8 : 0.4;
+			const twinkle = Math.abs(Math.sin(Date.now() / 500 + star.x)) * 0.4;
+			this.ctx!.fillStyle = `rgba(255, 255, 255, ${baseOpacity + twinkle})`;
+			this.ctx!.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+			this.ctx!.fill();
+
+			if (star.templateIdx !== undefined) {
+				this.ctx!.shadowBlur = 10;
+				this.ctx!.shadowColor = "white";
+				this.ctx!.stroke();
+				this.ctx!.shadowBlur = 0;
+			}
 		});
 
-		// Create Milky Way effect
-		const milkyWay = document.createElement("div");
-		Object.assign(milkyWay.style, {
-			position: "absolute",
-			inset: "0",
-			background: "radial-gradient(ellipse at center, rgba(100, 100, 255, 0.2) 0%, transparent 70%)",
-			opacity: "0",
-			transition: "opacity 2s ease-in",
+		// Draw completed names
+		this.ctx.font = "bold 20px sans-serif";
+		this.ctx.textAlign = "center";
+		this.completedNames = this.completedNames.filter((n) => {
+			this.ctx!.fillStyle = `rgba(255, 255, 255, ${n.life})`;
+			this.ctx!.fillText(n.name, n.x, n.y);
+			n.y -= 0.5;
+			n.life -= 0.005;
+			return n.life > 0;
 		});
-		this.container?.appendChild(milkyWay);
-		requestAnimationFrame(() => (milkyWay.style.opacity = "1"));
 
-		setTimeout(() => this.stop(), 5000);
+		this.animationFrameId = requestAnimationFrame(() => this.loop());
 	}
 
 	public stop() {
-		if (this.spawnInterval) clearInterval(this.spawnInterval);
-		this.spawnInterval = null;
-
-		if (this.container) {
-			this.container.style.transition = "opacity 1s ease-out";
-			this.container.style.opacity = "0";
-			setTimeout(() => {
-				this.container?.remove();
-				this.container = null;
-				this.svg = null;
-				this.activeStars = [];
-				this.isCompleted = false;
-			}, 1000);
-		}
+		if (this.animationFrameId) cancelAnimationFrame(this.animationFrameId);
+		if (this.clickHandler && this.canvas) this.canvas.removeEventListener("mousedown", this.clickHandler);
+		this.container?.remove();
+		this.container = null;
+		this.canvas = null;
+		this.ctx = null;
+		this.stars = [];
 	}
 }
 

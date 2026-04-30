@@ -23,6 +23,7 @@ class MoonJumper {
 	private clouds: { body: Matter.Body; el: HTMLDivElement }[] = [];
 	private stars: { el: HTMLDivElement; x: number; y: number; parallax: number; opacity: number }[] = [];
 	private isInfiniteMode = false;
+	private originalTheme: "light" | "dark" = "light";
 	private lastClickTime = 0;
 	private animationFrameId: number | null = null;
 	private clickHandler: ((e: MouseEvent) => void) | null = null;
@@ -31,6 +32,8 @@ class MoonJumper {
 
 	public async start() {
 		if (this.container) return;
+
+		this.originalTheme = document.documentElement.classList.contains("dark") ? "dark" : "light";
 
 		// 1. Scroll to bottom
 		window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
@@ -229,7 +232,14 @@ class MoonJumper {
 
 		// Convert viewport click to document coordinates
 		const x = e.clientX;
-		const y = e.clientY + window.scrollY;
+		let y = e.clientY + window.scrollY;
+
+		// If in Space Mode (climbing past document top), adjust y relative to altitude
+		const viewportH = window.innerHeight;
+		if (this.rabbit && this.rabbit.position.y < viewportH * 0.1) {
+			const altitude = viewportH * 0.1 - this.rabbit.position.y;
+			y -= altitude;
+		}
 
 		const distToRabbit = Math.hypot(x - this.rabbit.position.x, y - this.rabbit.position.y);
 		if (distToRabbit < 50) return;
@@ -341,7 +351,11 @@ class MoonJumper {
 			this.rabbitEl.style.transform = `translate(-50%, -50%) rotate(${this.rabbit.angle}rad)`;
 
 			const displayAltitude = Math.max(0, Math.floor((document.body.scrollHeight - pos.y) / 10));
-			this.heightEl.textContent = `${displayAltitude}m`;
+			if (displayAltitude > 1000) {
+				this.heightEl.textContent = `${(displayAltitude / 1000).toFixed(1)}km`;
+			} else {
+				this.heightEl.textContent = `${displayAltitude}m`;
+			}
 
 			this.clouds.forEach((c) => {
 				const cRenderY = c.body.position.y - currentScrollY;
@@ -423,6 +437,12 @@ class MoonJumper {
 
 		const main = document.querySelector("main");
 		if (main) main.style.opacity = "1";
+
+		if (this.originalTheme === "light") {
+			document.documentElement.classList.remove("dark");
+		} else {
+			document.documentElement.classList.add("dark");
+		}
 
 		if (this.container) {
 			this.container.style.opacity = "0";
