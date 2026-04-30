@@ -21,6 +21,7 @@ class MoonJumper {
 	private rightWall: Matter.Body | null = null;
 	private platforms: Platform[] = [];
 	private clouds: { body: Matter.Body; el: HTMLDivElement }[] = [];
+	private stars: { el: HTMLDivElement; x: number; y: number; parallax: number; opacity: number }[] = [];
 	private isInfiniteMode = false;
 	private lastClickTime = 0;
 	private animationFrameId: number | null = null;
@@ -99,8 +100,9 @@ class MoonJumper {
 			friction: 0.5,
 		});
 
-		this.leftWall = Bodies.rectangle(-50, docHeight / 2, 100, docHeight * 2, { isStatic: true });
-		this.rightWall = Bodies.rectangle(width + 50, docHeight / 2, 100, docHeight * 2, { isStatic: true });
+		// Walls will be moved to follow viewport in the loop for space mode
+		this.leftWall = Bodies.rectangle(-50, docHeight / 2, 100, docHeight * 10, { isStatic: true });
+		this.rightWall = Bodies.rectangle(width + 50, docHeight / 2, 100, docHeight * 10, { isStatic: true });
 
 		Composite.add(this.engine.world, [this.ground, this.leftWall, this.rightWall]);
 
@@ -162,20 +164,49 @@ class MoonJumper {
 	}
 
 	private initPlatforms() {
-		const elements = document.querySelectorAll("a, button, h1, h2, .card, p, li, img");
+		const elements = Array.from(document.querySelectorAll("a, button, h1, h2, h3, .card, p, li, img, span, div.project-card"));
 		const currentScroll = window.scrollY;
+		const processedRects: DOMRect[] = [];
+
 		elements.forEach((el) => {
-			const rect = el.getBoundingClientRect();
-			if (rect.width > 10 && rect.height > 10) {
-				const absY = rect.top + currentScroll;
-				const absX = rect.left + rect.width / 2;
-				const body = Bodies.rectangle(absX, absY + rect.height / 2, rect.width, rect.height, {
-					isStatic: true,
-					label: "platform",
-				});
-				Composite.add(this.engine!.world, body);
-				this.platforms.push({ body, element: el, originalY: absY, originalX: absX });
+			const style = window.getComputedStyle(el);
+			if (style.display === "none" || style.visibility === "hidden" || style.opacity === "0") return;
+
+			// Check if el or any ancestor is fixed/sticky
+			let parent: Element | null = el;
+			let isFixed = false;
+			while (parent && parent !== document.body) {
+				const pStyle = window.getComputedStyle(parent);
+				if (pStyle.position === "fixed" || pStyle.position === "sticky") {
+					isFixed = true;
+					break;
+				}
+				parent = parent.parentElement;
 			}
+			if (isFixed) return;
+
+			const hasText = Array.from(el.childNodes).some((node) => node.nodeType === Node.TEXT_NODE && node.textContent?.trim());
+			const isImage = el.tagName === "IMG";
+			// If it doesn't have direct text and isn't an image, skip unless it's a known container
+			if (!hasText && !isImage && !el.classList.contains("card") && !el.classList.contains("project-card")) return;
+
+			const rect = el.getBoundingClientRect();
+			if (rect.width < 10 || rect.height < 10) return;
+
+			// Avoid overlapping with already processed platforms
+			const isOverlapping = processedRects.some((r) => rect.left >= r.left && rect.right <= r.right && rect.top >= r.top && rect.bottom <= r.bottom);
+			if (isOverlapping) return;
+
+			const absY = rect.top + currentScroll;
+			const absX = rect.left + rect.width / 2;
+			const body = Bodies.rectangle(absX, absY + rect.height / 2, rect.width, rect.height, {
+				isStatic: true,
+				label: "platform",
+				friction: 0.5,
+			});
+			Composite.add(this.engine!.world, body);
+			this.platforms.push({ body, element: el, originalY: absY, originalX: absX });
+			processedRects.push(rect);
 		});
 	}
 
@@ -250,33 +281,61 @@ class MoonJumper {
 			const pos = this.rabbit.position;
 			const viewportH = window.innerHeight;
 
-			// Camera Logic: Smoothly scroll to keep rabbit in center
-			const targetScrollY = pos.y - viewportH * 0.5;
+			// Camera Logic:
+			// In document range, we scroll.
+			// Beyond document top (Y < viewportH * 0.5), we need to handle virtual camera.
+			// Actually, window.scrollTo(0, negative) doesn't work.
+
+			let targetScrollY = pos.y - viewportH * 0.5;
+			if (targetScrollY < 0) {
+				targetScrollY = 0;
+			}
 			window.scrollTo(0, targetScrollY);
 
-			// Space Mode: When rabbit is above the document top
-			if (pos.y < 0) {
-				this.isInfiniteMode = true;
-				const altitude = -pos.y;
-				const opacity = Math.min(0.8, altitude / 4000);
-				this.container.style.backgroundColor = `rgba(0, 0, 20, ${opacity})`;
+			const currentScrollY = window.scrollY;
 
-				// Fade out main content
+			// Constraints: Keep rabbit in 10% - 90% of viewport
+			// If rabbit is too high in viewport, move camera up (if possible) or push rabbit down.
+			// Since we can't scroll above 0, if pos.y < viewportH * 0.1, we have a problem.
+
+			let renderY = pos.y - currentScrollY;
+
+			// Apply viewport constraints
+			const minRenderY = viewportH * 0.1;
+			const maxRenderY = viewportH * 0.9;
+
+			if (renderY < minRenderY) {
+				// Rabbit is above the 10% line.
+				// If we are already at scroll 0, we must force rabbit to stay at 10% line visually.
+				// This means we are effectively in "Space Mode" where the background moves instead.
+				renderY = minRenderY;
+			} else if (renderY > maxRenderY && pos.y < document.body.scrollHeight - 100) {
+				// Only constrain bottom if we are not at the very start
+				renderY = maxRenderY;
+			}
+
+			// Space Mode: When rabbit tries to go above the scrollable area
+			if (pos.y < viewportH * 0.1) {
+				this.isInfiniteMode = true;
+				const altitude = viewportH * 0.1 - pos.y;
+				const bgOpacity = Math.min(0.9, altitude / 4000);
+				this.container.style.backgroundColor = `rgba(0, 0, 20, ${bgOpacity})`;
+
 				const main = document.querySelector("main");
 				if (main) {
 					main.style.opacity = `${Math.max(0, 1 - altitude / 1500)}`;
 				}
-				// Dark mode like effect:
 				document.documentElement.classList.add("dark");
+				this.updateStars(altitude);
 			} else {
 				this.isInfiniteMode = false;
 				this.container.style.backgroundColor = "transparent";
 				const main = document.querySelector("main");
 				if (main) main.style.opacity = "1";
+				this.hideStars();
 			}
 
-			// Rendering: Position elements relative to viewport
-			const renderY = pos.y - window.scrollY;
+			// Rendering
 			this.rabbitEl.style.left = `${pos.x}px`;
 			this.rabbitEl.style.top = `${renderY}px`;
 			this.rabbitEl.style.transform = `translate(-50%, -50%) rotate(${this.rabbit.angle}rad)`;
@@ -285,10 +344,21 @@ class MoonJumper {
 			this.heightEl.textContent = `${displayAltitude}m`;
 
 			this.clouds.forEach((c) => {
-				const cRenderY = c.body.position.y - window.scrollY;
+				const cRenderY = c.body.position.y - currentScrollY;
+				// In space mode, we might need to adjust cloud render Y if we are pinning rabbit
+				let finalCRenderY = cRenderY;
+				if (pos.y < viewportH * 0.1) {
+					finalCRenderY = cRenderY + (viewportH * 0.1 - pos.y);
+				}
 				c.el.style.left = `${c.body.position.x}px`;
-				c.el.style.top = `${cRenderY}px`;
+				c.el.style.top = `${finalCRenderY}px`;
 			});
+
+			// Update walls to follow rabbit in space mode
+			if (this.leftWall && this.rightWall) {
+				Body.setPosition(this.leftWall, { x: -50, y: pos.y });
+				Body.setPosition(this.rightWall, { x: window.innerWidth + 50, y: pos.y });
+			}
 
 			// Bound rabbit to screen width
 			if (pos.x < 20) Body.setPosition(this.rabbit, { x: 20, y: pos.y });
@@ -303,6 +373,45 @@ class MoonJumper {
 			this.animationFrameId = requestAnimationFrame(update);
 		};
 		update();
+	}
+
+	private updateStars(altitude: number) {
+		if (this.stars.length === 0) {
+			for (let i = 0; i < 60; i++) {
+				const el = document.createElement("div");
+				const opacity = Math.random();
+				Object.assign(el.style, {
+					position: "absolute",
+					width: Math.random() > 0.8 ? "3px" : "1.5px",
+					height: Math.random() > 0.8 ? "3px" : "1.5px",
+					backgroundColor: "#fff",
+					borderRadius: "50%",
+					pointerEvents: "none",
+					opacity: "0",
+					boxShadow: Math.random() > 0.9 ? "0 0 5px #fff" : "none",
+				});
+				this.container?.appendChild(el);
+				this.stars.push({
+					el,
+					x: Math.random() * 100,
+					y: Math.random() * 100,
+					parallax: Math.random() * 0.4 + 0.1,
+					opacity,
+				});
+			}
+		}
+
+		const vh = window.innerHeight;
+		this.stars.forEach((s) => {
+			const yPos = ((s.y * vh) / 100 + altitude * s.parallax) % vh;
+			s.el.style.left = `${s.x}%`;
+			s.el.style.top = `${yPos}px`;
+			s.el.style.opacity = `${Math.min(1, altitude / 1000) * s.opacity}`;
+		});
+	}
+
+	private hideStars() {
+		this.stars.forEach((s) => (s.el.style.opacity = "0"));
 	}
 
 	public stop() {
@@ -330,6 +439,7 @@ class MoonJumper {
 				this.rightWall = null;
 				this.platforms = [];
 				this.clouds = [];
+				this.stars = [];
 				this.isInfiniteMode = false;
 			}, 1000);
 		}
