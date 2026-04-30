@@ -32,6 +32,8 @@ class BugHunt {
 				const isImg = el.tagName === "IMG";
 
 				if (!hasText && !isImg) return;
+				const hasElement = el.children.length > 0;
+				if (hasElement && !hasText) return;
 
 				const textMap = new Map<Text, string>();
 				if (hasText) {
@@ -150,7 +152,7 @@ class BugHunt {
 			this.restoreElement(target);
 			this.score += 10;
 
-			if (this.score >= 100) {
+			if (this.score >= 100 && this.buggyElements.filter((b) => b.isBuggy).length <= 8) {
 				this.showVictory();
 			}
 		}
@@ -172,7 +174,7 @@ class BugHunt {
 	}
 
 	private showVictory() {
-		const finalBugCount = this.buggyElements.length;
+		const finalBugCount = this.buggyElements.filter((b) => b.isBuggy).length;
 		this.stop();
 
 		// Create a "System Cleaned" terminal overlay
