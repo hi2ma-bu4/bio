@@ -111,6 +111,11 @@ const yearlyRanges = [
 		end: { month: 9, day: 2 },
 	},
 	{
+		id: "world-testers-day",
+		start: { month: 9, day: 9 },
+		end: { month: 9, day: 9 },
+	},
+	{
 		id: "programmers-day",
 		start: { month: 9, day: 12 },
 		end: { month: 9, day: 13 },

@@ -75,11 +75,16 @@ async function initParticles() {
 				preset = "absentglyph";
 				break;
 			case "star-festival":
+				preset = "star-weaver";
 				break;
 			case "harvest-moon":
+				preset = "moon-jumper";
 				break;
 			case "lottery-day":
 				preset = "random";
+				break;
+			case "world-testers-day":
+				preset = "bug-hunt";
 				break;
 			case "genshin-anniversary":
 				preset = "genshin";
@@ -161,6 +166,22 @@ async function initParticles() {
 				init();
 				lifecycle.addUpdate(init);
 			}
+			break;
+		}
+		case "star-weaver": {
+			const { startStarWeaver, stopStarWeaver } = await import("./libs/day-effect/star-weaver");
+			attachManagedEffect(startStarWeaver, stopStarWeaver);
+			theme = "dark";
+			break;
+		}
+		case "moon-jumper": {
+			const { startMoonJumper, stopMoonJumper } = await import("./libs/day-effect/moon-jumper");
+			attachManagedEffect(startMoonJumper, stopMoonJumper);
+			break;
+		}
+		case "bug-hunt": {
+			const { startBugHunt, stopBugHunt } = await import("./libs/day-effect/bug-hunt");
+			attachManagedEffect(startBugHunt, stopBugHunt);
 			break;
 		}
 		case "fireworks": {
