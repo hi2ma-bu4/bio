@@ -12,11 +12,18 @@ export function safeSet(v: themeType) {
 	if (typeof localStorage !== "undefined") localStorage.setItem(STORAGE_KEY, v);
 }
 
-export function applyTheme(mode: themeType, doc: Document = document) {
+export function applyTheme(mode: themeType, doc: Document = document, transition: boolean = true) {
 	// 変更禁止状態
 	if (isThemeLock) {
 		if (!lockTheme) return;
 		mode = lockTheme;
+	}
+
+	if (transition && doc === document) {
+		document.documentElement.setAttribute("data-theme-transition", "");
+		setTimeout(() => {
+			document.documentElement.removeAttribute("data-theme-transition");
+		}, 1100);
 	}
 
 	const setDark = () => doc.documentElement.classList.add("dark");
@@ -34,8 +41,8 @@ export function applyTheme(mode: themeType, doc: Document = document) {
 }
 
 // テーマ変更
-export function updateTheme() {
-	applyTheme(safeGet() ?? "auto");
+export function updateTheme(transition: boolean = true) {
+	applyTheme(safeGet() ?? "auto", document, transition);
 }
 
 export function updateToggleButtonUI(btn: HTMLElement) {
@@ -80,11 +87,12 @@ export function getNextTheme(current: themeType | null) {
 }
 
 export function themeChangeLock(flag: boolean, mode: themeType | null = null, doc?: Document) {
+	const transition = !doc; // Transition only if we are on the current document (manual/effect change)
 	if (flag) {
 		if (mode) {
 			lockTheme = mode;
-			applyTheme(lockTheme, doc);
-		} else applyTheme(safeGet() ?? "auto", doc);
+			applyTheme(lockTheme, doc, transition);
+		} else applyTheme(safeGet() ?? "auto", doc, transition);
 	} else {
 		lockTheme = null;
 	}
