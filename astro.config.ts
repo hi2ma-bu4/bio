@@ -17,6 +17,7 @@ import type { PreRenderedAsset, PreRenderedChunk } from "rollup";
 import { type MinifyOptions } from "terser";
 
 import generateDarkIcons from "./dev/integrations/generateDarkIcons";
+import inline404Integration from "./dev/integrations/inline404";
 import staticTsCompile from "./dev/integrations/staticTsCompile";
 import typecheckIntegration from "./dev/integrations/typecheck";
 
@@ -189,7 +190,9 @@ export default defineConfig({
 			changefreq: "weekly",
 			priority: 0.8,
 			lastmod: new Date(),
+			filter: (page) => !page.includes("/404/"),
 		}),
+		inline404Integration(),
 		htmlMinifierNext({
 			collapseInlineTagWhitespace: true,
 			collapseWhitespace: true,

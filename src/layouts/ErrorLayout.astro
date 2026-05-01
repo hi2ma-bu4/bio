@@ -1,0 +1,70 @@
+---
+import { GoogleFontsOptimizer } from "astro-google-fonts-optimizer";
+import { SEO } from "astro-seo";
+import Footer from "../components/Footer.astro";
+import GoogleAnalytics from "../components/GoogleAnalytics.astro";
+import Header from "../components/Header.astro";
+import { AUTHOR, BASE_DIR, GTAG_ID, SITE_DESCRIPTION, SITE_TITLE } from "../config";
+
+import "../styles/global.css";
+
+interface Props {
+	title: string;
+	description?: string;
+}
+
+const linkArr = [{ rel: "icon", href: `${BASE_DIR}favicon.svg`, type: "image/svg+xml" }];
+
+const metaArr = [
+	{ name: "viewport", content: "width=device-width, initial-scale=1.0" },
+	{ name: "format-detection", content: "telephone=no, address=no, email=no" },
+	{ name: "author", content: AUTHOR },
+	{ name: "generator", content: Astro.generator },
+	{ name: "mobile-web-app-capable", content: "yes" },
+	{ name: "apple-mobile-web-app-capable", content: "yes" },
+	{ name: "apple-mobile-web-app-status-bar-style", content: "black-translucent" },
+	{ name: "apple-mobile-web-app-title", content: SITE_TITLE },
+];
+
+const { title, description = SITE_DESCRIPTION } = Astro.props;
+---
+
+<!doctype html>
+<html lang="ja" data-overlayscrollbars-initialize>
+	<head>
+		<SEO
+			charset="UTF-8"
+			title={title}
+			titleDefault="Page"
+			titleTemplate={`%s | ${SITE_TITLE}`}
+			description={description}
+			extend={{
+				link: linkArr,
+				meta: metaArr,
+			}}
+		/>
+
+		<script src="../scripts/theme-toggle.ts"></script>
+
+		<GoogleAnalytics />
+
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<GoogleFontsOptimizer url="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Noto+Sans+JP:wght@400;700&display=swap" />
+	</head>
+	<body class="min-h-screen flex flex-col w-full" data-overlayscrollbars-initialize>
+		<!-- Google Tag Manager (noscript) -->
+		<noscript><iframe src={`https://www.googletagmanager.com/ns.html?id=${GTAG_ID}`} height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+		<!-- End Google Tag Manager (noscript) -->
+
+		<Header />
+
+		<main class="grow w-full max-w-5xl mx-auto px-4 py-8 md:px-8" role="main">
+			<slot />
+		</main>
+
+		<Footer />
+
+		<script src="../scripts/image-handler.ts"></script>
+		<script src="../scripts/overlay-scrollbars.ts"></script>
+	</body>
+</html>
