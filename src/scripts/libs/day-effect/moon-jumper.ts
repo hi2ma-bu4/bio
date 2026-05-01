@@ -1,5 +1,5 @@
 import Matter from "matter-js";
-import { applyTheme, safeGet, themeChangeLock, updateAllToggleButtonsUI, type themeType } from "../theme-utils";
+import { themeChangeLock, updateAllToggleButtonsUI, updateTheme } from "../theme-utils";
 
 const { Engine, Runner, Bodies, Composite, Body, Events } = Matter;
 
@@ -19,7 +19,6 @@ class MoonJumper {
 	private platforms: Platform[] = [];
 	private clouds: { body: Matter.Body; el: HTMLDivElement }[] = [];
 	private stars: { el: HTMLDivElement; x: number; y: number; parallax: number; opacity: number }[] = [];
-	private originalTheme: themeType = "auto";
 	private inSpace = false;
 	private lastClickTime = 0;
 	private animationFrameId: number | null = null;
@@ -29,8 +28,6 @@ class MoonJumper {
 
 	public async start() {
 		if (this.container) return;
-
-		this.originalTheme = safeGet() ?? "auto";
 
 		// 1. Scroll to bottom
 		window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
@@ -59,7 +56,7 @@ class MoonJumper {
 		this.startLoop();
 
 		this.clickHandler = (e: MouseEvent) => this.handleClick(e);
-		window.addEventListener("mousedown", this.clickHandler, true);
+		window.addEventListener("mousedown", this.clickHandler, { capture: true, passive: false });
 
 		this.resizeHandler = () => this.handleResize();
 		window.addEventListener("resize", this.resizeHandler);
@@ -164,6 +161,9 @@ class MoonJumper {
 	}
 
 	private initPlatforms() {
+		// Mobile Check: If window width is narrow, don't generate DOM-based platforms
+		if (window.innerWidth < 768) return;
+
 		const elements = Array.from(document.querySelectorAll("a, button, h1, h2, h3, .card, p, li, img, span, div.project-card"));
 		const currentScroll = window.scrollY;
 		const processedRects: { left: number; right: number; top: number; bottom: number }[] = [];
@@ -185,37 +185,58 @@ class MoonJumper {
 			}
 			if (isFixed) return;
 
-			const hasText = Array.from(el.childNodes).some((node) => node.nodeType === Node.TEXT_NODE && node.textContent?.trim());
 			const isImage = el.tagName === "IMG";
-			// If it doesn't have direct text and isn't an image, skip unless it's a known container
-			if (!hasText && !isImage && !el.classList.contains("card") && !el.classList.contains("project-card")) return;
 
-			// Use getClientRects to support multi-line inline elements
-			const rects = Array.from(el.getClientRects());
-			rects.forEach((rect) => {
-				if (rect.width < 10 || rect.height < 10) return;
+			// For elements containing text, we use Ranges to get hitboxes for the actual text lines
+			// instead of the full block element width.
+			const textNodes: Text[] = [];
+			const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+			let node;
+			while ((node = walker.nextNode())) {
+				if (node.textContent?.trim()) {
+					textNodes.push(node as Text);
+				}
+			}
 
-				// Avoid overlapping with already processed platforms
-				const isOverlapping = processedRects.some((r) => rect.left >= r.left - 1 && rect.right <= r.right + 1 && rect.top >= r.top - 1 && rect.bottom <= r.bottom + 1);
-				if (isOverlapping) return;
-
-				const absY = rect.top + currentScroll;
-				const absX = rect.left + rect.width / 2;
-				const body = Bodies.rectangle(absX, absY + rect.height / 2, rect.width, rect.height, {
-					isStatic: true,
-					label: "platform",
-					friction: 0.5,
+			if (textNodes.length > 0) {
+				const range = document.createRange();
+				textNodes.forEach((textNode) => {
+					range.selectNodeContents(textNode);
+					const rects = Array.from(range.getClientRects());
+					rects.forEach((rect) => this.addPlatformFromRect(rect, currentScroll, processedRects));
 				});
-				Composite.add(this.engine!.world, body);
-				this.platforms.push({ body });
-				processedRects.push({
-					left: rect.left,
-					right: rect.right,
-					top: rect.top,
-					bottom: rect.bottom,
-				});
-			});
+			} else if (isImage || el.classList.contains("card") || el.classList.contains("project-card")) {
+				const rect = el.getBoundingClientRect();
+				this.addPlatformFromRect(rect, currentScroll, processedRects);
+			}
 		});
+	}
+
+	private addPlatformFromRect(rect: DOMRect | DOMRectReadOnly, currentScroll: number, processedRects: { left: number; right: number; top: number; bottom: number }[]) {
+		if (rect.width < 10 || rect.height < 10) return;
+
+		// Avoid overlapping with already processed platforms
+		const isOverlapping = processedRects.some((r) => rect.left >= r.left - 1 && rect.right <= r.right + 1 && rect.top >= r.top - 1 && rect.bottom <= r.bottom + 1);
+		if (isOverlapping) return;
+
+		const absY = rect.top + currentScroll;
+		const absX = rect.left + rect.width / 2;
+		const body = Bodies.rectangle(absX, absY + rect.height / 2, rect.width, rect.height, {
+			isStatic: true,
+			label: "platform",
+			friction: 0.5,
+		});
+
+		if (this.engine) {
+			Composite.add(this.engine.world, body);
+			this.platforms.push({ body });
+			processedRects.push({
+				left: rect.left,
+				right: rect.right,
+				top: rect.top,
+				bottom: rect.bottom,
+			});
+		}
 	}
 
 	private handleClick(e: MouseEvent) {
@@ -247,7 +268,7 @@ class MoonJumper {
 			const altitude = viewportH * 0.1 - this.rabbit.position.y;
 			y -= altitude;
 
-			// Stop propagation to prevent hitting faded content
+			// Stop interaction with the underlying page in Space Mode
 			e.preventDefault();
 			e.stopPropagation();
 		}
@@ -349,7 +370,7 @@ class MoonJumper {
 				if (this.inSpace) {
 					this.inSpace = false;
 					themeChangeLock(false);
-					applyTheme(this.originalTheme);
+					updateTheme();
 					updateAllToggleButtonsUI();
 					if (this.container) this.container.style.pointerEvents = "none";
 				}
@@ -443,16 +464,17 @@ class MoonJumper {
 		this.unlockScroll();
 		if (this.animationFrameId) cancelAnimationFrame(this.animationFrameId);
 		if (this.runner) Runner.stop(this.runner);
-		if (this.clickHandler) window.removeEventListener("mousedown", this.clickHandler, true);
+		if (this.clickHandler) window.removeEventListener("mousedown", this.clickHandler, { capture: true });
 		if (this.resizeHandler) window.removeEventListener("resize", this.resizeHandler);
 
 		const main = document.querySelector("main") as HTMLElement;
 		if (main) {
 			main.style.opacity = "1";
+			main.style.pointerEvents = "auto";
 		}
 
 		themeChangeLock(false);
-		applyTheme(this.originalTheme);
+		updateTheme(); // This will use the original theme from storage/auto
 		updateAllToggleButtonsUI();
 
 		if (this.container) {
