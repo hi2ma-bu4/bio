@@ -134,7 +134,7 @@
 	html[data-theme-transition] header,
 	html[data-theme-transition] main,
 	html[data-theme-transition] footer {
-		@apply transition-colors duration-1000 ease-in-out;
+		@apply transition-colors duration-300 ease-in-out;
 	}
 
 	/* フォーカス時のリング */

@@ -164,7 +164,7 @@ class MoonJumper {
 		// Mobile Check: If window width is narrow, don't generate DOM-based platforms
 		if (window.innerWidth < 768) return;
 
-		const elements = Array.from(document.querySelectorAll("a, button, h1, h2, h3, .card, p, li, img, span, div.project-card"));
+		const elements = Array.from(document.querySelectorAll(`a, button, h1, h2, h3, .card, p, li, img, span, div[id^="work-card-"]`));
 		const currentScroll = window.scrollY;
 		const processedRects: { left: number; right: number; top: number; bottom: number }[] = [];
 
@@ -205,7 +205,7 @@ class MoonJumper {
 					const rects = Array.from(range.getClientRects());
 					rects.forEach((rect) => this.addPlatformFromRect(rect, currentScroll, processedRects));
 				});
-			} else if (isImage || el.classList.contains("card") || el.classList.contains("project-card")) {
+			} else if (isImage || el.id.startsWith("work-card-")) {
 				const rect = el.getBoundingClientRect();
 				this.addPlatformFromRect(rect, currentScroll, processedRects);
 			}
