@@ -192,7 +192,6 @@ export default defineConfig({
 			lastmod: new Date(),
 			filter: (page) => !page.includes("/404/"),
 		}),
-		inline404Integration(),
 		htmlMinifierNext({
 			collapseInlineTagWhitespace: true,
 			collapseWhitespace: true,
@@ -208,6 +207,7 @@ export default defineConfig({
 			sortAttributes: true,
 			sortClassNames: true,
 		}),
+		inline404Integration(),
 	],
 	vite: {
 		publicDir: "public",
