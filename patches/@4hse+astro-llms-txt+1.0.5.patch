@@ -1,0 +1,1360 @@
+diff --git a/node_modules/@4hse/astro-llms-txt/src/entryToSimpleMarkdown.ts b/node_modules/@4hse/astro-llms-txt/src/entryToSimpleMarkdown.ts
+index 67b40e6..5e644c6 100644
+--- a/node_modules/@4hse/astro-llms-txt/src/entryToSimpleMarkdown.ts
++++ b/node_modules/@4hse/astro-llms-txt/src/entryToSimpleMarkdown.ts
+@@ -1,161 +1,525 @@
+-import type { RootContent } from 'hast';
+-import { matches, select, selectAll } from 'hast-util-select';
+-import rehypeParse from 'rehype-parse';
+-import rehypeRemark from 'rehype-remark';
+-import remarkGfm from 'remark-gfm';
+-import remarkStringify from 'remark-stringify';
+-import { unified } from 'unified';
+-import { remove } from 'unist-util-remove';
+-
+-/**
+- * Selector to get for minification
+- */
+-const structureSelectors = ['h2','h3','h4','h5','h6','ul','ol','li'];
+-
+-const htmlToMarkdownPipeline = unified()
+-	.use(rehypeParse, { fragment: true })
+-
+-	.use(function removeSomeElements() {
+-		return (tree, file) => {
+-			remove(tree, (_node) => {
+-				const node = _node as RootContent;
+-				const data = file.data as { ignoreSelectors: string[] };
+-				for (const selector of data.ignoreSelectors) {
+-					if (matches(selector, node)) {
+-						return true;
+-					}
+-				}
+-				return false;
+-			});
+-			return tree;
+-		};
+-	})
+-
+-	.use(function keepOnlyStructure() {
+-		return (tree, file) => {
+-			if (!file.data.onlyStructure) return tree;
+-			remove(tree, (_node) => {
+-				const node = _node as RootContent;
+-				return !structureSelectors.some(sel => matches(sel, node));
+-			});
+-			return tree;
+-		};
+-	})
+-
+-	.use(function improveExpressiveCodeHandling() {
+-		return (tree) => {
+-			const ecInstances = selectAll('.expressive-code', tree as Parameters<typeof selectAll>[1]);
+-			for (const instance of ecInstances) {
+-				// Remove the “Terminal Window” label from Expressive Code terminal frames.
+-				const figcaption = select('figcaption', instance);
+-				if (figcaption) {
+-					const terminalWindowTextIndex = figcaption.children.findIndex((child) =>
+-						matches('span.sr-only', child)
+-					);
+-					if (terminalWindowTextIndex > -1) {
+-						figcaption.children.splice(terminalWindowTextIndex, 1);
+-					}
+-				}
+-				const pre = select('pre', instance);
+-				const code = select('code', instance);
+-				// Use Expressive Code’s `data-language=*` attribute to set a `language-*` class name.
+-				// This is what `hast-util-to-mdast` checks for code language metadata.
+-				if (pre?.properties.dataLanguage && code) {
+-					if (!Array.isArray(code.properties.className)) code.properties.className = [];
+-
+-					const diffLines =
+-						pre.properties.dataLanguage === 'diff'
+-							? []
+-							: code.children.filter((child) => matches('div.ec-line.ins, div.ec-line.del', child));
+-					if (diffLines.length === 0) {
+-						code.properties.className.push(`language-${pre.properties.dataLanguage}`);
+-					} else {
+-						code.properties.className.push('language-diff');
+-						for (const line of diffLines) {
+-							if (line.type !== 'element') continue;
+-							const classes = line.properties?.className;
+-							if (typeof classes !== 'string' && !Array.isArray(classes)) continue;
+-							const marker = classes.includes('ins') ? '+' : '-';
+-							const span = select('span:not(.indent)', line);
+-							const firstChild = span?.children[0];
+-							if (firstChild?.type === 'text') {
+-								firstChild.value = `${marker}${firstChild.value}`;
+-							}
+-						}
+-					}
+-				}
+-			}
+-		};
+-	})
+-
+-	.use(function improveTabsHandling() {
+-		return (tree) => {
+-			const tabInstances = selectAll('starlight-tabs', tree as Parameters<typeof selectAll>[1]);
+-			for (const instance of tabInstances) {
+-				const tabs = selectAll('[role="tab"]', instance);
+-				const panels = selectAll('[role="tabpanel"]', instance);
+-				// Convert parent `<starlight-tabs>` element to empty unordered list.
+-				instance.tagName = 'ul';
+-				instance.properties = {};
+-				instance.children = [];
+-				// Iterate over tabs and panels to build a list with tab label as initial list text.
+-				for (let i = 0; i < Math.min(tabs.length, panels.length); i++) {
+-					const tab = tabs[i];
+-					const panel = panels[i];
+-					if (!tab || !panel) continue;
+-					// Filter out extra whitespace and icons from tab contents.
+-					const tabLabel = tab.children
+-						.filter((child) => child.type === 'text' && child.value.trim())
+-						.map((child) => child.type === 'text' && child.value.trim())
+-						.join('');
+-					// Add list entry for this tab and panel.
+-					instance.children.push({
+-						type: 'element',
+-						tagName: 'li',
+-						properties: {},
+-						children: [
+-							{
+-								type: 'element',
+-								tagName: 'p',
+-								children: [{ type: 'text', value: tabLabel }],
+-								properties: {},
+-							},
+-							panel,
+-						],
+-					});
+-				}
+-			}
+-		};
+-	})
+-	.use(function improveFileTreeHandling() {
+-		return (tree) => {
+-			const trees = selectAll('starlight-file-tree', tree as Parameters<typeof selectAll>[1]);
+-			for (const tree of trees) {
+-				// Remove “Directory” screen reader labels from <FileTree> entries.
+-				remove(tree, (_node) => {
+-					const node = _node as RootContent;
+-					return matches('.sr-only', node);
+-				});
+-			}
+-		};
+-	})
+-	.use(rehypeRemark)
+-	.use(remarkGfm)
+-	.use(remarkStringify);
++import type { Element, ElementContent, Root, RootContent } from "hast";
++import { matches } from "hast-util-select";
++import rehypeParse from "rehype-parse";
++import rehypeRemark from "rehype-remark";
++import remarkGfm from "remark-gfm";
++import remarkStringify from "remark-stringify";
++import { unified } from "unified";
++
++const structureSelectors = ["h2", "h3", "h4", "h5", "h6", "ul", "ol", "li"];
++const noisySelectors = [
++  "img",
++  "picture",
++  "source",
++  "svg",
++  "canvas",
++  "iframe",
++  "script",
++  "style",
++  "template",
++  "noscript",
++  "[hidden]",
++  "[aria-hidden='true']",
++];
++const whitespaceSensitiveTags = new Set(["code", "pre", "textarea"]);
++const blockLikeTags = new Set([
++  "address",
++  "article",
++  "aside",
++  "blockquote",
++  "body",
++  "details",
++  "div",
++  "dl",
++  "dt",
++  "dd",
++  "fieldset",
++  "figcaption",
++  "figure",
++  "footer",
++  "form",
++  "h1",
++  "h2",
++  "h3",
++  "h4",
++  "h5",
++  "h6",
++  "header",
++  "hr",
++  "html",
++  "li",
++  "main",
++  "nav",
++  "ol",
++  "p",
++  "pre",
++  "section",
++  "table",
++  "tbody",
++  "td",
++  "tfoot",
++  "th",
++  "thead",
++  "tr",
++  "ul",
++]);
++const ancillaryEmbedTextPatterns = [
++  /\bprefer the source\b/i,
++  /\bview (?:the )?(?:instagram|facebook|tiktok|twitter|x|linkedin) (?:post|video|thread|source)\b/i,
++  /\bview (?:this )?(?:post|video|thread) on (?:instagram|facebook|tiktok|twitter|x|linkedin)\b/i,
++  /\bview on (?:instagram|facebook|tiktok|twitter|x|linkedin)\b/i,
++  /\bwatch (?:the )?(?:video|clip) on (?:youtube|tiktok)\b/i,
++];
++const ancillaryEmbedClassPattern = /\b(?:instagram-media|twitter-tweet|tiktok-embed|facebook-post)\b/i;
++const ancillaryEmbedWrapperTags = new Set(["aside", "blockquote", "div", "figcaption", "figure", "p"]);
++const socialHostPattern = /(?:^|\.)((?:instagram|facebook|tiktok|twitter|x|linkedin|youtube))\.com$/i;
++
++type MarkdownInput = string | Root | RootContent;
++type HtmlNode = RootContent | ElementContent;
++
++interface FilterContext {
++  ignoreSelectors: string[];
++  insideStructure: boolean;
++  onlyStructure: boolean;
++}
++
++const htmlFragmentParser = unified().use(rehypeParse, { fragment: true });
++const markdownStringifier = unified()
++  .use(rehypeRemark)
++  .use(remarkGfm)
++  .use(remarkStringify);
++
++function normalizeTree(input: MarkdownInput): Root {
++  if (typeof input === "string") {
++    return htmlFragmentParser.parse(input) as Root;
++  }
++
++  const subtree: Root = input.type === "root"
++    ? input
++    : { type: "root", children: [input] };
++  return structuredClone(subtree);
++}
++
++function filterTree(root: Root, context: Omit<FilterContext, "insideStructure">): Root {
++  const children = root.children
++    .map(node => filterNode(node as RootContent, { ...context, insideStructure: false }))
++    .filter((node): node is RootContent => node !== null);
++
++  return { ...root, children };
++}
++
++function filterNode(node: RootContent, context: FilterContext): RootContent | null {
++  if (node.type === "comment") {
++    return null;
++  }
++
++  if (node.type === "text") {
++    if (context.onlyStructure && !context.insideStructure) {
++      return null;
++    }
++
++    return structuredClone(node);
++  }
++
++  if (!isElement(node)) {
++    return null;
++  }
++
++  if (isBreakElement(node)) {
++    if (context.onlyStructure && !context.insideStructure) {
++      return null;
++    }
++
++    return { type: "text", value: " " };
++  }
++
++  if (shouldDropElement(node, context.ignoreSelectors)) {
++    return null;
++  }
++
++  const isStructural = structureSelectors.some(selector => matches(selector, node));
++  const insideStructure = context.insideStructure || isStructural;
++  const children = node.children
++    .map(child => filterNode(child, { ...context, insideStructure }))
++    .filter((child): child is ElementContent => child !== null);
++
++  if (!children.length) {
++    return null;
++  }
++
++  if (!context.onlyStructure) {
++    return { ...node, children };
++  }
++
++  if (isStructural || context.insideStructure) {
++    return { ...node, children };
++  }
++
++  return children.length ? { ...node, children } : null;
++}
++
++function shouldDropElement(node: Element, ignoreSelectors: string[]): boolean {
++  return (
++    [...ignoreSelectors, ...noisySelectors].some(selector => matches(selector, node))
++    || isAncillarySocialEmbedElement(node)
++  );
++}
++
++function isAncillarySocialEmbedElement(node: Element): boolean {
++  if (!ancillaryEmbedWrapperTags.has(node.tagName)) {
++    return false;
++  }
++
++  const className = getClassName(node);
++  if (className && ancillaryEmbedClassPattern.test(className)) {
++    return true;
++  }
++
++  const text = getNodeTextContent(node).replace(/\s+/g, " ").trim();
++  if (!text || text.length > 180) return false;
++  if (!ancillaryEmbedTextPatterns.some(pattern => pattern.test(text))) return false;
++
++  return getDescendantHrefs(node).some(href => isSocialEmbedHref(href));
++}
++
++function getClassName(node: Element): string {
++  const className = node.properties?.className;
++
++  if (Array.isArray(className)) {
++    return className.filter((value): value is string => typeof value === "string").join(" ");
++  }
++
++  return typeof className === "string" ? className : "";
++}
++
++function getDescendantHrefs(node: Element): string[] {
++  const hrefs: string[] = [];
++  const visit = (current: HtmlNode) => {
++    if (!isElement(current)) return;
++
++    const href = current.properties?.href;
++    if (typeof href === "string") hrefs.push(href);
++
++    for (const child of current.children) {
++      visit(child as HtmlNode);
++    }
++  };
++
++  visit(node);
++  return hrefs;
++}
++
++function isSocialEmbedHref(href: string): boolean {
++  if (!/^(?:https?:)?\/\//i.test(href)) return false;
++
++  try {
++    return socialHostPattern.test(new URL(href).hostname);
++  } catch {
++    return false;
++  }
++}
++
++function getNodeTextContent(node: HtmlNode | null | undefined): string {
++  if (!node) return "";
++  if (node.type === "text") return node.value;
++  if (!isElement(node)) return "";
++
++  return node.children.map(child => getNodeTextContent(child as HtmlNode)).join("");
++}
++
++function normalizeWhitespaceTree(root: Root): Root {
++  return normalizeParent(root);
++}
++
++function normalizeParent<T extends Root | Element>(parent: T): T {
++  if (parent.type === "element" && whitespaceSensitiveTags.has(parent.tagName)) {
++    return parent;
++  }
++
++  const children = parent.children
++    .map(child => normalizeHtmlNode(child as HtmlNode))
++    .filter((child): child is HtmlNode => child !== null);
++
++  const normalizedChildren = shouldNormalizeInlineSequence(children)
++    ? normalizeInlineChildren(children)
++    : normalizeBlockChildren(children);
++
++  return { ...parent, children: normalizedChildren as T["children"] };
++}
++
++function normalizeHtmlNode(node: HtmlNode): HtmlNode | null {
++  if (node.type === "text") {
++    return { ...node, value: collapseWhitespace(node.value) };
++  }
++
++  if (!isElement(node)) {
++    return null;
++  }
++
++  const normalized = normalizeParent(node);
++  return normalized.children.length ? normalized : null;
++}
++
++function shouldNormalizeInlineSequence(children: HtmlNode[]): boolean {
++  const meaningfulChildren = children.filter(child => !isBlankTextNode(child));
++  return meaningfulChildren.length > 0 && meaningfulChildren.every(isInlineLikeNode);
++}
++
++function normalizeInlineChildren(children: HtmlNode[]): HtmlNode[] {
++  const normalized: HtmlNode[] = [];
++  let pendingWhitespace = false;
++
++  for (const child of children) {
++    const leadingWhitespace = hasLeadingBoundaryWhitespace(child);
++    const trailingWhitespace = hasTrailingBoundaryWhitespace(child);
++    const trimmedChild = trimBoundaryWhitespace(child);
++
++    if (!trimmedChild) {
++      pendingWhitespace ||= leadingWhitespace || trailingWhitespace;
++      continue;
++    }
++
++    const previous = normalized.at(-1);
++    if (previous && shouldInsertBoundarySpace(previous, trimmedChild, pendingWhitespace || leadingWhitespace)) {
++      appendTextNode(normalized, " ");
++    }
++
++    appendHtmlNode(normalized, trimmedChild);
++    pendingWhitespace = trailingWhitespace;
++  }
++
++  return normalized;
++}
++
++function normalizeBlockChildren(children: HtmlNode[]): HtmlNode[] {
++  const normalized: HtmlNode[] = [];
++
++  for (const child of children) {
++    if (child.type === "text") {
++      const value = collapseWhitespace(child.value).trim();
++      if (!value) continue;
++
++      appendHtmlNode(normalized, { ...child, value });
++      continue;
++    }
++
++    appendHtmlNode(normalized, child);
++  }
++
++  return normalized;
++}
++
++function trimBoundaryWhitespace(node: HtmlNode): HtmlNode | null {
++  return trimRightBoundary(trimLeftBoundary(node));
++}
++
++function trimLeftBoundary(node: HtmlNode | null): HtmlNode | null {
++  if (!node) return null;
++
++  if (node.type === "text") {
++    const value = collapseWhitespace(node.value).replace(/^\s+/, "");
++    return value ? { ...node, value } : null;
++  }
++
++  if (!isElement(node) || whitespaceSensitiveTags.has(node.tagName)) {
++    return node;
++  }
++
++  const children = [...node.children] as HtmlNode[];
++  while (children.length) {
++    const trimmedChild = trimLeftBoundary(children[0] ?? null);
++    if (trimmedChild) {
++      children[0] = trimmedChild;
++      break;
++    }
++
++    children.shift();
++  }
++
++  return children.length ? { ...node, children: children as ElementContent[] } : null;
++}
++
++function trimRightBoundary(node: HtmlNode | null): HtmlNode | null {
++  if (!node) return null;
++
++  if (node.type === "text") {
++    const value = collapseWhitespace(node.value).replace(/\s+$/, "");
++    return value ? { ...node, value } : null;
++  }
++
++  if (!isElement(node) || whitespaceSensitiveTags.has(node.tagName)) {
++    return node;
++  }
++
++  const children = [...node.children] as HtmlNode[];
++  while (children.length) {
++    const index = children.length - 1;
++    const trimmedChild = trimRightBoundary(children[index] ?? null);
++    if (trimmedChild) {
++      children[index] = trimmedChild;
++      break;
++    }
++
++    children.pop();
++  }
++
++  return children.length ? { ...node, children: children as ElementContent[] } : null;
++}
++
++function hasLeadingBoundaryWhitespace(node: HtmlNode): boolean {
++  const text = getLeadingText(node);
++  return !!text && /^\s/.test(text);
++}
++
++function hasTrailingBoundaryWhitespace(node: HtmlNode): boolean {
++  const text = getTrailingText(node);
++  return !!text && /\s$/.test(text);
++}
++
++function getLeadingText(node: HtmlNode | null | undefined): string | undefined {
++  if (!node) return undefined;
++  if (node.type === "text") return collapseWhitespace(node.value);
++  if (!isElement(node)) return undefined;
++
++  for (const child of node.children) {
++    const text = getLeadingText(child as HtmlNode);
++    if (text !== undefined) return text;
++  }
++
++  return undefined;
++}
++
++function getTrailingText(node: HtmlNode | null | undefined): string | undefined {
++  if (!node) return undefined;
++  if (node.type === "text") return collapseWhitespace(node.value);
++  if (!isElement(node)) return undefined;
++
++  for (let index = node.children.length - 1; index >= 0; index -= 1) {
++    const text = getTrailingText(node.children[index] as HtmlNode);
++    if (text !== undefined) return text;
++  }
++
++  return undefined;
++}
++
++function shouldInsertBoundarySpace(
++  previous: HtmlNode,
++  next: HtmlNode,
++  requestedByWhitespace: boolean,
++): boolean {
++  const previousChar = getTrailingBoundaryChar(previous);
++  const nextChar = getLeadingBoundaryChar(next);
++  if (!previousChar || !nextChar) return false;
++  if (isTightFollowingPunctuation(nextChar) || isTightLeadingPunctuation(previousChar)) return false;
++
++  if (requestedByWhitespace) {
++    return true;
++  }
++
++  return (
++    isInlineElement(previous)
++    && isInlineElement(next)
++    && isWordLike(previousChar)
++    && isWordLike(nextChar)
++  );
++}
++
++function getLeadingBoundaryChar(node: HtmlNode): string | undefined {
++  return getLeadingText(node)?.trimStart().at(0);
++}
++
++function getTrailingBoundaryChar(node: HtmlNode): string | undefined {
++  return getTrailingText(node)?.trimEnd().at(-1);
++}
++
++function isTightFollowingPunctuation(char: string): boolean {
++  return /[),.;:!?%\]}»”’]/u.test(char);
++}
++
++function isTightLeadingPunctuation(char: string): boolean {
++  return /[(\[{«“‘]/u.test(char);
++}
++
++function isWordLike(char: string): boolean {
++  return /[\p{L}\p{N}]/u.test(char);
++}
++
++function isInlineLikeNode(node: HtmlNode): boolean {
++  if (node.type === "text") return true;
++  return isElement(node) && !blockLikeTags.has(node.tagName);
++}
++
++function isInlineElement(node: HtmlNode): node is Element {
++  return isElement(node) && !blockLikeTags.has(node.tagName);
++}
++
++function isBlankTextNode(node: HtmlNode): boolean {
++  return node.type === "text" && !collapseWhitespace(node.value).trim();
++}
++
++function appendHtmlNode(nodes: HtmlNode[], node: HtmlNode): void {
++  if (node.type === "text") {
++    appendTextNode(nodes, node.value);
++    return;
++  }
++
++  nodes.push(node);
++}
++
++function appendTextNode(nodes: HtmlNode[], value: string): void {
++  if (!value) return;
++
++  const previous = nodes.at(-1);
++  if (previous?.type === "text") {
++    previous.value += value;
++    return;
++  }
++
++  nodes.push({ type: "text", value });
++}
++
++function collapseWhitespace(value: string): string {
++  return value.replace(/\s+/g, " ");
++}
++
++function cleanupMarkdown(markdown: string): string {
++  const lines = markdown
++    .replace(/<!--[\s\S]*?-->/g, "")
++    .split("\n")
++    .filter(line => !isDecorativeMarkdownLine(line));
++
++  return lines.join("\n").replace(/\n{3,}/g, "\n\n").trim();
++}
++
++function isDecorativeMarkdownLine(line: string): boolean {
++  const trimmed = line.trim();
++  if (!trimmed) return false;
++
++  const withoutListMarker = trimmed.replace(/^(?:[-*+]\s+|\d+\.\s+)/, "");
++  return (
++    /^(?:!\[[^\]]*]\([^)\n]+\)|\[!\[[^\]]*]\([^)\n]+\)]\([^)\n]+\))$/.test(withoutListMarker)
++    || /^\[\]\([^)\n]+\)$/.test(withoutListMarker)
++  );
++}
++
++function isElement(node: RootContent | null | undefined): node is Element {
++  return node?.type === "element";
++}
++
++function isBreakElement(node: RootContent | null | undefined): boolean {
++  return isElement(node) && node.tagName === "br";
++}
+ 
+ /** Render html content to Markdown to support rendering and simplifying MDX components */
+ export async function entryToSimpleMarkdown(
+-	html: string,
+- 	ignoreSelectors: string[] = [],
+-	onlyStructure: boolean = false,
++  html: MarkdownInput,
++  ignoreSelectors: string[] = [],
++  onlyStructure: boolean = false,
+ ) {
+-	const file = await htmlToMarkdownPipeline.process({
+-		value: html,
+-		data: { onlyStructure, ignoreSelectors },
+-	});
+-	let markdown = String(file).trim();
+-	//if (onlyStructure) {
+-	//	markdown = markdown.replace(/\s+/g, ' ');
+-	//}
+-	return markdown;
++  const tree = normalizeWhitespaceTree(
++    filterTree(normalizeTree(html), { ignoreSelectors, onlyStructure }),
++  );
++  const markdownTree = await markdownStringifier.run(tree);
++  const markdown = String(markdownStringifier.stringify(markdownTree)).trim();
++  return cleanupMarkdown(markdown);
+ }
+diff --git a/node_modules/@4hse/astro-llms-txt/src/index.ts b/node_modules/@4hse/astro-llms-txt/src/index.ts
+index c17584c..65223a9 100644
+--- a/node_modules/@4hse/astro-llms-txt/src/index.ts
++++ b/node_modules/@4hse/astro-llms-txt/src/index.ts
+@@ -1,8 +1,12 @@
+ import type { AstroConfig, AstroIntegration } from "astro";
+ import fs from "fs/promises";
+-import path from "path";
+-import { JSDOM } from "jsdom";
++import type { Element, Root, RootContent } from "hast";
++import { select } from "hast-util-select";
+ import micromatch from "micromatch";
++import path from "node:path";
++import { fileURLToPath } from "node:url";
++import rehypeParse from "rehype-parse";
++import { unified } from "unified";
+ import { entryToSimpleMarkdown } from "./entryToSimpleMarkdown";
+ 
+ interface DocSet {
+@@ -13,10 +17,18 @@ interface DocSet {
+   promote?: string[];
+   demote?: string[];
+   onlyStructure?: boolean;
+-  mainSelector?: string; //default "main"
++  mainSelector?: string; // default "main"
+   ignoreSelectors?: string[];
+ }
+ 
++interface IndexSection {
++  title: string;
++  include: string[];
++  promote?: string[];
++  demote?: string[];
++  sort?: "default" | "date-desc";
++}
++
+ interface LlmsConfig {
+   title: string;
+   description?: string;
+@@ -25,6 +37,24 @@ interface LlmsConfig {
+   docSet?: DocSet[];
+   notes?: string;
+   pageSeparator?: string;
++  indexSections?: IndexSection[];
++  datePath?: (pathname: string) => Date | undefined;
++}
++
++interface ParsedPage {
++  pathname: string;
++  htmlPath: string;
++  canonical: string;
++  description?: string;
++  document: Root;
++}
++
++interface PageExcerpt {
++  pathname: string;
++  canonical: string;
++  description?: string;
++  main: Element;
++  title: string;
+ }
+ 
+ interface PluginContext {
+@@ -32,8 +62,11 @@ interface PluginContext {
+   astroConfig: AstroConfig;
+   distDir: string;
+   pages: { pathname: string }[];
++  pageCache: Map<string, Promise<ParsedPage | null>>;
+ }
+ 
++const htmlDocumentParser = unified().use(rehypeParse);
++
+ /**
+  * Astro integration to generate a llms.txt file containing documentation sets.
+  * @param configOptions
+@@ -53,15 +86,18 @@ export default function astroLlmsTxt(configOptions: LlmsConfig): AstroIntegratio
+           configOptions.pageSeparator = "\n\n---\n\n";
+         }
+ 
+-        const context : PluginContext = {
++        const context: PluginContext = {
+           config: configOptions,
+           astroConfig,
+-          distDir: dir.pathname,
++          distDir: fileURLToPath(dir),
+           pages: pages.map(page => ({ pathname: page.pathname })),
++          pageCache: new Map(),
+         };
+ 
+-        const allDocSetsContent = await processAllDocSets(context);
+-        const llmsTxt = buildLlmsIndex(configOptions, allDocSetsContent);
++        const collator = new Intl.Collator(astroConfig.i18n?.defaultLocale || "en");
++        const docSetLines = await processAllDocSets(context, collator);
++        const indexSectionBlocks = await buildIndexSections(context, collator);
++        const llmsTxt = buildLlmsIndex(configOptions, docSetLines, indexSectionBlocks);
+ 
+         await fs.writeFile(path.join(context.distDir, "llms.txt"), llmsTxt, "utf-8");
+         console.log("✅ llms.txt generated");
+@@ -73,17 +109,19 @@ export default function astroLlmsTxt(configOptions: LlmsConfig): AstroIntegratio
+ /**
+  * Process all documentation sets defined in the configuration.
+  * @param context
++ * @param collator
+  * @returns
+  */
+-async function processAllDocSets(context : PluginContext): Promise<string[]> {
++async function processAllDocSets(
++  context: PluginContext,
++  collator: Intl.Collator,
++): Promise<string[]> {
+   const lines: string[] = [];
+   const { config, astroConfig } = context;
+ 
+-  const collator = new Intl.Collator(astroConfig.i18n?.defaultLocale || 'en');
+-
+   for (const set of config.docSet ?? []) {
+     await processDocSet({ set, context, collator });
+-    const url = new URL(set.url, astroConfig.site);
++    const url = resolvePublicUrl(set.url, astroConfig);
+     lines.push(`- [${set.title}](${url}): ${set.description}`);
+   }
+ 
+@@ -95,36 +133,28 @@ async function processAllDocSets(context : PluginContext): Promise<string[]> {
+  * @param args
+  */
+ async function processDocSet(args: {
+-  context: PluginContext,
+-  collator: Intl.Collator,
+-  set: DocSet
++  context: PluginContext;
++  collator: Intl.Collator;
++  set: DocSet;
+ }): Promise<void> {
+   const { context, collator, set } = args;
+-  const { distDir, pages, config } = context;
+-
+-  const matches = pages
+-    .map(p => p.pathname)
+-    .filter(pn =>
+-      set.include.some(pat => micromatch.isMatch(pn, pat))
+-    );
+-
+-  const sorted = matches.sort((a, b) => {
+-    const pa = prioritizePathname(a, set.promote, set.demote);
+-    const pb = prioritizePathname(b, set.promote, set.demote);
+-    return collator.compare(pa, pb);
+-  });
+-
++  const { distDir, config } = context;
++  const matches = getMatchedPathnames(context.pages, set.include);
++  const sorted = sortDocSetPathnames(matches, collator, set.promote, set.demote);
+   const entries: string[] = [];
+ 
+-  for (const pn of sorted) {
+-    const htmlPath = path.join(distDir, pn.replace(/\/$/, ""), "index.html");
+-    try {
+-      await fs.access(htmlPath);
+-      const entry = await buildEntryFromHtml(htmlPath, set.mainSelector, set.ignoreSelectors, set.onlyStructure ?? false);
+-      entries.push(entry);
+-    } catch {
+-      console.error(`❌ File not found: ${htmlPath}`);
+-    }
++  for (const pathname of sorted) {
++    const page = await getParsedPage(context, pathname);
++    if (!page) continue;
++
++    const entry = await buildEntryFromPage(
++      page,
++      set.mainSelector,
++      set.ignoreSelectors,
++      set.onlyStructure ?? false,
++      { suppressTitleHeading: isRootPathname(pathname) },
++    );
++    entries.push(entry);
+   }
+ 
+   const outPath = path.join(distDir, set.url.replace(/^\//, ""));
+@@ -135,42 +165,62 @@ async function processDocSet(args: {
+   console.log(`✅ DocSet "${set.title}" generated at ${outPath}`);
+ }
+ 
++async function buildIndexSections(
++  context: PluginContext,
++  collator: Intl.Collator,
++): Promise<string[]> {
++  const blocks: string[] = [];
++
++  for (const section of context.config.indexSections ?? []) {
++    const matches = getMatchedPathnames(context.pages, section.include)
++      .filter(pathname => !isRootPathname(pathname));
++
++    const entries = await Promise.all(
++      matches.map(async pathname => {
++        const page = await getParsedPage(context, pathname);
++        return page ? buildPageExcerpt(page) : null;
++      }),
++    );
++
++    const availableEntries = entries.filter((entry): entry is PageExcerpt => entry !== null);
++    const sortedEntries = sortIndexSectionEntries(availableEntries, section, context, collator);
++
++    if (!sortedEntries.length) continue;
++
++    const lines = sortedEntries.map(entry =>
++      renderLinkLine(entry.title, entry.canonical, entry.description),
++    );
++    blocks.push(`## ${section.title}\n\n${lines.join("\n")}`);
++  }
++
++  return blocks;
++}
++
+ /**
+- * Build a single entry from an HTML file.
+- * @param htmlPath 
++ * Build a single entry from a parsed page.
++ * @param page
+  * @param onlyStructure
+  * @returns
+  */
+-async function buildEntryFromHtml(
+-  htmlPath: string, 
+-  mainSelector: string = 'main', 
++async function buildEntryFromPage(
++  page: ParsedPage,
++  mainSelector: string = "main",
+   ignoreSelectors: string[] = [],
+   onlyStructure: boolean,
++  options: { suppressTitleHeading?: boolean } = {},
+ ): Promise<string> {
+-  const html = await fs.readFile(htmlPath, "utf-8");
+-  const dom = new JSDOM(html);
+-  const doc = dom.window.document;
+-  const main = doc.querySelector(mainSelector);
+-  if (!main) throw new Error(`Missing main selector <${mainSelector}>`);
+-
+-  const h1 = main.querySelector("h1");
+-  const title = h1?.textContent?.trim() ?? "Untitled";
+-  if (h1) h1.remove();
+-
+-  const metaDesc = doc
+-    .querySelector('meta[name="description"]')
+-    ?.getAttribute("content")
+-    ?.trim();
+-
++  const excerpt = buildPageExcerpt(page, mainSelector);
+   const markdown = await entryToSimpleMarkdown(
+-    main.innerHTML.trim(), 
+-    ['h1','footer','header', ...ignoreSelectors],
++    excerpt.main,
++    ["h1", "footer", "header", ...ignoreSelectors],
+     onlyStructure,
+   );
+ 
+-  const parts = [`# ${title}`];
+-  if (metaDesc) parts.push(`> ${metaDesc}`);
+-  parts.push(markdown.trim());
++  const parts: string[] = [];
++  if (!options.suppressTitleHeading) parts.push(`# ${excerpt.title}`);
++  if (excerpt.description) parts.push(`> ${excerpt.description}`);
++  parts.push(`URL: ${excerpt.canonical}`);
++  if (markdown.trim()) parts.push(markdown.trim());
+ 
+   return parts.join("\n\n");
+ }
+@@ -178,53 +228,379 @@ async function buildEntryFromHtml(
+ /**
+  * Build the final llms.txt index content.
+  * @param opts Configuration options for the index.
+- * @param docSetsLines Lines representing documentation sets.
++ * @param docSetLines Lines representing documentation sets.
++ * @param indexSectionBlocks Rendered H2 sections for page links.
+  * @returns The formatted llms.txt content.
+  */
+ function buildLlmsIndex(
+   opts: LlmsConfig,
+-  docSetsLines: string[]
++  docSetLines: string[],
++  indexSectionBlocks: string[],
+ ): string {
++  const usingIndexSections = Array.isArray(opts.indexSections);
++  const optionalLines = [
++    ...(usingIndexSections ? docSetLines : []),
++    ...(opts.optionalLinks ?? []).map(link =>
++      renderLinkLine(link.label, link.url, link.description),
++    ),
++  ];
++
+   const lines: string[] = [
+     `# ${opts.title}`,
+     opts.description ? `> ${opts.description}` : "",
+-    opts.details ?? ""
++    opts.details ?? "",
++    opts.notes ?? "",
+   ];
+ 
+-  if (docSetsLines.length) {
+-    lines.push("## Documentation Sets\n\n" + docSetsLines.join("\n"));
++  if (usingIndexSections) {
++    lines.push(...indexSectionBlocks);
++  } else if (docSetLines.length) {
++    lines.push("## Documentation Sets\n\n" + docSetLines.join("\n"));
+   }
+ 
+-  if (opts.notes) {
+-    lines.push("## Notes\n\n" + opts.notes);
++  if (optionalLines.length) {
++    lines.push("## Optional\n\n" + optionalLines.join("\n"));
+   }
+ 
+-  if (opts.optionalLinks?.length) {
+-    lines.push(
+-      "## Optional\n\n" +
+-      opts.optionalLinks
+-        .map(l => `- [${l.label}](${l.url})${l.description ? `: ${l.description}` : ""}`)
+-        .join("\n")
+-    );
++  return lines.filter(Boolean).join("\n\n");
++}
++
++function buildPageExcerpt(page: ParsedPage, mainSelector: string = "main"): PageExcerpt {
++  const main = select(mainSelector, page.document);
++  if (!isElement(main)) {
++    throw new Error(`Missing main selector <${mainSelector}> for ${page.pathname}`);
+   }
+ 
+-  return lines.filter(Boolean).join("\n\n");
++  const h1 = select("h1", main);
++
++  return {
++    pathname: page.pathname,
++    canonical: page.canonical,
++    description: page.description,
++    main,
++    title: getTextContent(h1).trim() || "Untitled",
++  };
+ }
+ 
+-/**
+- * Prioritize a pathname based on promotion and demotion patterns.
+- * @param id 
+- * @param promote 
+- * @param demote 
+- * @returns 
+- */
+-function prioritizePathname(id: string, promote: string[] = [], demote: string[] = []) {
+-  const demoted = demote.findIndex(expr => micromatch.isMatch(id, expr));
++async function getParsedPage(
++  context: PluginContext,
++  pathname: string,
++): Promise<ParsedPage | null> {
++  const cached = context.pageCache.get(pathname);
++  if (cached) return cached;
++
++  const promise = loadParsedPage(context, pathname);
++  context.pageCache.set(pathname, promise);
++  return promise;
++}
++
++async function loadParsedPage(
++  context: PluginContext,
++  pathname: string,
++): Promise<ParsedPage | null> {
++  const htmlPath = getHtmlPath(context.distDir, pathname);
++
++  try {
++    const html = await fs.readFile(htmlPath, "utf-8");
++    const document = htmlDocumentParser.parse(html) as Root;
++
++    return {
++      pathname,
++      htmlPath,
++      canonical: resolvePublicUrl(pathname, context.astroConfig),
++      description: getMetaContent(select('meta[name="description"]', document)),
++      document,
++    };
++  } catch (error) {
++    if (isMissingFileError(error)) {
++      if (!is404Pathname(pathname)) {
++        console.warn(`⚠️ Skipping page with missing HTML: ${htmlPath}`);
++      }
++
++      return null;
++    }
++
++    throw error;
++  }
++}
++
++function sortIndexSectionEntries(
++  entries: PageExcerpt[],
++  section: IndexSection,
++  context: PluginContext,
++  collator: Intl.Collator,
++): PageExcerpt[] {
++  const sortedEntries = [...entries];
++
++  if (section.sort === "date-desc") {
++    const { datePath } = context.config;
++    if (!datePath) {
++      throw new Error('indexSections with sort "date-desc" require a datePath(pathname) callback.');
++    }
++
++    const datedEntries = sortedEntries.map(entry => ({
++      entry,
++      date: requireValidDate(datePath(entry.pathname), entry.pathname),
++    }));
++
++    datedEntries.sort((a, b) => {
++      const leftPriority = getPathPriority(a.entry.pathname, section.promote, section.demote);
++      const rightPriority = getPathPriority(b.entry.pathname, section.promote, section.demote);
++      if (leftPriority !== rightPriority) return rightPriority - leftPriority;
++
++      const dateDiff = b.date.getTime() - a.date.getTime();
++      if (dateDiff !== 0) return dateDiff;
++
++      const titleDiff = collator.compare(a.entry.title, b.entry.title);
++      if (titleDiff !== 0) return titleDiff;
++
++      return collator.compare(a.entry.pathname, b.entry.pathname);
++    });
++
++    return datedEntries.map(item => item.entry);
++  }
++
++  return sortedEntries.sort((a, b) =>
++    comparePathPriority(a.pathname, b.pathname, section.promote, section.demote, collator),
++  );
++}
++
++function sortPathnames(
++  pathnames: string[],
++  collator: Intl.Collator,
++  promote: string[] = [],
++  demote: string[] = [],
++): string[] {
++  return [...pathnames].sort((a, b) =>
++    comparePathPriority(a, b, promote, demote, collator),
++  );
++}
++
++function sortDocSetPathnames(
++  pathnames: string[],
++  collator: Intl.Collator,
++  promote: string[] = [],
++  demote: string[] = [],
++): string[] {
++  const sorted = sortPathnames(pathnames, collator, promote, demote);
++  return [
++    ...sorted.filter(pathname => isRootPathname(pathname)),
++    ...sorted.filter(pathname => !isRootPathname(pathname)),
++  ];
++}
++
++function comparePathPriority(
++  left: string,
++  right: string,
++  promote: string[] = [],
++  demote: string[] = [],
++  collator: Intl.Collator,
++): number {
++  const leftPriority = getPathPriority(left, promote, demote);
++  const rightPriority = getPathPriority(right, promote, demote);
++
++  if (leftPriority !== rightPriority) {
++    return rightPriority - leftPriority;
++  }
++
++  return collator.compare(left, right);
++}
++
++function getPathPriority(
++  pathname: string,
++  promote: string[] = [],
++  demote: string[] = [],
++): number {
++  const demoted = demote.findIndex(expr => matchesPathname(pathname, expr));
+   const promoted = demoted > -1
+     ? -1
+-    : promote.findIndex(expr => micromatch.isMatch(id, expr));
+-  const prefixLength =
++    : promote.findIndex(expr => matchesPathname(pathname, expr));
++
++  return (
+     (promoted > -1 ? promote.length - promoted : 0)
+-    + demote.length - demoted - 1;
+-  return '_'.repeat(prefixLength) + id;
++    + demote.length - demoted - 1
++  );
++}
++
++function getMatchedPathnames(
++  pages: { pathname: string }[],
++  include: string[],
++): string[] {
++  return [...new Set(
++    pages
++      .map(page => page.pathname)
++      .filter(pathname => !isExcludedPathname(pathname))
++      .filter(pathname => include.some(pattern => matchesPathname(pathname, pattern))),
++  )];
++}
++
++function renderLinkLine(label: string, url: string, description?: string): string {
++  return `- [${label}](${url})${description ? `: ${description}` : ""}`;
++}
++
++function getHtmlPath(distDir: string, pathname: string): string {
++  if (isRootPathname(pathname)) {
++    return path.join(distDir, "index.html");
++  }
++
++  if (is404Pathname(pathname)) {
++    return path.join(distDir, "404.html");
++  }
++
++  return path.join(distDir, pathname.replace(/^\/+|\/+$/g, ""), "index.html");
++}
++
++function getSiteUrl(astroConfig: AstroConfig): URL {
++  if (!astroConfig.site) {
++    throw new Error('astro-llms-txt requires Astro "site" to generate absolute llms.txt URLs.');
++  }
++
++  return typeof astroConfig.site === "string" ? new URL(astroConfig.site) : astroConfig.site;
++}
++
++function resolvePublicUrl(pathname: string, astroConfig: AstroConfig): string {
++  if (isAbsoluteUrl(pathname)) {
++    return new URL(pathname).toString();
++  }
++
++  return new URL(buildPublicPath(pathname, astroConfig.base), getSiteUrl(astroConfig)).toString();
++}
++
++function buildPublicPath(pathname: string, base: string = "/"): string {
++  const normalizedBase = normalizeBasePath(base);
++  const normalizedPathname = normalizePublicPathname(pathname);
++
++  if (normalizedBase === "/") return normalizedPathname;
++  if (normalizedPathname === "/") return normalizedBase;
++  return `${normalizedBase.replace(/\/$/, "")}${normalizedPathname}`;
++}
++
++function normalizeBasePath(base: string): string {
++  if (!base || base === "/") return "/";
++  return `/${base.replace(/^\/+|\/+$/g, "")}/`;
++}
++
++function normalizePublicPathname(pathname: string): string {
++  if (isRootPathname(pathname)) return "/";
++  return `/${pathname.replace(/^\/+/, "")}`;
++}
++
++function matchesPathname(pathname: string, pattern: string): boolean {
++  return micromatch.isMatch(isRootPathname(pathname) ? "/" : pathname, pattern);
++}
++
++function isRootPathname(pathname: string): boolean {
++  return pathname === "" || pathname === "/";
++}
++
++function isExcludedPathname(pathname: string): boolean {
++  return is404Pathname(pathname);
++}
++
++function is404Pathname(pathname: string): boolean {
++  return pathname.replace(/^\/+|\/+$/g, "") === "404";
++}
++
++function isAbsoluteUrl(value: string): boolean {
++  return /^[a-zA-Z][a-zA-Z\d+\-.]*:/.test(value);
++}
++
++function isMissingFileError(error: unknown): error is NodeJS.ErrnoException {
++  return typeof error === "object" && error !== null && "code" in error && error.code === "ENOENT";
++}
++
++function requireValidDate(date: Date | undefined, pathname: string): Date {
++  if (!(date instanceof Date) || Number.isNaN(date.getTime())) {
++    throw new Error(`Missing valid date for "${pathname}" in indexSections sort "date-desc".`);
++  }
++
++  return date;
++}
++
++function isElement(node: RootContent | null | undefined): node is Element {
++  return node?.type === "element";
++}
++
++function getMetaContent(node: RootContent | null | undefined): string | undefined {
++  if (!isElement(node)) return undefined;
++
++  const content = node.properties?.content;
++  return typeof content === "string" ? content.trim() || undefined : undefined;
++}
++
++function getTextContent(node: RootContent | null | undefined): string {
++  if (!node) return "";
++  if (node.type === "text") return collapseWhitespace(node.value);
++  if (isBreakElement(node)) return " ";
++  if ("children" in node && Array.isArray(node.children)) {
++    return joinTextChildren(node.children as RootContent[]);
++  }
++  return "";
++}
++
++function joinTextChildren(children: RootContent[]): string {
++  let text = "";
++  let pendingWhitespace = false;
++  let previousNode: RootContent | null = null;
++  let previousText = "";
++
++  for (const child of children) {
++    const childText = getTextContent(child);
++    if (!childText.trim()) {
++      pendingWhitespace ||= /\s/.test(childText);
++      continue;
++    }
++
++    const leadingWhitespace = /^\s/.test(childText);
++    const trailingWhitespace = /\s$/.test(childText);
++    const trimmedText = childText.trim();
++
++    if (previousNode && shouldInsertTextBoundarySpace(
++      previousNode,
++      child,
++      previousText.at(-1),
++      trimmedText.at(0),
++      pendingWhitespace || leadingWhitespace,
++    )) {
++      text += " ";
++    }
++
++    text += trimmedText;
++    previousNode = child;
++    previousText = trimmedText;
++    pendingWhitespace = trailingWhitespace;
++  }
++
++  return text;
++}
++
++function shouldInsertTextBoundarySpace(
++  previousNode: RootContent,
++  nextNode: RootContent,
++  previousChar: string | undefined,
++  nextChar: string | undefined,
++  requestedByWhitespace: boolean,
++): boolean {
++  if (!previousChar || !nextChar) return false;
++  if (/[),.;:!?%\]}»”’]/u.test(nextChar)) return false;
++  if (/[(\[{«“‘]/u.test(previousChar)) return false;
++
++  if (requestedByWhitespace) {
++    return true;
++  }
++
++  return (
++    isElement(previousNode)
++    && isElement(nextNode)
++    && /[\p{L}\p{N}]/u.test(previousChar)
++    && /[\p{L}\p{N}]/u.test(nextChar)
++  );
++}
++
++function collapseWhitespace(value: string): string {
++  return value.replace(/\s+/g, " ");
++}
++
++function isBreakElement(node: RootContent | null | undefined): boolean {
++  return isElement(node) && node.tagName === "br";
+ }

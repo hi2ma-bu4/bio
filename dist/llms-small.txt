@@ -1,0 +1,45 @@
+<SYSTEM>Index of key pages</SYSTEM>
+
+> JavaScript を中心に、個人開発したページ・スクリプトを掲載しています。トップページ。
+
+URL: https://hi2ma-bu4.github.io/bio/
+
+## About Me
+
+---
+
+# Link
+
+> JavaScript を中心に、個人開発したページ・スクリプトを掲載しています。関連リンク集。
+
+URL: https://hi2ma-bu4.github.io/bio/link/
+
+### [GitHub](https://github.com/hi2ma-bu4/)
+
+### [GitHub Gist](https://gist.github.com/hi2ma-bu4/)
+
+### [Greasyfork](https://greasyfork.org/ja/users/1245323)
+
+---
+
+# Works
+
+> JavaScript を中心に、個人開発したページ・スクリプトを掲載しています。制作物一覧。
+
+URL: https://hi2ma-bu4.github.io/bio/works/
+
+### RepoShowcase
+
+### 漢字手書き検索ツール
+
+### MIDI FallingBar
+
+### Tool 2048
+
+### ReTrans
+
+### Mandelbrot Set
+
+### Ryo is You
+
+### js-minecraft

@@ -1,0 +1,107 @@
+<SYSTEM>The Full site of snowsSite</SYSTEM>
+
+> JavaScript を中心に、個人開発したページ・スクリプトを掲載しています。トップページ。
+
+URL: https://hi2ma-bu4.github.io/bio/
+
+何時でも何処でもそれとない機能と共に
+
+[制作実績を見る](/bio/works/) [外部リンク](/bio/link/)
+
+## About Me
+
+こんにちは。このサイトでは、趣味で作ったページ、ライブラリを公開しています。
+
+主に JavaScript/TypeScript を利用しています。
+
+---
+
+# Link
+
+> JavaScript を中心に、個人開発したページ・スクリプトを掲載しています。関連リンク集。
+
+URL: https://hi2ma-bu4.github.io/bio/link/
+
+### [GitHub](https://github.com/hi2ma-bu4/)
+
+[コード置き場](https://github.com/hi2ma-bu4/)
+
+### [GitHub Gist](https://gist.github.com/hi2ma-bu4/)
+
+[コード部品を放棄する場所](https://gist.github.com/hi2ma-bu4/)
+
+### [Greasyfork](https://greasyfork.org/ja/users/1245323)
+
+[Tampermonkey用ユーザースクリプト公開場所](https://greasyfork.org/ja/users/1245323)
+
+---
+
+# Works
+
+> JavaScript を中心に、個人開発したページ・スクリプトを掲載しています。制作物一覧。
+
+URL: https://hi2ma-bu4.github.io/bio/works/
+
+### RepoShowcase
+
+作成した個人利用用途のライブラリ一覧。
+
+Hub Page
+
+[サイトへ移動](https://hi2ma-bu4.github.io/RepoShowcase/)
+
+### 漢字手書き検索ツール
+
+オフラインで漢字を手書き検索できるツールです。
+
+JavaScript TypeScript WebAssembly Python ONNX-Runtime
+
+[サイトへ移動](/bio/KanjiSearch/)
+
+### MIDI FallingBar
+
+MidiをWebでYouTubeで見るような形式で再生できます。
+
+JavaScript TypeScript GLSL Three.js Tone.js
+
+[サイトへ移動](/bio/MIDI-FallingBar/)
+
+### Tool 2048
+
+2048ゲームの最適解計算ツールです。
+
+JavaScript TypeScript WebAssembly
+
+[サイトへ移動](/bio/tool-2048/)
+
+### ReTrans
+
+再翻訳ブームに乗ったページです。
+
+JavaScript GAS
+
+[サイトへ移動](/bio/ReTrans/)
+
+### Mandelbrot Set
+
+マンデルブロ集合の表示ページです。
+
+JavaScript GLSL PC Only
+
+[サイトへ移動](/bio/mandelbrot/)
+
+### Ryo is You
+
+Baba is Youのパクリです。
+
+JavaScript PC Only
+
+[サイトへ移動](/bio/ryoisyou/)
+
+### js-minecraft
+
+DOMだけでMinecraftを再現したかった...
+
+JavaScript PC Only
+
+[サイトへ移動](/bio/js-minecraft/)
