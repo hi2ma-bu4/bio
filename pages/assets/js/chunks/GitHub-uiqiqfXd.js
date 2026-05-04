@@ -1,4 +1,4 @@
-import { c as createAstro, a as createComponent, m as maybeRenderHead, s as spreadAttributes, h as renderTemplate } from './vendor-DPKMOOaA.js';
+import { c as createAstro, a as createComponent, m as maybeRenderHead, s as spreadAttributes, h as renderTemplate } from './vendor-i1xxQsk3.js';
 import 'clsx';
 
 const $$Astro = createAstro("https://hi2ma-bu4.github.io/");
