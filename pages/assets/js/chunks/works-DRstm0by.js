@@ -1,6 +1,6 @@
 import { c as createAstro, a as createComponent, m as maybeRenderHead, f as addAttribute, r as renderComponent, ew as $$Picture, h as renderTemplate, j as $$ArrowTopRightOnSquare, ex as $$XMark, b as renderScript, ey as defineScriptVars } from './vendor-qhX5JPlG.js';
 import 'piccolore';
-import { a as $$GitHub, $ as $$Layout } from './Layout-B48jrBp2.js';
+import { a as $$GitHub, $ as $$Layout } from './Layout-s2OzfXoe.js';
 import { C as CLASS_AUTO_IMG_ALT, B as BASE_DIR } from './Header-C1g5yFl3.js';
 
 function isImageMetadata(v) {
