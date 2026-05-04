@@ -46,22 +46,6 @@ MidiをWebでYouTubeで見るような形式で再生できます。
 
 2048ゲームの最適解計算ツールです。
 
-### [ReTrans](/bio/works/#work-card-ReTrans)
-
-再翻訳ブームに乗ったページです。
-
-### [Mandelbrot Set](/bio/works/#work-card-mandelbrot)
-
-マンデルブロ集合の表示ページです。
-
-### [Ryo is You](/bio/works/#work-card-js-ryoisyou)
-
-Baba is Youのパクリです。
-
-### [js-minecraft](/bio/works/#work-card-js-minecraft)
-
-DOMだけでMinecraftを再現したかった...
-
 [すべての制作物を見る](/bio/works/)
 
 ---

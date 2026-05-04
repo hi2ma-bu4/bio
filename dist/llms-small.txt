@@ -18,14 +18,6 @@ URL: https://hi2ma-bu4.github.io/bio/
 
 ### [Tool 2048](/bio/works/#work-card-tool-2048)
 
-### [ReTrans](/bio/works/#work-card-ReTrans)
-
-### [Mandelbrot Set](/bio/works/#work-card-mandelbrot)
-
-### [Ryo is You](/bio/works/#work-card-js-ryoisyou)
-
-### [js-minecraft](/bio/works/#work-card-js-minecraft)
-
 ---
 
 # Link
