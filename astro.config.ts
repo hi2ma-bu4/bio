@@ -240,7 +240,16 @@ export default defineConfig({
 					},
 					assetFileNames(chunkInfo: PreRenderedAsset): string {
 						const { ext, name } = path.parse(chunkInfo.names[0]);
-						if (ext == ".css") return `assets/css/${name}-[hash][extname]`;
+						switch (ext) {
+							case ".css":
+								return `assets/css/${name}-[hash][extname]`;
+							case ".png":
+							case ".jpg":
+							case ".jpeg":
+							case ".webp":
+							case ".svg":
+								return `assets/imgs/${name}-[hash][extname]`;
+						}
 						return `assets/${name}-[hash][extname]`;
 					},
 					manualChunks(id) {

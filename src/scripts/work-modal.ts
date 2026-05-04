@@ -1,7 +1,7 @@
 // 作品モーダルの制御（共通ユーティリティを使用）
 import { OverlayScrollbars } from "overlayscrollbars";
 
-import type { WorkItemData } from "../types/work-item";
+import { isImageMetadata, type WorkItemData } from "../types/work-item";
 import { addEscapeListener, createFocusTrap, lockBodyScroll, unlockBodyScroll } from "./libs/ui-utils";
 
 function initWorkModal() {
@@ -48,7 +48,13 @@ function initWorkModal() {
 
 				const imageEl = content.querySelector<HTMLImageElement>('[data-template-id="image"]') as HTMLImageElement | null;
 				if (imageEl) {
-					const absoluteImageUrl = new URL(workData.imageUrl, window.location.origin).href;
+					let src: string = "";
+					if (isImageMetadata(workData.imageUrl)) {
+						src = workData.imageUrl.src;
+					} else {
+						src = workData.imageUrl ?? "";
+					}
+					const absoluteImageUrl = new URL(src, window.location.origin).href;
 					imageEl.src = absoluteImageUrl;
 					imageEl.alt = workData.title;
 				}
@@ -56,11 +62,11 @@ function initWorkModal() {
 				const longDescriptionEl = content.querySelector<HTMLParagraphElement>('[data-template-id="long-description"]');
 				if (longDescriptionEl) longDescriptionEl.innerText = workData.longDescription;
 
-				const othUrlsEl = content.querySelector<HTMLParagraphElement>('[data-template-id="oth-urls"]');
-				if (othUrlsEl) {
-					othUrlsEl.innerHTML = "";
-					if (workData.othUrls) {
-						workData.othUrls.forEach((link: string) => {
+				const otherUrlsEl = content.querySelector<HTMLParagraphElement>('[data-template-id="other-urls"]');
+				if (otherUrlsEl) {
+					otherUrlsEl.innerHTML = "";
+					if (workData.otherUrls) {
+						workData.otherUrls.forEach((link: string) => {
 							const urlLi = document.createElement("li");
 							urlLi.className = "mb-2 list-none";
 							const urlAnchor = document.createElement("a");
@@ -70,7 +76,7 @@ function initWorkModal() {
 							urlAnchor.href = link;
 							urlAnchor.textContent = urlAnchor.href;
 							urlLi.appendChild(urlAnchor);
-							othUrlsEl.appendChild(urlLi);
+							otherUrlsEl.appendChild(urlLi);
 						});
 					}
 				}

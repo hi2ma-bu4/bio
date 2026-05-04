@@ -1,11 +1,15 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import WorkCard, { type Props as Work } from "../components/WorkCard.astro";
+import WorkCard from "../components/WorkCard.astro";
 import WorkModal from "../components/WorkModal.astro";
 import { BASE_DIR } from "../config";
 import type { WorkItemData } from "../types/work-item";
 
-export type worksDataType = WorkItemData & Work;
+import imageKanjiSearch from "../imgs/kanjiSearch.png";
+import imageMidiFallingBar from "../imgs/midiFallingBar.png";
+import imageTool2048 from "../imgs/tool2048.png";
+
+export type worksDataType = WorkItemData;
 
 // 作品データ
 const worksData: worksDataType[] = [
@@ -23,7 +27,7 @@ const worksData: worksDataType[] = [
 		id: "KanjiSearch",
 		title: "漢字手書き検索ツール",
 		description: "オフラインで漢字を手書き検索できるツールです。",
-		imageUrl: "",
+		imageUrl: imageKanjiSearch,
 		directLink: `${BASE_DIR}KanjiSearch/`,
 		githubLink: "https://github.com/hi2ma-bu4/KanjiSearch",
 		tags: ["JavaScript", "TypeScript", "WebAssembly", "Python", "ONNX-Runtime"],
@@ -36,7 +40,7 @@ const worksData: worksDataType[] = [
 		id: "MIDI-FallingBar",
 		title: "MIDI FallingBar",
 		description: "MidiをWebでYouTubeで見るような形式で再生できます。",
-		imageUrl: "",
+		imageUrl: imageMidiFallingBar,
 		tags: ["JavaScript", "TypeScript", "GLSL", "Three.js", "Tone.js"],
 		directLink: `${BASE_DIR}MIDI-FallingBar/`,
 		githubLink: "https://github.com/hi2ma-bu4/MIDI-FallingBar",
@@ -48,7 +52,7 @@ WebGLレンダリングにはThree.jsを、MIDIファイルのパースには@to
 		id: "tool-2048",
 		title: "Tool 2048",
 		description: "2048ゲームの最適解計算ツールです。",
-		imageUrl: "",
+		imageUrl: imageTool2048,
 		directLink: `${BASE_DIR}tool-2048/`,
 		githubLink: "https://github.com/hi2ma-bu4/tool-2048",
 		tags: ["JavaScript", "TypeScript", "WebAssembly"],
@@ -67,7 +71,7 @@ WebGLレンダリングにはThree.jsを、MIDIファイルのパースには@to
 		longDescription: `巷で噂の「再翻訳」で遊べるページです。
 
 以下のURLで、カスタム再翻訳が試す事ができます。`,
-		othUrls: [`${BASE_DIR}ReTrans/?ja&en&gd&az&lo&ur&yo&ko&ar&is&gd&lb&ur&yi&vi&be&de&rw&sl&ny&zh-CN&ja`],
+		otherUrls: [`${BASE_DIR}ReTrans/?ja&en&gd&az&lo&ur&yo&ko&ar&is&gd&lb&ur&yi&vi&be&de&rw&sl&ny&zh-CN&ja`],
 	},
 	{
 		id: "mandelbrot",

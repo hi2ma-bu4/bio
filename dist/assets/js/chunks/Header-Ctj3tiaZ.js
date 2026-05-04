@@ -1,4 +1,4 @@
-import { a as createComponent, m as maybeRenderHead, h as renderTemplate, eu as defineScriptVars, f as addAttribute, c as createAstro, s as spreadAttributes, ex as createTransitionScope, r as renderComponent, eA as $$Sun, eB as $$Moon } from './vendor-DPKMOOaA.js';
+import { a as createComponent, m as maybeRenderHead, h as renderTemplate, ev as defineScriptVars, f as addAttribute, c as createAstro, s as spreadAttributes, ey as createTransitionScope, r as renderComponent, eB as $$Sun, eC as $$Moon } from './vendor-i1xxQsk3.js';
 import 'piccolore';
 import 'clsx';
 
