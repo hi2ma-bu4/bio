@@ -14,6 +14,56 @@ URL: https://hi2ma-bu4.github.io/bio/
 
 主に JavaScript/TypeScript を利用しています。
 
+## Skills
+
+TypeScript
+
+JavaScript
+
+Java
+
+C#
+
+Python
+
+Rust
+
+## Featured Works
+
+### [RepoShowcase](/bio/works/#work-card-RepoShowcase)
+
+作成した個人利用用途のライブラリ一覧。
+
+### [漢字手書き検索ツール](/bio/works/#work-card-KanjiSearch)
+
+オフラインで漢字を手書き検索できるツールです。
+
+### [MIDI FallingBar](/bio/works/#work-card-MIDI-FallingBar)
+
+MidiをWebでYouTubeで見るような形式で再生できます。
+
+### [Tool 2048](/bio/works/#work-card-tool-2048)
+
+2048ゲームの最適解計算ツールです。
+
+### [ReTrans](/bio/works/#work-card-ReTrans)
+
+再翻訳ブームに乗ったページです。
+
+### [Mandelbrot Set](/bio/works/#work-card-mandelbrot)
+
+マンデルブロ集合の表示ページです。
+
+### [Ryo is You](/bio/works/#work-card-js-ryoisyou)
+
+Baba is Youのパクリです。
+
+### [js-minecraft](/bio/works/#work-card-js-minecraft)
+
+DOMだけでMinecraftを再現したかった...
+
+[すべての制作物を見る](/bio/works/)
+
 ---
 
 # Link

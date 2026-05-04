@@ -1,0 +1,33 @@
+---
+import type { AstroInstance } from "astro";
+import type { AstroComponentFactory } from "astro/runtime/server/index.js";
+
+export interface Props {
+	iconName: string; // アイコン名（例: "Link", "Squares2X2"など）
+	[key: string]: any; // その他のプロパティ
+}
+
+const { iconName, ...rest } = Astro.props;
+
+let Icon: AstroComponentFactory | null = null;
+
+for (const [fileName, file] of Object.entries(import.meta.glob("./icon/*.astro", { eager: true }))) {
+	const name = fileName.split("/").pop()?.replace(".astro", "");
+	if (name === iconName) {
+		Icon = (file as AstroInstance).default;
+		break;
+	}
+}
+if (!Icon) {
+	for (const [fileName, file] of Object.entries(import.meta.glob("../../node_modules/astro-heroicons/solid/*.astro", { eager: true }))) {
+		const name = fileName.split("/").pop()?.replace(".astro", "");
+		if (name === iconName) {
+			Icon = (file as AstroInstance).default;
+			break;
+		}
+	}
+	console.warn(`HeroiconsのSolidアイコン[${iconName}]は見つかりません。`);
+}
+---
+
+{Icon && <Icon {...rest} />}

@@ -1,8 +1,24 @@
 ---
+import ArrowRightIcon from "astro-heroicons/solid/ArrowRight.astro";
 import LinkIcon from "astro-heroicons/solid/Link.astro";
 import Squares2X2Icon from "astro-heroicons/solid/Squares2X2.astro";
+
+import GlobIcon from "../components/GlobIcon.astro";
 import { BASE_DIR } from "../config";
 import Layout from "../layouts/Layout.astro";
+import { worksData } from "./works.astro";
+
+const workUrl = `${BASE_DIR}works/`;
+
+const languages = [
+	//
+	{ name: "TypeScript", icon: "TypeScript" },
+	{ name: "JavaScript", icon: "JavaScript" },
+	{ name: "Java", icon: "Java" },
+	{ name: "C#", icon: "CSharp" },
+	{ name: "Python", icon: "Python" },
+	{ name: "Rust", icon: "Rust" },
+] as const;
 ---
 
 <Layout title="Top" description="JavaScript を中心に、個人開発したページ・スクリプトを掲載しています。トップページ。">
@@ -12,11 +28,11 @@ import Layout from "../layouts/Layout.astro";
 		</h1>
 		<p class="text-xl md:text-2xl text-slate-700 dark:text-slate-300 mb-12 max-w-2xl mx-auto">何時でも何処でもそれとない機能と共に</p>
 		<div class="flex justify-center gap-4 flex-wrap">
-			<a href={`${BASE_DIR}works/`} class="inline-flex items-center gap-2 px-6 py-3 rounded-lg text-lg font-medium whitespace-nowrap bg-primary-600 text-white hover:bg-primary-700 focus-visible:ring-primary-500">
+			<a href={workUrl} class="inline-flex items-center gap-2 px-6 py-3 rounded-lg text-lg font-medium whitespace-nowrap bg-primary-600 text-white hover:bg-primary-700 focus-visible:ring-primary-500 transition-colors">
 				<Squares2X2Icon class="w-5 h-5" />
 				制作実績を見る
 			</a>
-			<a href={`${BASE_DIR}link/`} class="inline-flex items-center gap-2 px-6 py-3 rounded-lg text-lg font-medium whitespace-nowrap bg-slate-200 text-slate-800 hover:bg-slate-300 dark:bg-slate-700 dark:text-slate-200 dark:hover:bg-slate-600 focus-visible:ring-primary-500">
+			<a href={`${BASE_DIR}link/`} class="inline-flex items-center gap-2 px-6 py-3 rounded-lg text-lg font-medium whitespace-nowrap bg-slate-200 text-slate-800 hover:bg-slate-300 dark:bg-slate-700 dark:text-slate-200 dark:hover:bg-slate-600 focus-visible:ring-primary-500 transition-colors">
 				<LinkIcon class="w-5 h-5" />
 				外部リンク
 			</a>
@@ -28,6 +44,51 @@ import Layout from "../layouts/Layout.astro";
 		<div class="max-w-prose mx-auto text-lg text-slate-700 dark:text-slate-300 space-y-6">
 			<p>こんにちは。このサイトでは、趣味で作ったページ、ライブラリを公開しています。</p>
 			<p>主に JavaScript/TypeScript を利用しています。</p>
+		</div>
+	</section>
+
+	<section class="py-32 border-t border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 -mx-4 px-4 md:-mx-8 md:px-8">
+		<div class="max-w-4xl mx-auto text-center">
+			<h2 class="text-4xl font-bold mb-16 tracking-tight">Skills</h2>
+			<div class="flex flex-wrap justify-center gap-10 md:gap-14">
+				{
+					languages.map((lang) => (
+						<div class="group relative" title={lang.name}>
+							<div class="w-14 h-14 md:w-20 md:h-20 fill-slate-400 group-hover:fill-primary-500 group-hover:scale-110 transition-all duration-300 ease-out">
+								<GlobIcon iconName={lang.icon} />
+							</div>
+							<span class="absolute -bottom-10 left-1/2 -translate-x-1/2 text-sm font-bold opacity-0 group-hover:opacity-100 transition-all duration-300 whitespace-nowrap bg-slate-900 text-white px-3 py-1.5 rounded-lg shadow-xl translate-y-2 group-hover:translate-y-0">{lang.name}</span>
+						</div>
+					))
+				}
+			</div>
+		</div>
+	</section>
+
+	<section class="py-32 border-t border-slate-200 dark:border-slate-800">
+		<div class="max-w-3xl mx-auto">
+			<h2 class="text-4xl font-bold mb-16 text-center tracking-tight">Featured Works</h2>
+			<div class="space-y-16">
+				{
+					worksData.map((work) => (
+						<div class="group relative pl-10 before:absolute before:left-0 before:top-0 before:bottom-0 before:w-1.5 before:bg-primary-500 before:rounded-full before:opacity-10 hover:before:opacity-100 before:transition-all duration-300">
+							<h3 class="text-2xl font-bold mb-3">
+								<a href={`${workUrl}#work-card-${work.id}`} class="hover:text-primary-600 dark:hover:text-primary-400 transition-colors inline-flex items-center gap-2">
+									{work.title}
+									<ArrowRightIcon class="w-5 h-5 opacity-0 -translate-x-3 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" />
+								</a>
+							</h3>
+							<p class="text-slate-600 dark:text-slate-400 text-lg leading-relaxed">{work.description}</p>
+						</div>
+					))
+				}
+			</div>
+			<div class="mt-20 text-center">
+				<a href={workUrl} class="group text-primary-600 dark:text-primary-400 text-lg font-bold hover:underline inline-flex items-center gap-2 py-2 px-4 rounded-lg hover:bg-primary-50 dark:hover:bg-primary-900/20 transition-all">
+					すべての制作物を見る
+					<ArrowRightIcon class="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+				</a>
+			</div>
 		</div>
 	</section>
 

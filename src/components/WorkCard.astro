@@ -32,13 +32,13 @@ const isCardFooter = directLink || githubLink;
 		isCardFooter && (
 			<div class="p-4 md:p-6 pt-0 md:pt-0 flex flex-row gap-2">
 				{directLink && (
-					<a href={directLink} target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium bg-primary-600 text-white hover:bg-primary-700 focus-visible:ring-primary-500" onclick="event.stopPropagation()" aria-label={`${title}のサイトへ移動`}>
+					<a href={directLink} target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium bg-primary-600 text-white hover:bg-primary-700 focus-visible:ring-primary-500 transition-colors" onclick="event.stopPropagation()" aria-label={`${title}のサイトへ移動`}>
 						サイトへ移動
 						<ArrowTopRightOnSquareIcon class="w-4 h-4" />
 					</a>
 				)}
 				{githubLink && (
-					<a href={githubLink} target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium bg-gray-800 text-white hover:bg-gray-900 dark:text-gray-900 dark:bg-gray-400 dark:hover:bg-gray-300 focus-visible:ring-primary-500" onclick="event.stopPropagation()" aria-label={`${title}のGitHubへ移動`}>
+					<a href={githubLink} target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium bg-gray-800 text-white hover:bg-gray-900 dark:text-gray-900 dark:bg-gray-400 dark:hover:bg-gray-300 focus-visible:ring-primary-500 transition-colors" onclick="event.stopPropagation()" aria-label={`${title}のGitHubへ移動`}>
 						<GitHub class="w-5 h-5" />
 					</a>
 				)}

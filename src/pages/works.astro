@@ -10,10 +10,8 @@ import imageMidiFallingBar from "../imgs/midiFallingBar.png";
 import imageTool2048 from "../imgs/tool2048.png";
 import imageMandelbrot from "../imgs/mandelbrot.png";
 
-export type worksDataType = WorkItemData;
-
 // 作品データ
-const worksData: worksDataType[] = [
+export const worksData: WorkItemData[] = [
 	{
 		id: "RepoShowcase",
 		title: "RepoShowcase",
@@ -118,7 +116,7 @@ const workItemsMap = worksData.reduce(
 		acc[work.id] = work;
 		return acc;
 	},
-	{} as Record<string, worksDataType>,
+	{} as Record<string, WorkItemData>,
 );
 ---
 
