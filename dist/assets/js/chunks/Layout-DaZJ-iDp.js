@@ -1,6 +1,6 @@
-import { c as createAstro, a as createComponent, m as maybeRenderHead, f as addAttribute, ey as createTransitionScope, r as renderComponent, ez as $$Bars3, eu as $$XMark, h as renderTemplate, b as renderScript, $ as $$SEO, eA as $$ClientRouter, d as $$GoogleFontsOptimizer, e as renderHead, g as renderSlot } from './vendor-i1xxQsk3.js';
+import { c as createAstro, a as createComponent, m as maybeRenderHead, f as addAttribute, ey as createTransitionScope, r as renderComponent, ez as $$Bars3, eu as $$XMark, h as renderTemplate, b as renderScript, $ as $$SEO, eA as $$ClientRouter, d as $$GoogleFontsOptimizer, e as renderHead, g as renderSlot } from './vendor-C4FbIaAb.js';
 import 'piccolore';
-import { S as SITE_TITLE, d as $$ThemeToggle, N as NAV_LINKS, B as BASE_DIR, A as AUTHOR, a as SITE_DESCRIPTION, $ as $$GoogleAnalytics, G as GTAG_ID, b as $$Header, c as $$Footer } from './Header-Ctj3tiaZ.js';
+import { S as SITE_TITLE, d as $$ThemeToggle, N as NAV_LINKS, B as BASE_DIR, A as AUTHOR, a as SITE_DESCRIPTION, $ as $$GoogleAnalytics, G as GTAG_ID, b as $$Header, c as $$Footer } from './Header-Ci1VnVsb.js';
 /* empty css               */
 
 const pwaAssetsHead = {"links":[{"href":"/bio/favicon.ico","rel":"icon","sizes":"48x48"},{"href":"/bio/favicon.svg","rel":"icon","sizes":"any","type":"image/svg+xml"},{"href":"/bio/apple-touch-icon-180x180.png","rel":"apple-touch-icon"}],"themeColor":{"content":"#1D396F"}};

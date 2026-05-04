@@ -8,6 +8,7 @@ import type { WorkItemData } from "../types/work-item";
 import imageKanjiSearch from "../imgs/kanjiSearch.png";
 import imageMidiFallingBar from "../imgs/midiFallingBar.png";
 import imageTool2048 from "../imgs/tool2048.png";
+import imageMandelbrot from "../imgs/mandelbrot.png";
 
 export type worksDataType = WorkItemData;
 
@@ -77,7 +78,7 @@ WebGLレンダリングにはThree.jsを、MIDIファイルのパースには@to
 		id: "mandelbrot",
 		title: "Mandelbrot Set",
 		description: "マンデルブロ集合の表示ページです。",
-		imageUrl: "",
+		imageUrl: imageMandelbrot,
 		directLink: `${BASE_DIR}mandelbrot/`,
 		githubLink: "https://github.com/hi2ma-bu4/mandelbrot",
 		tags: ["JavaScript", "GLSL", "PC Only"],
