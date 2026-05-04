@@ -36,7 +36,7 @@ const $$CircleHalfStroke = createComponent(($$result, $$props, $$slots) => {
 const $$file = "C:/Users/snows/Documents/Program/js/bio/src/components/icon/CircleHalfStroke.astro";
 const $$url = undefined;
 
-const __vite_glob_0_0 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+const __vite_glob_0_1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
 	__proto__: null,
 	default: $$CircleHalfStroke,
 	file: $$file,
@@ -54,4 +54,4 @@ const $$Header = createComponent(($$result, $$props, $$slots) => {
   return renderTemplate`${maybeRenderHead()}<header id="main-header" class="w-full py-4 px-4 md:px-8 transition-transform duration-300" role="banner"${addAttribute(createTransitionScope($$result, "l7r54iwe"), "data-astro-transition-persist")}> <nav class="max-w-5xl mx-auto flex justify-between items-center"> <a${addAttribute(BASE_DIR, "href")} id="logo" class="text-2xl font-bold text-primary-600 dark:text-primary-400" data-astro-reload>${SITE_TITLE}</a> <div class="hidden md:flex items-center space-x-6"> ${NAV_LINKS.map((link) => renderTemplate`<a${addAttribute(link.href, "href")}${addAttribute(["text-lg font-medium text-slate-700 dark:text-slate-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors", { "font-bold text-primary-600 dark:text-primary-400": Astro2.url.pathname === link.href }], "class:list")}${addAttribute(Astro2.url.pathname === link.href ? "page" : false, "aria-current")}> ${link.text} </a>`)} ${renderComponent($$result, "ThemeToggle", $$ThemeToggle, {})} </div> </nav> </header>`;
 }, "C:/Users/snows/Documents/Program/js/bio/src/components/Header.astro", "self");
 
-export { $$GoogleAnalytics as $, AUTHOR as A, BASE_DIR as B, CLASS_AUTO_IMG_ALT as C, GTAG_ID as G, NAV_LINKS as N, SITE_TITLE as S, __vite_glob_0_0 as _, SITE_DESCRIPTION as a, $$Header as b, $$Footer as c, $$ThemeToggle as d };
+export { $$GoogleAnalytics as $, AUTHOR as A, BASE_DIR as B, CLASS_AUTO_IMG_ALT as C, GTAG_ID as G, NAV_LINKS as N, SITE_TITLE as S, __vite_glob_0_1 as _, SITE_DESCRIPTION as a, $$Header as b, $$Footer as c, $$ThemeToggle as d };
