@@ -20,6 +20,19 @@ const worksData: worksDataType[] = [
 		longDescription: `作成したライブラリ(ほとんど個人利用用途)の一覧とそのデモページを設置しています。`,
 	},
 	{
+		id: "KanjiSearch",
+		title: "漢字手書き検索ツール",
+		description: "オフラインで漢字を手書き検索できるツールです。",
+		imageUrl: "",
+		directLink: `${BASE_DIR}KanjiSearch/`,
+		githubLink: "https://github.com/hi2ma-bu4/KanjiSearch",
+		tags: ["JavaScript", "TypeScript", "WebAssembly", "Python", "ONNX-Runtime"],
+		longDescription: `このツールは、オフラインで漢字を手書き検索できる機能を提供します。
+(初回起動時にモデルのダウンロードが必要です)
+手書きの漢字を認識するために、ONNX形式の機械学習モデルを使用しています。
+精度がかなり悪いため、あまり実用的ではありませんが、onnxの勉強で作成しました。`,
+	},
+	{
 		id: "MIDI-FallingBar",
 		title: "MIDI FallingBar",
 		description: "MidiをWebでYouTubeで見るような形式で再生できます。",
@@ -100,7 +113,7 @@ const workItemsMap = worksData.reduce(
 		acc[work.id] = work;
 		return acc;
 	},
-	{} as Record<string, worksDataType>
+	{} as Record<string, worksDataType>,
 );
 ---
 
