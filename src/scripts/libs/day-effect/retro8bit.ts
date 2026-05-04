@@ -150,7 +150,12 @@ export function startRetro8bit(): void {
 
 			Array.from(img.attributes).forEach((attr) => canvas.setAttribute(attr.name, attr.value));
 
-			img.parentNode.replaceChild(canvas, img);
+			// picture要素内のimgの場合、親Nodeはpictureであるため、さらにその親Nodeを取得して置換する
+			if (img.parentNode.nodeName.toLowerCase() === "picture" && img.parentNode.parentNode) {
+				img.parentNode.parentNode.replaceChild(canvas, img.parentNode);
+			} else {
+				img.parentNode.replaceChild(canvas, img);
+			}
 
 			const tmpCanvas = document.createElement("canvas");
 			tmpCanvas.width = canvas.width;
