@@ -2343,579 +2343,579 @@ const __vite_glob_1_296 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineP
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const $$Astro$54 = createAstro("https://hi2ma-bu4.github.io/");
-const $$AcademicCap = createComponent(($$result, $$props, $$slots) => {
+const $$ArrowTopRightOnSquare = createComponent(($$result, $$props, $$slots) => {
   const Astro2 = $$result.createAstro($$Astro$54, $$props, $$slots);
-  Astro2.self = $$AcademicCap;
-  return renderTemplate`${maybeRenderHead()}<svg${spreadAttributes(Astro2.props)} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-slot="icon"> <path d="M11.7 2.805a.75.75 0 0 1 .6 0A60.65 60.65 0 0 1 22.83 8.72a.75.75 0 0 1-.231 1.337 49.948 49.948 0 0 0-9.902 3.912l-.003.002c-.114.06-.227.119-.34.18a.75.75 0 0 1-.707 0A50.88 50.88 0 0 0 7.5 12.173v-.224c0-.131.067-.248.172-.311a54.615 54.615 0 0 1 4.653-2.52.75.75 0 0 0-.65-1.352 56.123 56.123 0 0 0-4.78 2.589 1.858 1.858 0 0 0-.859 1.228 49.803 49.803 0 0 0-4.634-1.527.75.75 0 0 1-.231-1.337A60.653 60.653 0 0 1 11.7 2.805Z"></path> <path d="M13.06 15.473a48.45 48.45 0 0 1 7.666-3.282c.134 1.414.22 2.843.255 4.284a.75.75 0 0 1-.46.711 47.87 47.87 0 0 0-8.105 4.342.75.75 0 0 1-.832 0 47.87 47.87 0 0 0-8.104-4.342.75.75 0 0 1-.461-.71c.035-1.442.121-2.87.255-4.286.921.304 1.83.634 2.726.99v1.27a1.5 1.5 0 0 0-.14 2.508c-.09.38-.222.753-.397 1.11.452.213.901.434 1.346.66a6.727 6.727 0 0 0 .551-1.607 1.5 1.5 0 0 0 .14-2.67v-.645a48.549 48.549 0 0 1 3.44 1.667 2.25 2.25 0 0 0 2.12 0Z"></path> <path d="M4.462 19.462c.42-.419.753-.89 1-1.395.453.214.902.435 1.347.662a6.742 6.742 0 0 1-1.286 1.794.75.75 0 0 1-1.06-1.06Z"></path> </svg>`;
-}, "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/AcademicCap.astro", void 0);
+  Astro2.self = $$ArrowTopRightOnSquare;
+  return renderTemplate`${maybeRenderHead()}<svg${spreadAttributes(Astro2.props)} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-slot="icon"> <path fill-rule="evenodd" d="M15.75 2.25H21a.75.75 0 0 1 .75.75v5.25a.75.75 0 0 1-1.5 0V4.81L8.03 17.03a.75.75 0 0 1-1.06-1.06L19.19 3.75h-3.44a.75.75 0 0 1 0-1.5Zm-10.5 4.5a1.5 1.5 0 0 0-1.5 1.5v10.5a1.5 1.5 0 0 0 1.5 1.5h10.5a1.5 1.5 0 0 0 1.5-1.5V10.5a.75.75 0 0 1 1.5 0v8.25a3 3 0 0 1-3 3H5.25a3 3 0 0 1-3-3V8.25a3 3 0 0 1 3-3h8.25a.75.75 0 0 1 0 1.5H5.25Z" clip-rule="evenodd"></path> </svg>`;
+}, "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArrowTopRightOnSquare.astro", void 0);
 
-const $$file$50 = "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/AcademicCap.astro";
+const $$file$50 = "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArrowTopRightOnSquare.astro";
 const $$url$50 = undefined;
 
-const __vite_glob_1_0 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+const __vite_glob_1_33 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
-  default: $$AcademicCap,
+  default: $$ArrowTopRightOnSquare,
   file: $$file$50,
   url: $$url$50
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const $$Astro$53 = createAstro("https://hi2ma-bu4.github.io/");
-const $$AdjustmentsHorizontal = createComponent(($$result, $$props, $$slots) => {
+const $$AcademicCap = createComponent(($$result, $$props, $$slots) => {
   const Astro2 = $$result.createAstro($$Astro$53, $$props, $$slots);
-  Astro2.self = $$AdjustmentsHorizontal;
-  return renderTemplate`${maybeRenderHead()}<svg${spreadAttributes(Astro2.props)} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-slot="icon"> <path d="M18.75 12.75h1.5a.75.75 0 0 0 0-1.5h-1.5a.75.75 0 0 0 0 1.5ZM12 6a.75.75 0 0 1 .75-.75h7.5a.75.75 0 0 1 0 1.5h-7.5A.75.75 0 0 1 12 6ZM12 18a.75.75 0 0 1 .75-.75h7.5a.75.75 0 0 1 0 1.5h-7.5A.75.75 0 0 1 12 18ZM3.75 6.75h1.5a.75.75 0 1 0 0-1.5h-1.5a.75.75 0 0 0 0 1.5ZM5.25 18.75h-1.5a.75.75 0 0 1 0-1.5h1.5a.75.75 0 0 1 0 1.5ZM3 12a.75.75 0 0 1 .75-.75h7.5a.75.75 0 0 1 0 1.5h-7.5A.75.75 0 0 1 3 12ZM9 3.75a2.25 2.25 0 1 0 0 4.5 2.25 2.25 0 0 0 0-4.5ZM12.75 12a2.25 2.25 0 1 1 4.5 0 2.25 2.25 0 0 1-4.5 0ZM9 15.75a2.25 2.25 0 1 0 0 4.5 2.25 2.25 0 0 0 0-4.5Z"></path> </svg>`;
-}, "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/AdjustmentsHorizontal.astro", void 0);
+  Astro2.self = $$AcademicCap;
+  return renderTemplate`${maybeRenderHead()}<svg${spreadAttributes(Astro2.props)} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-slot="icon"> <path d="M11.7 2.805a.75.75 0 0 1 .6 0A60.65 60.65 0 0 1 22.83 8.72a.75.75 0 0 1-.231 1.337 49.948 49.948 0 0 0-9.902 3.912l-.003.002c-.114.06-.227.119-.34.18a.75.75 0 0 1-.707 0A50.88 50.88 0 0 0 7.5 12.173v-.224c0-.131.067-.248.172-.311a54.615 54.615 0 0 1 4.653-2.52.75.75 0 0 0-.65-1.352 56.123 56.123 0 0 0-4.78 2.589 1.858 1.858 0 0 0-.859 1.228 49.803 49.803 0 0 0-4.634-1.527.75.75 0 0 1-.231-1.337A60.653 60.653 0 0 1 11.7 2.805Z"></path> <path d="M13.06 15.473a48.45 48.45 0 0 1 7.666-3.282c.134 1.414.22 2.843.255 4.284a.75.75 0 0 1-.46.711 47.87 47.87 0 0 0-8.105 4.342.75.75 0 0 1-.832 0 47.87 47.87 0 0 0-8.104-4.342.75.75 0 0 1-.461-.71c.035-1.442.121-2.87.255-4.286.921.304 1.83.634 2.726.99v1.27a1.5 1.5 0 0 0-.14 2.508c-.09.38-.222.753-.397 1.11.452.213.901.434 1.346.66a6.727 6.727 0 0 0 .551-1.607 1.5 1.5 0 0 0 .14-2.67v-.645a48.549 48.549 0 0 1 3.44 1.667 2.25 2.25 0 0 0 2.12 0Z"></path> <path d="M4.462 19.462c.42-.419.753-.89 1-1.395.453.214.902.435 1.347.662a6.742 6.742 0 0 1-1.286 1.794.75.75 0 0 1-1.06-1.06Z"></path> </svg>`;
+}, "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/AcademicCap.astro", void 0);
 
-const $$file$4$ = "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/AdjustmentsHorizontal.astro";
+const $$file$4$ = "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/AcademicCap.astro";
 const $$url$4$ = undefined;
 
-const __vite_glob_1_1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+const __vite_glob_1_0 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
-  default: $$AdjustmentsHorizontal,
+  default: $$AcademicCap,
   file: $$file$4$,
   url: $$url$4$
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const $$Astro$52 = createAstro("https://hi2ma-bu4.github.io/");
-const $$AdjustmentsVertical = createComponent(($$result, $$props, $$slots) => {
+const $$AdjustmentsHorizontal = createComponent(($$result, $$props, $$slots) => {
   const Astro2 = $$result.createAstro($$Astro$52, $$props, $$slots);
-  Astro2.self = $$AdjustmentsVertical;
-  return renderTemplate`${maybeRenderHead()}<svg${spreadAttributes(Astro2.props)} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-slot="icon"> <path d="M6 12a.75.75 0 0 1-.75-.75v-7.5a.75.75 0 1 1 1.5 0v7.5A.75.75 0 0 1 6 12ZM18 12a.75.75 0 0 1-.75-.75v-7.5a.75.75 0 0 1 1.5 0v7.5A.75.75 0 0 1 18 12ZM6.75 20.25v-1.5a.75.75 0 0 0-1.5 0v1.5a.75.75 0 0 0 1.5 0ZM18.75 18.75v1.5a.75.75 0 0 1-1.5 0v-1.5a.75.75 0 0 1 1.5 0ZM12.75 5.25v-1.5a.75.75 0 0 0-1.5 0v1.5a.75.75 0 0 0 1.5 0ZM12 21a.75.75 0 0 1-.75-.75v-7.5a.75.75 0 0 1 1.5 0v7.5A.75.75 0 0 1 12 21ZM3.75 15a2.25 2.25 0 1 0 4.5 0 2.25 2.25 0 0 0-4.5 0ZM12 11.25a2.25 2.25 0 1 1 0-4.5 2.25 2.25 0 0 1 0 4.5ZM15.75 15a2.25 2.25 0 1 0 4.5 0 2.25 2.25 0 0 0-4.5 0Z"></path> </svg>`;
-}, "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/AdjustmentsVertical.astro", void 0);
+  Astro2.self = $$AdjustmentsHorizontal;
+  return renderTemplate`${maybeRenderHead()}<svg${spreadAttributes(Astro2.props)} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-slot="icon"> <path d="M18.75 12.75h1.5a.75.75 0 0 0 0-1.5h-1.5a.75.75 0 0 0 0 1.5ZM12 6a.75.75 0 0 1 .75-.75h7.5a.75.75 0 0 1 0 1.5h-7.5A.75.75 0 0 1 12 6ZM12 18a.75.75 0 0 1 .75-.75h7.5a.75.75 0 0 1 0 1.5h-7.5A.75.75 0 0 1 12 18ZM3.75 6.75h1.5a.75.75 0 1 0 0-1.5h-1.5a.75.75 0 0 0 0 1.5ZM5.25 18.75h-1.5a.75.75 0 0 1 0-1.5h1.5a.75.75 0 0 1 0 1.5ZM3 12a.75.75 0 0 1 .75-.75h7.5a.75.75 0 0 1 0 1.5h-7.5A.75.75 0 0 1 3 12ZM9 3.75a2.25 2.25 0 1 0 0 4.5 2.25 2.25 0 0 0 0-4.5ZM12.75 12a2.25 2.25 0 1 1 4.5 0 2.25 2.25 0 0 1-4.5 0ZM9 15.75a2.25 2.25 0 1 0 0 4.5 2.25 2.25 0 0 0 0-4.5Z"></path> </svg>`;
+}, "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/AdjustmentsHorizontal.astro", void 0);
 
-const $$file$4_ = "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/AdjustmentsVertical.astro";
+const $$file$4_ = "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/AdjustmentsHorizontal.astro";
 const $$url$4_ = undefined;
 
-const __vite_glob_1_2 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+const __vite_glob_1_1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
-  default: $$AdjustmentsVertical,
+  default: $$AdjustmentsHorizontal,
   file: $$file$4_,
   url: $$url$4_
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const $$Astro$51 = createAstro("https://hi2ma-bu4.github.io/");
-const $$ArchiveBox = createComponent(($$result, $$props, $$slots) => {
+const $$AdjustmentsVertical = createComponent(($$result, $$props, $$slots) => {
   const Astro2 = $$result.createAstro($$Astro$51, $$props, $$slots);
-  Astro2.self = $$ArchiveBox;
-  return renderTemplate`${maybeRenderHead()}<svg${spreadAttributes(Astro2.props)} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-slot="icon"> <path d="M3.375 3C2.339 3 1.5 3.84 1.5 4.875v.75c0 1.036.84 1.875 1.875 1.875h17.25c1.035 0 1.875-.84 1.875-1.875v-.75C22.5 3.839 21.66 3 20.625 3H3.375Z"></path> <path fill-rule="evenodd" d="m3.087 9 .54 9.176A3 3 0 0 0 6.62 21h10.757a3 3 0 0 0 2.995-2.824L20.913 9H3.087Zm6.163 3.75A.75.75 0 0 1 10 12h4a.75.75 0 0 1 0 1.5h-4a.75.75 0 0 1-.75-.75Z" clip-rule="evenodd"></path> </svg>`;
-}, "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArchiveBox.astro", void 0);
+  Astro2.self = $$AdjustmentsVertical;
+  return renderTemplate`${maybeRenderHead()}<svg${spreadAttributes(Astro2.props)} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-slot="icon"> <path d="M6 12a.75.75 0 0 1-.75-.75v-7.5a.75.75 0 1 1 1.5 0v7.5A.75.75 0 0 1 6 12ZM18 12a.75.75 0 0 1-.75-.75v-7.5a.75.75 0 0 1 1.5 0v7.5A.75.75 0 0 1 18 12ZM6.75 20.25v-1.5a.75.75 0 0 0-1.5 0v1.5a.75.75 0 0 0 1.5 0ZM18.75 18.75v1.5a.75.75 0 0 1-1.5 0v-1.5a.75.75 0 0 1 1.5 0ZM12.75 5.25v-1.5a.75.75 0 0 0-1.5 0v1.5a.75.75 0 0 0 1.5 0ZM12 21a.75.75 0 0 1-.75-.75v-7.5a.75.75 0 0 1 1.5 0v7.5A.75.75 0 0 1 12 21ZM3.75 15a2.25 2.25 0 1 0 4.5 0 2.25 2.25 0 0 0-4.5 0ZM12 11.25a2.25 2.25 0 1 1 0-4.5 2.25 2.25 0 0 1 0 4.5ZM15.75 15a2.25 2.25 0 1 0 4.5 0 2.25 2.25 0 0 0-4.5 0Z"></path> </svg>`;
+}, "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/AdjustmentsVertical.astro", void 0);
 
-const $$file$4Z = "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArchiveBox.astro";
+const $$file$4Z = "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/AdjustmentsVertical.astro";
 const $$url$4Z = undefined;
 
-const __vite_glob_1_3 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+const __vite_glob_1_2 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
-  default: $$ArchiveBox,
+  default: $$AdjustmentsVertical,
   file: $$file$4Z,
   url: $$url$4Z
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const $$Astro$50 = createAstro("https://hi2ma-bu4.github.io/");
-const $$ArchiveBoxArrowDown = createComponent(($$result, $$props, $$slots) => {
+const $$ArchiveBox = createComponent(($$result, $$props, $$slots) => {
   const Astro2 = $$result.createAstro($$Astro$50, $$props, $$slots);
-  Astro2.self = $$ArchiveBoxArrowDown;
-  return renderTemplate`${maybeRenderHead()}<svg${spreadAttributes(Astro2.props)} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-slot="icon"> <path d="M3.375 3C2.339 3 1.5 3.84 1.5 4.875v.75c0 1.036.84 1.875 1.875 1.875h17.25c1.035 0 1.875-.84 1.875-1.875v-.75C22.5 3.839 21.66 3 20.625 3H3.375Z"></path> <path fill-rule="evenodd" d="m3.087 9 .54 9.176A3 3 0 0 0 6.62 21h10.757a3 3 0 0 0 2.995-2.824L20.913 9H3.087ZM12 10.5a.75.75 0 0 1 .75.75v4.94l1.72-1.72a.75.75 0 1 1 1.06 1.06l-3 3a.75.75 0 0 1-1.06 0l-3-3a.75.75 0 1 1 1.06-1.06l1.72 1.72v-4.94a.75.75 0 0 1 .75-.75Z" clip-rule="evenodd"></path> </svg>`;
-}, "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArchiveBoxArrowDown.astro", void 0);
+  Astro2.self = $$ArchiveBox;
+  return renderTemplate`${maybeRenderHead()}<svg${spreadAttributes(Astro2.props)} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-slot="icon"> <path d="M3.375 3C2.339 3 1.5 3.84 1.5 4.875v.75c0 1.036.84 1.875 1.875 1.875h17.25c1.035 0 1.875-.84 1.875-1.875v-.75C22.5 3.839 21.66 3 20.625 3H3.375Z"></path> <path fill-rule="evenodd" d="m3.087 9 .54 9.176A3 3 0 0 0 6.62 21h10.757a3 3 0 0 0 2.995-2.824L20.913 9H3.087Zm6.163 3.75A.75.75 0 0 1 10 12h4a.75.75 0 0 1 0 1.5h-4a.75.75 0 0 1-.75-.75Z" clip-rule="evenodd"></path> </svg>`;
+}, "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArchiveBox.astro", void 0);
 
-const $$file$4Y = "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArchiveBoxArrowDown.astro";
+const $$file$4Y = "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArchiveBox.astro";
 const $$url$4Y = undefined;
 
-const __vite_glob_1_4 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+const __vite_glob_1_3 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
-  default: $$ArchiveBoxArrowDown,
+  default: $$ArchiveBox,
   file: $$file$4Y,
   url: $$url$4Y
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const $$Astro$4$ = createAstro("https://hi2ma-bu4.github.io/");
-const $$ArchiveBoxXMark = createComponent(($$result, $$props, $$slots) => {
+const $$ArchiveBoxArrowDown = createComponent(($$result, $$props, $$slots) => {
   const Astro2 = $$result.createAstro($$Astro$4$, $$props, $$slots);
-  Astro2.self = $$ArchiveBoxXMark;
-  return renderTemplate`${maybeRenderHead()}<svg${spreadAttributes(Astro2.props)} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-slot="icon"> <path d="M3.375 3C2.339 3 1.5 3.84 1.5 4.875v.75c0 1.036.84 1.875 1.875 1.875h17.25c1.035 0 1.875-.84 1.875-1.875v-.75C22.5 3.839 21.66 3 20.625 3H3.375Z"></path> <path fill-rule="evenodd" d="m3.087 9 .54 9.176A3 3 0 0 0 6.62 21h10.757a3 3 0 0 0 2.995-2.824L20.913 9H3.087Zm6.133 2.845a.75.75 0 0 1 1.06 0l1.72 1.72 1.72-1.72a.75.75 0 1 1 1.06 1.06l-1.72 1.72 1.72 1.72a.75.75 0 1 1-1.06 1.06L12 15.685l-1.72 1.72a.75.75 0 1 1-1.06-1.06l1.72-1.72-1.72-1.72a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd"></path> </svg>`;
-}, "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArchiveBoxXMark.astro", void 0);
+  Astro2.self = $$ArchiveBoxArrowDown;
+  return renderTemplate`${maybeRenderHead()}<svg${spreadAttributes(Astro2.props)} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-slot="icon"> <path d="M3.375 3C2.339 3 1.5 3.84 1.5 4.875v.75c0 1.036.84 1.875 1.875 1.875h17.25c1.035 0 1.875-.84 1.875-1.875v-.75C22.5 3.839 21.66 3 20.625 3H3.375Z"></path> <path fill-rule="evenodd" d="m3.087 9 .54 9.176A3 3 0 0 0 6.62 21h10.757a3 3 0 0 0 2.995-2.824L20.913 9H3.087ZM12 10.5a.75.75 0 0 1 .75.75v4.94l1.72-1.72a.75.75 0 1 1 1.06 1.06l-3 3a.75.75 0 0 1-1.06 0l-3-3a.75.75 0 1 1 1.06-1.06l1.72 1.72v-4.94a.75.75 0 0 1 .75-.75Z" clip-rule="evenodd"></path> </svg>`;
+}, "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArchiveBoxArrowDown.astro", void 0);
 
-const $$file$4X = "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArchiveBoxXMark.astro";
+const $$file$4X = "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArchiveBoxArrowDown.astro";
 const $$url$4X = undefined;
 
-const __vite_glob_1_5 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+const __vite_glob_1_4 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
-  default: $$ArchiveBoxXMark,
+  default: $$ArchiveBoxArrowDown,
   file: $$file$4X,
   url: $$url$4X
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const $$Astro$4_ = createAstro("https://hi2ma-bu4.github.io/");
-const $$ArrowDown = createComponent(($$result, $$props, $$slots) => {
+const $$ArchiveBoxXMark = createComponent(($$result, $$props, $$slots) => {
   const Astro2 = $$result.createAstro($$Astro$4_, $$props, $$slots);
-  Astro2.self = $$ArrowDown;
-  return renderTemplate`${maybeRenderHead()}<svg${spreadAttributes(Astro2.props)} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-slot="icon"> <path fill-rule="evenodd" d="M12 2.25a.75.75 0 0 1 .75.75v16.19l6.22-6.22a.75.75 0 1 1 1.06 1.06l-7.5 7.5a.75.75 0 0 1-1.06 0l-7.5-7.5a.75.75 0 1 1 1.06-1.06l6.22 6.22V3a.75.75 0 0 1 .75-.75Z" clip-rule="evenodd"></path> </svg>`;
-}, "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArrowDown.astro", void 0);
+  Astro2.self = $$ArchiveBoxXMark;
+  return renderTemplate`${maybeRenderHead()}<svg${spreadAttributes(Astro2.props)} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-slot="icon"> <path d="M3.375 3C2.339 3 1.5 3.84 1.5 4.875v.75c0 1.036.84 1.875 1.875 1.875h17.25c1.035 0 1.875-.84 1.875-1.875v-.75C22.5 3.839 21.66 3 20.625 3H3.375Z"></path> <path fill-rule="evenodd" d="m3.087 9 .54 9.176A3 3 0 0 0 6.62 21h10.757a3 3 0 0 0 2.995-2.824L20.913 9H3.087Zm6.133 2.845a.75.75 0 0 1 1.06 0l1.72 1.72 1.72-1.72a.75.75 0 1 1 1.06 1.06l-1.72 1.72 1.72 1.72a.75.75 0 1 1-1.06 1.06L12 15.685l-1.72 1.72a.75.75 0 1 1-1.06-1.06l1.72-1.72-1.72-1.72a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd"></path> </svg>`;
+}, "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArchiveBoxXMark.astro", void 0);
 
-const $$file$4W = "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArrowDown.astro";
+const $$file$4W = "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArchiveBoxXMark.astro";
 const $$url$4W = undefined;
 
-const __vite_glob_1_6 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+const __vite_glob_1_5 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
-  default: $$ArrowDown,
+  default: $$ArchiveBoxXMark,
   file: $$file$4W,
   url: $$url$4W
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const $$Astro$4Z = createAstro("https://hi2ma-bu4.github.io/");
-const $$ArrowDownCircle = createComponent(($$result, $$props, $$slots) => {
+const $$ArrowDown = createComponent(($$result, $$props, $$slots) => {
   const Astro2 = $$result.createAstro($$Astro$4Z, $$props, $$slots);
-  Astro2.self = $$ArrowDownCircle;
-  return renderTemplate`${maybeRenderHead()}<svg${spreadAttributes(Astro2.props)} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-slot="icon"> <path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm-.53 14.03a.75.75 0 0 0 1.06 0l3-3a.75.75 0 1 0-1.06-1.06l-1.72 1.72V8.25a.75.75 0 0 0-1.5 0v5.69l-1.72-1.72a.75.75 0 0 0-1.06 1.06l3 3Z" clip-rule="evenodd"></path> </svg>`;
-}, "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArrowDownCircle.astro", void 0);
+  Astro2.self = $$ArrowDown;
+  return renderTemplate`${maybeRenderHead()}<svg${spreadAttributes(Astro2.props)} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-slot="icon"> <path fill-rule="evenodd" d="M12 2.25a.75.75 0 0 1 .75.75v16.19l6.22-6.22a.75.75 0 1 1 1.06 1.06l-7.5 7.5a.75.75 0 0 1-1.06 0l-7.5-7.5a.75.75 0 1 1 1.06-1.06l6.22 6.22V3a.75.75 0 0 1 .75-.75Z" clip-rule="evenodd"></path> </svg>`;
+}, "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArrowDown.astro", void 0);
 
-const $$file$4V = "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArrowDownCircle.astro";
+const $$file$4V = "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArrowDown.astro";
 const $$url$4V = undefined;
 
-const __vite_glob_1_7 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+const __vite_glob_1_6 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
-  default: $$ArrowDownCircle,
+  default: $$ArrowDown,
   file: $$file$4V,
   url: $$url$4V
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const $$Astro$4Y = createAstro("https://hi2ma-bu4.github.io/");
-const $$ArrowDownLeft = createComponent(($$result, $$props, $$slots) => {
+const $$ArrowDownCircle = createComponent(($$result, $$props, $$slots) => {
   const Astro2 = $$result.createAstro($$Astro$4Y, $$props, $$slots);
-  Astro2.self = $$ArrowDownLeft;
-  return renderTemplate`${maybeRenderHead()}<svg${spreadAttributes(Astro2.props)} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-slot="icon"> <path fill-rule="evenodd" d="M20.03 3.97a.75.75 0 0 1 0 1.06L6.31 18.75h9.44a.75.75 0 0 1 0 1.5H4.5a.75.75 0 0 1-.75-.75V8.25a.75.75 0 0 1 1.5 0v9.44L18.97 3.97a.75.75 0 0 1 1.06 0Z" clip-rule="evenodd"></path> </svg>`;
-}, "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArrowDownLeft.astro", void 0);
+  Astro2.self = $$ArrowDownCircle;
+  return renderTemplate`${maybeRenderHead()}<svg${spreadAttributes(Astro2.props)} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-slot="icon"> <path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm-.53 14.03a.75.75 0 0 0 1.06 0l3-3a.75.75 0 1 0-1.06-1.06l-1.72 1.72V8.25a.75.75 0 0 0-1.5 0v5.69l-1.72-1.72a.75.75 0 0 0-1.06 1.06l3 3Z" clip-rule="evenodd"></path> </svg>`;
+}, "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArrowDownCircle.astro", void 0);
 
-const $$file$4U = "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArrowDownLeft.astro";
+const $$file$4U = "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArrowDownCircle.astro";
 const $$url$4U = undefined;
 
-const __vite_glob_1_8 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+const __vite_glob_1_7 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
-  default: $$ArrowDownLeft,
+  default: $$ArrowDownCircle,
   file: $$file$4U,
   url: $$url$4U
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const $$Astro$4X = createAstro("https://hi2ma-bu4.github.io/");
-const $$ArrowDownOnSquare = createComponent(($$result, $$props, $$slots) => {
+const $$ArrowDownLeft = createComponent(($$result, $$props, $$slots) => {
   const Astro2 = $$result.createAstro($$Astro$4X, $$props, $$slots);
-  Astro2.self = $$ArrowDownOnSquare;
-  return renderTemplate`${maybeRenderHead()}<svg${spreadAttributes(Astro2.props)} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-slot="icon"> <path d="M12 1.5a.75.75 0 0 1 .75.75V7.5h-1.5V2.25A.75.75 0 0 1 12 1.5ZM11.25 7.5v5.69l-1.72-1.72a.75.75 0 0 0-1.06 1.06l3 3a.75.75 0 0 0 1.06 0l3-3a.75.75 0 1 0-1.06-1.06l-1.72 1.72V7.5h3.75a3 3 0 0 1 3 3v9a3 3 0 0 1-3 3h-9a3 3 0 0 1-3-3v-9a3 3 0 0 1 3-3h3.75Z"></path> </svg>`;
-}, "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArrowDownOnSquare.astro", void 0);
+  Astro2.self = $$ArrowDownLeft;
+  return renderTemplate`${maybeRenderHead()}<svg${spreadAttributes(Astro2.props)} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-slot="icon"> <path fill-rule="evenodd" d="M20.03 3.97a.75.75 0 0 1 0 1.06L6.31 18.75h9.44a.75.75 0 0 1 0 1.5H4.5a.75.75 0 0 1-.75-.75V8.25a.75.75 0 0 1 1.5 0v9.44L18.97 3.97a.75.75 0 0 1 1.06 0Z" clip-rule="evenodd"></path> </svg>`;
+}, "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArrowDownLeft.astro", void 0);
 
-const $$file$4T = "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArrowDownOnSquare.astro";
+const $$file$4T = "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArrowDownLeft.astro";
 const $$url$4T = undefined;
 
-const __vite_glob_1_9 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+const __vite_glob_1_8 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
-  default: $$ArrowDownOnSquare,
+  default: $$ArrowDownLeft,
   file: $$file$4T,
   url: $$url$4T
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const $$Astro$4W = createAstro("https://hi2ma-bu4.github.io/");
-const $$ArrowDownOnSquareStack = createComponent(($$result, $$props, $$slots) => {
+const $$ArrowDownOnSquare = createComponent(($$result, $$props, $$slots) => {
   const Astro2 = $$result.createAstro($$Astro$4W, $$props, $$slots);
-  Astro2.self = $$ArrowDownOnSquareStack;
-  return renderTemplate`${maybeRenderHead()}<svg${spreadAttributes(Astro2.props)} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-slot="icon"> <path fill-rule="evenodd" d="M9.75 6.75h-3a3 3 0 0 0-3 3v7.5a3 3 0 0 0 3 3h7.5a3 3 0 0 0 3-3v-7.5a3 3 0 0 0-3-3h-3V1.5a.75.75 0 0 0-1.5 0v5.25Zm0 0h1.5v5.69l1.72-1.72a.75.75 0 1 1 1.06 1.06l-3 3a.75.75 0 0 1-1.06 0l-3-3a.75.75 0 1 1 1.06-1.06l1.72 1.72V6.75Z" clip-rule="evenodd"></path> <path d="M7.151 21.75a2.999 2.999 0 0 0 2.599 1.5h7.5a3 3 0 0 0 3-3v-7.5c0-1.11-.603-2.08-1.5-2.599v7.099a4.5 4.5 0 0 1-4.5 4.5H7.151Z"></path> </svg>`;
-}, "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArrowDownOnSquareStack.astro", void 0);
+  Astro2.self = $$ArrowDownOnSquare;
+  return renderTemplate`${maybeRenderHead()}<svg${spreadAttributes(Astro2.props)} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-slot="icon"> <path d="M12 1.5a.75.75 0 0 1 .75.75V7.5h-1.5V2.25A.75.75 0 0 1 12 1.5ZM11.25 7.5v5.69l-1.72-1.72a.75.75 0 0 0-1.06 1.06l3 3a.75.75 0 0 0 1.06 0l3-3a.75.75 0 1 0-1.06-1.06l-1.72 1.72V7.5h3.75a3 3 0 0 1 3 3v9a3 3 0 0 1-3 3h-9a3 3 0 0 1-3-3v-9a3 3 0 0 1 3-3h3.75Z"></path> </svg>`;
+}, "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArrowDownOnSquare.astro", void 0);
 
-const $$file$4S = "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArrowDownOnSquareStack.astro";
+const $$file$4S = "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArrowDownOnSquare.astro";
 const $$url$4S = undefined;
 
-const __vite_glob_1_10 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+const __vite_glob_1_9 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
-  default: $$ArrowDownOnSquareStack,
+  default: $$ArrowDownOnSquare,
   file: $$file$4S,
   url: $$url$4S
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const $$Astro$4V = createAstro("https://hi2ma-bu4.github.io/");
-const $$ArrowDownRight = createComponent(($$result, $$props, $$slots) => {
+const $$ArrowDownOnSquareStack = createComponent(($$result, $$props, $$slots) => {
   const Astro2 = $$result.createAstro($$Astro$4V, $$props, $$slots);
-  Astro2.self = $$ArrowDownRight;
-  return renderTemplate`${maybeRenderHead()}<svg${spreadAttributes(Astro2.props)} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-slot="icon"> <path fill-rule="evenodd" d="M3.97 3.97a.75.75 0 0 1 1.06 0l13.72 13.72V8.25a.75.75 0 0 1 1.5 0V19.5a.75.75 0 0 1-.75.75H8.25a.75.75 0 0 1 0-1.5h9.44L3.97 5.03a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd"></path> </svg>`;
-}, "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArrowDownRight.astro", void 0);
+  Astro2.self = $$ArrowDownOnSquareStack;
+  return renderTemplate`${maybeRenderHead()}<svg${spreadAttributes(Astro2.props)} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-slot="icon"> <path fill-rule="evenodd" d="M9.75 6.75h-3a3 3 0 0 0-3 3v7.5a3 3 0 0 0 3 3h7.5a3 3 0 0 0 3-3v-7.5a3 3 0 0 0-3-3h-3V1.5a.75.75 0 0 0-1.5 0v5.25Zm0 0h1.5v5.69l1.72-1.72a.75.75 0 1 1 1.06 1.06l-3 3a.75.75 0 0 1-1.06 0l-3-3a.75.75 0 1 1 1.06-1.06l1.72 1.72V6.75Z" clip-rule="evenodd"></path> <path d="M7.151 21.75a2.999 2.999 0 0 0 2.599 1.5h7.5a3 3 0 0 0 3-3v-7.5c0-1.11-.603-2.08-1.5-2.599v7.099a4.5 4.5 0 0 1-4.5 4.5H7.151Z"></path> </svg>`;
+}, "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArrowDownOnSquareStack.astro", void 0);
 
-const $$file$4R = "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArrowDownRight.astro";
+const $$file$4R = "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArrowDownOnSquareStack.astro";
 const $$url$4R = undefined;
 
-const __vite_glob_1_11 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+const __vite_glob_1_10 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
-  default: $$ArrowDownRight,
+  default: $$ArrowDownOnSquareStack,
   file: $$file$4R,
   url: $$url$4R
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const $$Astro$4U = createAstro("https://hi2ma-bu4.github.io/");
-const $$ArrowDownTray = createComponent(($$result, $$props, $$slots) => {
+const $$ArrowDownRight = createComponent(($$result, $$props, $$slots) => {
   const Astro2 = $$result.createAstro($$Astro$4U, $$props, $$slots);
-  Astro2.self = $$ArrowDownTray;
-  return renderTemplate`${maybeRenderHead()}<svg${spreadAttributes(Astro2.props)} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-slot="icon"> <path fill-rule="evenodd" d="M12 2.25a.75.75 0 0 1 .75.75v11.69l3.22-3.22a.75.75 0 1 1 1.06 1.06l-4.5 4.5a.75.75 0 0 1-1.06 0l-4.5-4.5a.75.75 0 1 1 1.06-1.06l3.22 3.22V3a.75.75 0 0 1 .75-.75Zm-9 13.5a.75.75 0 0 1 .75.75v2.25a1.5 1.5 0 0 0 1.5 1.5h13.5a1.5 1.5 0 0 0 1.5-1.5V16.5a.75.75 0 0 1 1.5 0v2.25a3 3 0 0 1-3 3H5.25a3 3 0 0 1-3-3V16.5a.75.75 0 0 1 .75-.75Z" clip-rule="evenodd"></path> </svg>`;
-}, "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArrowDownTray.astro", void 0);
+  Astro2.self = $$ArrowDownRight;
+  return renderTemplate`${maybeRenderHead()}<svg${spreadAttributes(Astro2.props)} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-slot="icon"> <path fill-rule="evenodd" d="M3.97 3.97a.75.75 0 0 1 1.06 0l13.72 13.72V8.25a.75.75 0 0 1 1.5 0V19.5a.75.75 0 0 1-.75.75H8.25a.75.75 0 0 1 0-1.5h9.44L3.97 5.03a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd"></path> </svg>`;
+}, "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArrowDownRight.astro", void 0);
 
-const $$file$4Q = "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArrowDownTray.astro";
+const $$file$4Q = "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArrowDownRight.astro";
 const $$url$4Q = undefined;
 
-const __vite_glob_1_12 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+const __vite_glob_1_11 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
-  default: $$ArrowDownTray,
+  default: $$ArrowDownRight,
   file: $$file$4Q,
   url: $$url$4Q
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const $$Astro$4T = createAstro("https://hi2ma-bu4.github.io/");
-const $$ArrowLeft = createComponent(($$result, $$props, $$slots) => {
+const $$ArrowDownTray = createComponent(($$result, $$props, $$slots) => {
   const Astro2 = $$result.createAstro($$Astro$4T, $$props, $$slots);
-  Astro2.self = $$ArrowLeft;
-  return renderTemplate`${maybeRenderHead()}<svg${spreadAttributes(Astro2.props)} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-slot="icon"> <path fill-rule="evenodd" d="M11.03 3.97a.75.75 0 0 1 0 1.06l-6.22 6.22H21a.75.75 0 0 1 0 1.5H4.81l6.22 6.22a.75.75 0 1 1-1.06 1.06l-7.5-7.5a.75.75 0 0 1 0-1.06l7.5-7.5a.75.75 0 0 1 1.06 0Z" clip-rule="evenodd"></path> </svg>`;
-}, "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArrowLeft.astro", void 0);
+  Astro2.self = $$ArrowDownTray;
+  return renderTemplate`${maybeRenderHead()}<svg${spreadAttributes(Astro2.props)} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-slot="icon"> <path fill-rule="evenodd" d="M12 2.25a.75.75 0 0 1 .75.75v11.69l3.22-3.22a.75.75 0 1 1 1.06 1.06l-4.5 4.5a.75.75 0 0 1-1.06 0l-4.5-4.5a.75.75 0 1 1 1.06-1.06l3.22 3.22V3a.75.75 0 0 1 .75-.75Zm-9 13.5a.75.75 0 0 1 .75.75v2.25a1.5 1.5 0 0 0 1.5 1.5h13.5a1.5 1.5 0 0 0 1.5-1.5V16.5a.75.75 0 0 1 1.5 0v2.25a3 3 0 0 1-3 3H5.25a3 3 0 0 1-3-3V16.5a.75.75 0 0 1 .75-.75Z" clip-rule="evenodd"></path> </svg>`;
+}, "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArrowDownTray.astro", void 0);
 
-const $$file$4P = "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArrowLeft.astro";
+const $$file$4P = "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArrowDownTray.astro";
 const $$url$4P = undefined;
 
-const __vite_glob_1_13 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+const __vite_glob_1_12 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
-  default: $$ArrowLeft,
+  default: $$ArrowDownTray,
   file: $$file$4P,
   url: $$url$4P
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const $$Astro$4S = createAstro("https://hi2ma-bu4.github.io/");
-const $$ArrowLeftCircle = createComponent(($$result, $$props, $$slots) => {
+const $$ArrowLeft = createComponent(($$result, $$props, $$slots) => {
   const Astro2 = $$result.createAstro($$Astro$4S, $$props, $$slots);
-  Astro2.self = $$ArrowLeftCircle;
-  return renderTemplate`${maybeRenderHead()}<svg${spreadAttributes(Astro2.props)} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-slot="icon"> <path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm-4.28 9.22a.75.75 0 0 0 0 1.06l3 3a.75.75 0 1 0 1.06-1.06l-1.72-1.72h5.69a.75.75 0 0 0 0-1.5h-5.69l1.72-1.72a.75.75 0 0 0-1.06-1.06l-3 3Z" clip-rule="evenodd"></path> </svg>`;
-}, "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArrowLeftCircle.astro", void 0);
+  Astro2.self = $$ArrowLeft;
+  return renderTemplate`${maybeRenderHead()}<svg${spreadAttributes(Astro2.props)} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-slot="icon"> <path fill-rule="evenodd" d="M11.03 3.97a.75.75 0 0 1 0 1.06l-6.22 6.22H21a.75.75 0 0 1 0 1.5H4.81l6.22 6.22a.75.75 0 1 1-1.06 1.06l-7.5-7.5a.75.75 0 0 1 0-1.06l7.5-7.5a.75.75 0 0 1 1.06 0Z" clip-rule="evenodd"></path> </svg>`;
+}, "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArrowLeft.astro", void 0);
 
-const $$file$4O = "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArrowLeftCircle.astro";
+const $$file$4O = "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArrowLeft.astro";
 const $$url$4O = undefined;
 
-const __vite_glob_1_14 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+const __vite_glob_1_13 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
-  default: $$ArrowLeftCircle,
+  default: $$ArrowLeft,
   file: $$file$4O,
   url: $$url$4O
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const $$Astro$4R = createAstro("https://hi2ma-bu4.github.io/");
-const $$ArrowLeftEndOnRectangle = createComponent(($$result, $$props, $$slots) => {
+const $$ArrowLeftCircle = createComponent(($$result, $$props, $$slots) => {
   const Astro2 = $$result.createAstro($$Astro$4R, $$props, $$slots);
-  Astro2.self = $$ArrowLeftEndOnRectangle;
-  return renderTemplate`${maybeRenderHead()}<svg${spreadAttributes(Astro2.props)} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-slot="icon"> <path fill-rule="evenodd" d="M7.5 3.75A1.5 1.5 0 0 0 6 5.25v13.5a1.5 1.5 0 0 0 1.5 1.5h6a1.5 1.5 0 0 0 1.5-1.5V15a.75.75 0 0 1 1.5 0v3.75a3 3 0 0 1-3 3h-6a3 3 0 0 1-3-3V5.25a3 3 0 0 1 3-3h6a3 3 0 0 1 3 3V9A.75.75 0 0 1 15 9V5.25a1.5 1.5 0 0 0-1.5-1.5h-6Zm5.03 4.72a.75.75 0 0 1 0 1.06l-1.72 1.72h10.94a.75.75 0 0 1 0 1.5H10.81l1.72 1.72a.75.75 0 1 1-1.06 1.06l-3-3a.75.75 0 0 1 0-1.06l3-3a.75.75 0 0 1 1.06 0Z" clip-rule="evenodd"></path> </svg>`;
-}, "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArrowLeftEndOnRectangle.astro", void 0);
+  Astro2.self = $$ArrowLeftCircle;
+  return renderTemplate`${maybeRenderHead()}<svg${spreadAttributes(Astro2.props)} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-slot="icon"> <path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm-4.28 9.22a.75.75 0 0 0 0 1.06l3 3a.75.75 0 1 0 1.06-1.06l-1.72-1.72h5.69a.75.75 0 0 0 0-1.5h-5.69l1.72-1.72a.75.75 0 0 0-1.06-1.06l-3 3Z" clip-rule="evenodd"></path> </svg>`;
+}, "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArrowLeftCircle.astro", void 0);
 
-const $$file$4N = "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArrowLeftEndOnRectangle.astro";
+const $$file$4N = "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArrowLeftCircle.astro";
 const $$url$4N = undefined;
 
-const __vite_glob_1_15 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+const __vite_glob_1_14 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
-  default: $$ArrowLeftEndOnRectangle,
+  default: $$ArrowLeftCircle,
   file: $$file$4N,
   url: $$url$4N
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const $$Astro$4Q = createAstro("https://hi2ma-bu4.github.io/");
-const $$ArrowLeftOnRectangle = createComponent(($$result, $$props, $$slots) => {
+const $$ArrowLeftEndOnRectangle = createComponent(($$result, $$props, $$slots) => {
   const Astro2 = $$result.createAstro($$Astro$4Q, $$props, $$slots);
-  Astro2.self = $$ArrowLeftOnRectangle;
+  Astro2.self = $$ArrowLeftEndOnRectangle;
   return renderTemplate`${maybeRenderHead()}<svg${spreadAttributes(Astro2.props)} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-slot="icon"> <path fill-rule="evenodd" d="M7.5 3.75A1.5 1.5 0 0 0 6 5.25v13.5a1.5 1.5 0 0 0 1.5 1.5h6a1.5 1.5 0 0 0 1.5-1.5V15a.75.75 0 0 1 1.5 0v3.75a3 3 0 0 1-3 3h-6a3 3 0 0 1-3-3V5.25a3 3 0 0 1 3-3h6a3 3 0 0 1 3 3V9A.75.75 0 0 1 15 9V5.25a1.5 1.5 0 0 0-1.5-1.5h-6Zm5.03 4.72a.75.75 0 0 1 0 1.06l-1.72 1.72h10.94a.75.75 0 0 1 0 1.5H10.81l1.72 1.72a.75.75 0 1 1-1.06 1.06l-3-3a.75.75 0 0 1 0-1.06l3-3a.75.75 0 0 1 1.06 0Z" clip-rule="evenodd"></path> </svg>`;
-}, "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArrowLeftOnRectangle.astro", void 0);
+}, "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArrowLeftEndOnRectangle.astro", void 0);
 
-const $$file$4M = "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArrowLeftOnRectangle.astro";
+const $$file$4M = "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArrowLeftEndOnRectangle.astro";
 const $$url$4M = undefined;
 
-const __vite_glob_1_16 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+const __vite_glob_1_15 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
-  default: $$ArrowLeftOnRectangle,
+  default: $$ArrowLeftEndOnRectangle,
   file: $$file$4M,
   url: $$url$4M
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const $$Astro$4P = createAstro("https://hi2ma-bu4.github.io/");
-const $$ArrowLeftStartOnRectangle = createComponent(($$result, $$props, $$slots) => {
+const $$ArrowLeftOnRectangle = createComponent(($$result, $$props, $$slots) => {
   const Astro2 = $$result.createAstro($$Astro$4P, $$props, $$slots);
-  Astro2.self = $$ArrowLeftStartOnRectangle;
-  return renderTemplate`${maybeRenderHead()}<svg${spreadAttributes(Astro2.props)} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-slot="icon"> <path fill-rule="evenodd" d="M16.5 3.75a1.5 1.5 0 0 1 1.5 1.5v13.5a1.5 1.5 0 0 1-1.5 1.5h-6a1.5 1.5 0 0 1-1.5-1.5V15a.75.75 0 0 0-1.5 0v3.75a3 3 0 0 0 3 3h6a3 3 0 0 0 3-3V5.25a3 3 0 0 0-3-3h-6a3 3 0 0 0-3 3V9A.75.75 0 1 0 9 9V5.25a1.5 1.5 0 0 1 1.5-1.5h6ZM5.78 8.47a.75.75 0 0 0-1.06 0l-3 3a.75.75 0 0 0 0 1.06l3 3a.75.75 0 0 0 1.06-1.06l-1.72-1.72H15a.75.75 0 0 0 0-1.5H4.06l1.72-1.72a.75.75 0 0 0 0-1.06Z" clip-rule="evenodd"></path> </svg>`;
-}, "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArrowLeftStartOnRectangle.astro", void 0);
+  Astro2.self = $$ArrowLeftOnRectangle;
+  return renderTemplate`${maybeRenderHead()}<svg${spreadAttributes(Astro2.props)} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-slot="icon"> <path fill-rule="evenodd" d="M7.5 3.75A1.5 1.5 0 0 0 6 5.25v13.5a1.5 1.5 0 0 0 1.5 1.5h6a1.5 1.5 0 0 0 1.5-1.5V15a.75.75 0 0 1 1.5 0v3.75a3 3 0 0 1-3 3h-6a3 3 0 0 1-3-3V5.25a3 3 0 0 1 3-3h6a3 3 0 0 1 3 3V9A.75.75 0 0 1 15 9V5.25a1.5 1.5 0 0 0-1.5-1.5h-6Zm5.03 4.72a.75.75 0 0 1 0 1.06l-1.72 1.72h10.94a.75.75 0 0 1 0 1.5H10.81l1.72 1.72a.75.75 0 1 1-1.06 1.06l-3-3a.75.75 0 0 1 0-1.06l3-3a.75.75 0 0 1 1.06 0Z" clip-rule="evenodd"></path> </svg>`;
+}, "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArrowLeftOnRectangle.astro", void 0);
 
-const $$file$4L = "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArrowLeftStartOnRectangle.astro";
+const $$file$4L = "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArrowLeftOnRectangle.astro";
 const $$url$4L = undefined;
 
-const __vite_glob_1_17 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+const __vite_glob_1_16 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
-  default: $$ArrowLeftStartOnRectangle,
+  default: $$ArrowLeftOnRectangle,
   file: $$file$4L,
   url: $$url$4L
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const $$Astro$4O = createAstro("https://hi2ma-bu4.github.io/");
-const $$ArrowLongDown = createComponent(($$result, $$props, $$slots) => {
+const $$ArrowLeftStartOnRectangle = createComponent(($$result, $$props, $$slots) => {
   const Astro2 = $$result.createAstro($$Astro$4O, $$props, $$slots);
-  Astro2.self = $$ArrowLongDown;
-  return renderTemplate`${maybeRenderHead()}<svg${spreadAttributes(Astro2.props)} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-slot="icon"> <path fill-rule="evenodd" d="M12 2.25a.75.75 0 0 1 .75.75v16.19l2.47-2.47a.75.75 0 1 1 1.06 1.06l-3.75 3.75a.75.75 0 0 1-1.06 0l-3.75-3.75a.75.75 0 1 1 1.06-1.06l2.47 2.47V3a.75.75 0 0 1 .75-.75Z" clip-rule="evenodd"></path> </svg>`;
-}, "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArrowLongDown.astro", void 0);
+  Astro2.self = $$ArrowLeftStartOnRectangle;
+  return renderTemplate`${maybeRenderHead()}<svg${spreadAttributes(Astro2.props)} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-slot="icon"> <path fill-rule="evenodd" d="M16.5 3.75a1.5 1.5 0 0 1 1.5 1.5v13.5a1.5 1.5 0 0 1-1.5 1.5h-6a1.5 1.5 0 0 1-1.5-1.5V15a.75.75 0 0 0-1.5 0v3.75a3 3 0 0 0 3 3h6a3 3 0 0 0 3-3V5.25a3 3 0 0 0-3-3h-6a3 3 0 0 0-3 3V9A.75.75 0 1 0 9 9V5.25a1.5 1.5 0 0 1 1.5-1.5h6ZM5.78 8.47a.75.75 0 0 0-1.06 0l-3 3a.75.75 0 0 0 0 1.06l3 3a.75.75 0 0 0 1.06-1.06l-1.72-1.72H15a.75.75 0 0 0 0-1.5H4.06l1.72-1.72a.75.75 0 0 0 0-1.06Z" clip-rule="evenodd"></path> </svg>`;
+}, "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArrowLeftStartOnRectangle.astro", void 0);
 
-const $$file$4K = "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArrowLongDown.astro";
+const $$file$4K = "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArrowLeftStartOnRectangle.astro";
 const $$url$4K = undefined;
 
-const __vite_glob_1_18 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+const __vite_glob_1_17 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
-  default: $$ArrowLongDown,
+  default: $$ArrowLeftStartOnRectangle,
   file: $$file$4K,
   url: $$url$4K
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const $$Astro$4N = createAstro("https://hi2ma-bu4.github.io/");
-const $$ArrowLongLeft = createComponent(($$result, $$props, $$slots) => {
+const $$ArrowLongDown = createComponent(($$result, $$props, $$slots) => {
   const Astro2 = $$result.createAstro($$Astro$4N, $$props, $$slots);
-  Astro2.self = $$ArrowLongLeft;
-  return renderTemplate`${maybeRenderHead()}<svg${spreadAttributes(Astro2.props)} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-slot="icon"> <path fill-rule="evenodd" d="M7.28 7.72a.75.75 0 0 1 0 1.06l-2.47 2.47H21a.75.75 0 0 1 0 1.5H4.81l2.47 2.47a.75.75 0 1 1-1.06 1.06l-3.75-3.75a.75.75 0 0 1 0-1.06l3.75-3.75a.75.75 0 0 1 1.06 0Z" clip-rule="evenodd"></path> </svg>`;
-}, "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArrowLongLeft.astro", void 0);
+  Astro2.self = $$ArrowLongDown;
+  return renderTemplate`${maybeRenderHead()}<svg${spreadAttributes(Astro2.props)} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-slot="icon"> <path fill-rule="evenodd" d="M12 2.25a.75.75 0 0 1 .75.75v16.19l2.47-2.47a.75.75 0 1 1 1.06 1.06l-3.75 3.75a.75.75 0 0 1-1.06 0l-3.75-3.75a.75.75 0 1 1 1.06-1.06l2.47 2.47V3a.75.75 0 0 1 .75-.75Z" clip-rule="evenodd"></path> </svg>`;
+}, "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArrowLongDown.astro", void 0);
 
-const $$file$4J = "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArrowLongLeft.astro";
+const $$file$4J = "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArrowLongDown.astro";
 const $$url$4J = undefined;
 
-const __vite_glob_1_19 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+const __vite_glob_1_18 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
-  default: $$ArrowLongLeft,
+  default: $$ArrowLongDown,
   file: $$file$4J,
   url: $$url$4J
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const $$Astro$4M = createAstro("https://hi2ma-bu4.github.io/");
-const $$ArrowLongRight = createComponent(($$result, $$props, $$slots) => {
+const $$ArrowLongLeft = createComponent(($$result, $$props, $$slots) => {
   const Astro2 = $$result.createAstro($$Astro$4M, $$props, $$slots);
-  Astro2.self = $$ArrowLongRight;
-  return renderTemplate`${maybeRenderHead()}<svg${spreadAttributes(Astro2.props)} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-slot="icon"> <path fill-rule="evenodd" d="M16.72 7.72a.75.75 0 0 1 1.06 0l3.75 3.75a.75.75 0 0 1 0 1.06l-3.75 3.75a.75.75 0 1 1-1.06-1.06l2.47-2.47H3a.75.75 0 0 1 0-1.5h16.19l-2.47-2.47a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd"></path> </svg>`;
-}, "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArrowLongRight.astro", void 0);
+  Astro2.self = $$ArrowLongLeft;
+  return renderTemplate`${maybeRenderHead()}<svg${spreadAttributes(Astro2.props)} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-slot="icon"> <path fill-rule="evenodd" d="M7.28 7.72a.75.75 0 0 1 0 1.06l-2.47 2.47H21a.75.75 0 0 1 0 1.5H4.81l2.47 2.47a.75.75 0 1 1-1.06 1.06l-3.75-3.75a.75.75 0 0 1 0-1.06l3.75-3.75a.75.75 0 0 1 1.06 0Z" clip-rule="evenodd"></path> </svg>`;
+}, "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArrowLongLeft.astro", void 0);
 
-const $$file$4I = "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArrowLongRight.astro";
+const $$file$4I = "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArrowLongLeft.astro";
 const $$url$4I = undefined;
 
-const __vite_glob_1_20 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+const __vite_glob_1_19 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
-  default: $$ArrowLongRight,
+  default: $$ArrowLongLeft,
   file: $$file$4I,
   url: $$url$4I
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const $$Astro$4L = createAstro("https://hi2ma-bu4.github.io/");
-const $$ArrowLongUp = createComponent(($$result, $$props, $$slots) => {
+const $$ArrowLongRight = createComponent(($$result, $$props, $$slots) => {
   const Astro2 = $$result.createAstro($$Astro$4L, $$props, $$slots);
-  Astro2.self = $$ArrowLongUp;
-  return renderTemplate`${maybeRenderHead()}<svg${spreadAttributes(Astro2.props)} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-slot="icon"> <path fill-rule="evenodd" d="M11.47 2.47a.75.75 0 0 1 1.06 0l3.75 3.75a.75.75 0 0 1-1.06 1.06l-2.47-2.47V21a.75.75 0 0 1-1.5 0V4.81L8.78 7.28a.75.75 0 0 1-1.06-1.06l3.75-3.75Z" clip-rule="evenodd"></path> </svg>`;
-}, "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArrowLongUp.astro", void 0);
+  Astro2.self = $$ArrowLongRight;
+  return renderTemplate`${maybeRenderHead()}<svg${spreadAttributes(Astro2.props)} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-slot="icon"> <path fill-rule="evenodd" d="M16.72 7.72a.75.75 0 0 1 1.06 0l3.75 3.75a.75.75 0 0 1 0 1.06l-3.75 3.75a.75.75 0 1 1-1.06-1.06l2.47-2.47H3a.75.75 0 0 1 0-1.5h16.19l-2.47-2.47a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd"></path> </svg>`;
+}, "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArrowLongRight.astro", void 0);
 
-const $$file$4H = "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArrowLongUp.astro";
+const $$file$4H = "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArrowLongRight.astro";
 const $$url$4H = undefined;
 
-const __vite_glob_1_21 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+const __vite_glob_1_20 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
-  default: $$ArrowLongUp,
+  default: $$ArrowLongRight,
   file: $$file$4H,
   url: $$url$4H
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const $$Astro$4K = createAstro("https://hi2ma-bu4.github.io/");
-const $$ArrowPath = createComponent(($$result, $$props, $$slots) => {
+const $$ArrowLongUp = createComponent(($$result, $$props, $$slots) => {
   const Astro2 = $$result.createAstro($$Astro$4K, $$props, $$slots);
-  Astro2.self = $$ArrowPath;
-  return renderTemplate`${maybeRenderHead()}<svg${spreadAttributes(Astro2.props)} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-slot="icon"> <path fill-rule="evenodd" d="M4.755 10.059a7.5 7.5 0 0 1 12.548-3.364l1.903 1.903h-3.183a.75.75 0 1 0 0 1.5h4.992a.75.75 0 0 0 .75-.75V4.356a.75.75 0 0 0-1.5 0v3.18l-1.9-1.9A9 9 0 0 0 3.306 9.67a.75.75 0 1 0 1.45.388Zm15.408 3.352a.75.75 0 0 0-.919.53 7.5 7.5 0 0 1-12.548 3.364l-1.902-1.903h3.183a.75.75 0 0 0 0-1.5H2.984a.75.75 0 0 0-.75.75v4.992a.75.75 0 0 0 1.5 0v-3.18l1.9 1.9a9 9 0 0 0 15.059-4.035.75.75 0 0 0-.53-.918Z" clip-rule="evenodd"></path> </svg>`;
-}, "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArrowPath.astro", void 0);
+  Astro2.self = $$ArrowLongUp;
+  return renderTemplate`${maybeRenderHead()}<svg${spreadAttributes(Astro2.props)} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-slot="icon"> <path fill-rule="evenodd" d="M11.47 2.47a.75.75 0 0 1 1.06 0l3.75 3.75a.75.75 0 0 1-1.06 1.06l-2.47-2.47V21a.75.75 0 0 1-1.5 0V4.81L8.78 7.28a.75.75 0 0 1-1.06-1.06l3.75-3.75Z" clip-rule="evenodd"></path> </svg>`;
+}, "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArrowLongUp.astro", void 0);
 
-const $$file$4G = "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArrowPath.astro";
+const $$file$4G = "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArrowLongUp.astro";
 const $$url$4G = undefined;
 
-const __vite_glob_1_22 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+const __vite_glob_1_21 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
-  default: $$ArrowPath,
+  default: $$ArrowLongUp,
   file: $$file$4G,
   url: $$url$4G
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const $$Astro$4J = createAstro("https://hi2ma-bu4.github.io/");
-const $$ArrowPathRoundedSquare = createComponent(($$result, $$props, $$slots) => {
+const $$ArrowPath = createComponent(($$result, $$props, $$slots) => {
   const Astro2 = $$result.createAstro($$Astro$4J, $$props, $$slots);
-  Astro2.self = $$ArrowPathRoundedSquare;
-  return renderTemplate`${maybeRenderHead()}<svg${spreadAttributes(Astro2.props)} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-slot="icon"> <path fill-rule="evenodd" d="M12 5.25c1.213 0 2.415.046 3.605.135a3.256 3.256 0 0 1 3.01 3.01c.044.583.077 1.17.1 1.759L17.03 8.47a.75.75 0 1 0-1.06 1.06l3 3a.75.75 0 0 0 1.06 0l3-3a.75.75 0 0 0-1.06-1.06l-1.752 1.751c-.023-.65-.06-1.296-.108-1.939a4.756 4.756 0 0 0-4.392-4.392 49.422 49.422 0 0 0-7.436 0A4.756 4.756 0 0 0 3.89 8.282c-.017.224-.033.447-.046.672a.75.75 0 1 0 1.497.092c.013-.217.028-.434.044-.651a3.256 3.256 0 0 1 3.01-3.01c1.19-.09 2.392-.135 3.605-.135Zm-6.97 6.22a.75.75 0 0 0-1.06 0l-3 3a.75.75 0 1 0 1.06 1.06l1.752-1.751c.023.65.06 1.296.108 1.939a4.756 4.756 0 0 0 4.392 4.392 49.413 49.413 0 0 0 7.436 0 4.756 4.756 0 0 0 4.392-4.392c.017-.223.032-.447.046-.672a.75.75 0 0 0-1.497-.092c-.013.217-.028.434-.044.651a3.256 3.256 0 0 1-3.01 3.01 47.953 47.953 0 0 1-7.21 0 3.256 3.256 0 0 1-3.01-3.01 47.759 47.759 0 0 1-.1-1.759L6.97 15.53a.75.75 0 0 0 1.06-1.06l-3-3Z" clip-rule="evenodd"></path> </svg>`;
-}, "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArrowPathRoundedSquare.astro", void 0);
+  Astro2.self = $$ArrowPath;
+  return renderTemplate`${maybeRenderHead()}<svg${spreadAttributes(Astro2.props)} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-slot="icon"> <path fill-rule="evenodd" d="M4.755 10.059a7.5 7.5 0 0 1 12.548-3.364l1.903 1.903h-3.183a.75.75 0 1 0 0 1.5h4.992a.75.75 0 0 0 .75-.75V4.356a.75.75 0 0 0-1.5 0v3.18l-1.9-1.9A9 9 0 0 0 3.306 9.67a.75.75 0 1 0 1.45.388Zm15.408 3.352a.75.75 0 0 0-.919.53 7.5 7.5 0 0 1-12.548 3.364l-1.902-1.903h3.183a.75.75 0 0 0 0-1.5H2.984a.75.75 0 0 0-.75.75v4.992a.75.75 0 0 0 1.5 0v-3.18l1.9 1.9a9 9 0 0 0 15.059-4.035.75.75 0 0 0-.53-.918Z" clip-rule="evenodd"></path> </svg>`;
+}, "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArrowPath.astro", void 0);
 
-const $$file$4F = "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArrowPathRoundedSquare.astro";
+const $$file$4F = "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArrowPath.astro";
 const $$url$4F = undefined;
 
-const __vite_glob_1_23 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+const __vite_glob_1_22 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
-  default: $$ArrowPathRoundedSquare,
+  default: $$ArrowPath,
   file: $$file$4F,
   url: $$url$4F
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const $$Astro$4I = createAstro("https://hi2ma-bu4.github.io/");
-const $$ArrowRight = createComponent(($$result, $$props, $$slots) => {
+const $$ArrowPathRoundedSquare = createComponent(($$result, $$props, $$slots) => {
   const Astro2 = $$result.createAstro($$Astro$4I, $$props, $$slots);
-  Astro2.self = $$ArrowRight;
-  return renderTemplate`${maybeRenderHead()}<svg${spreadAttributes(Astro2.props)} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-slot="icon"> <path fill-rule="evenodd" d="M12.97 3.97a.75.75 0 0 1 1.06 0l7.5 7.5a.75.75 0 0 1 0 1.06l-7.5 7.5a.75.75 0 1 1-1.06-1.06l6.22-6.22H3a.75.75 0 0 1 0-1.5h16.19l-6.22-6.22a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd"></path> </svg>`;
-}, "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArrowRight.astro", void 0);
+  Astro2.self = $$ArrowPathRoundedSquare;
+  return renderTemplate`${maybeRenderHead()}<svg${spreadAttributes(Astro2.props)} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-slot="icon"> <path fill-rule="evenodd" d="M12 5.25c1.213 0 2.415.046 3.605.135a3.256 3.256 0 0 1 3.01 3.01c.044.583.077 1.17.1 1.759L17.03 8.47a.75.75 0 1 0-1.06 1.06l3 3a.75.75 0 0 0 1.06 0l3-3a.75.75 0 0 0-1.06-1.06l-1.752 1.751c-.023-.65-.06-1.296-.108-1.939a4.756 4.756 0 0 0-4.392-4.392 49.422 49.422 0 0 0-7.436 0A4.756 4.756 0 0 0 3.89 8.282c-.017.224-.033.447-.046.672a.75.75 0 1 0 1.497.092c.013-.217.028-.434.044-.651a3.256 3.256 0 0 1 3.01-3.01c1.19-.09 2.392-.135 3.605-.135Zm-6.97 6.22a.75.75 0 0 0-1.06 0l-3 3a.75.75 0 1 0 1.06 1.06l1.752-1.751c.023.65.06 1.296.108 1.939a4.756 4.756 0 0 0 4.392 4.392 49.413 49.413 0 0 0 7.436 0 4.756 4.756 0 0 0 4.392-4.392c.017-.223.032-.447.046-.672a.75.75 0 0 0-1.497-.092c-.013.217-.028.434-.044.651a3.256 3.256 0 0 1-3.01 3.01 47.953 47.953 0 0 1-7.21 0 3.256 3.256 0 0 1-3.01-3.01 47.759 47.759 0 0 1-.1-1.759L6.97 15.53a.75.75 0 0 0 1.06-1.06l-3-3Z" clip-rule="evenodd"></path> </svg>`;
+}, "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArrowPathRoundedSquare.astro", void 0);
 
-const $$file$4E = "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArrowRight.astro";
+const $$file$4E = "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArrowPathRoundedSquare.astro";
 const $$url$4E = undefined;
 
-const __vite_glob_1_24 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+const __vite_glob_1_23 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
-  default: $$ArrowRight,
+  default: $$ArrowPathRoundedSquare,
   file: $$file$4E,
   url: $$url$4E
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const $$Astro$4H = createAstro("https://hi2ma-bu4.github.io/");
-const $$ArrowRightCircle = createComponent(($$result, $$props, $$slots) => {
+const $$ArrowRight = createComponent(($$result, $$props, $$slots) => {
   const Astro2 = $$result.createAstro($$Astro$4H, $$props, $$slots);
-  Astro2.self = $$ArrowRightCircle;
-  return renderTemplate`${maybeRenderHead()}<svg${spreadAttributes(Astro2.props)} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-slot="icon"> <path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm4.28 10.28a.75.75 0 0 0 0-1.06l-3-3a.75.75 0 1 0-1.06 1.06l1.72 1.72H8.25a.75.75 0 0 0 0 1.5h5.69l-1.72 1.72a.75.75 0 1 0 1.06 1.06l3-3Z" clip-rule="evenodd"></path> </svg>`;
-}, "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArrowRightCircle.astro", void 0);
+  Astro2.self = $$ArrowRight;
+  return renderTemplate`${maybeRenderHead()}<svg${spreadAttributes(Astro2.props)} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-slot="icon"> <path fill-rule="evenodd" d="M12.97 3.97a.75.75 0 0 1 1.06 0l7.5 7.5a.75.75 0 0 1 0 1.06l-7.5 7.5a.75.75 0 1 1-1.06-1.06l6.22-6.22H3a.75.75 0 0 1 0-1.5h16.19l-6.22-6.22a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd"></path> </svg>`;
+}, "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArrowRight.astro", void 0);
 
-const $$file$4D = "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArrowRightCircle.astro";
+const $$file$4D = "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArrowRight.astro";
 const $$url$4D = undefined;
 
-const __vite_glob_1_25 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+const __vite_glob_1_24 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
-  default: $$ArrowRightCircle,
+  default: $$ArrowRight,
   file: $$file$4D,
   url: $$url$4D
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const $$Astro$4G = createAstro("https://hi2ma-bu4.github.io/");
-const $$ArrowRightEndOnRectangle = createComponent(($$result, $$props, $$slots) => {
+const $$ArrowRightCircle = createComponent(($$result, $$props, $$slots) => {
   const Astro2 = $$result.createAstro($$Astro$4G, $$props, $$slots);
-  Astro2.self = $$ArrowRightEndOnRectangle;
-  return renderTemplate`${maybeRenderHead()}<svg${spreadAttributes(Astro2.props)} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-slot="icon"> <path fill-rule="evenodd" d="M16.5 3.75a1.5 1.5 0 0 1 1.5 1.5v13.5a1.5 1.5 0 0 1-1.5 1.5h-6a1.5 1.5 0 0 1-1.5-1.5V15a.75.75 0 0 0-1.5 0v3.75a3 3 0 0 0 3 3h6a3 3 0 0 0 3-3V5.25a3 3 0 0 0-3-3h-6a3 3 0 0 0-3 3V9A.75.75 0 1 0 9 9V5.25a1.5 1.5 0 0 1 1.5-1.5h6Zm-5.03 4.72a.75.75 0 0 0 0 1.06l1.72 1.72H2.25a.75.75 0 0 0 0 1.5h10.94l-1.72 1.72a.75.75 0 1 0 1.06 1.06l3-3a.75.75 0 0 0 0-1.06l-3-3a.75.75 0 0 0-1.06 0Z" clip-rule="evenodd"></path> </svg>`;
-}, "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArrowRightEndOnRectangle.astro", void 0);
+  Astro2.self = $$ArrowRightCircle;
+  return renderTemplate`${maybeRenderHead()}<svg${spreadAttributes(Astro2.props)} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-slot="icon"> <path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm4.28 10.28a.75.75 0 0 0 0-1.06l-3-3a.75.75 0 1 0-1.06 1.06l1.72 1.72H8.25a.75.75 0 0 0 0 1.5h5.69l-1.72 1.72a.75.75 0 1 0 1.06 1.06l3-3Z" clip-rule="evenodd"></path> </svg>`;
+}, "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArrowRightCircle.astro", void 0);
 
-const $$file$4C = "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArrowRightEndOnRectangle.astro";
+const $$file$4C = "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArrowRightCircle.astro";
 const $$url$4C = undefined;
 
-const __vite_glob_1_26 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+const __vite_glob_1_25 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
-  default: $$ArrowRightEndOnRectangle,
+  default: $$ArrowRightCircle,
   file: $$file$4C,
   url: $$url$4C
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const $$Astro$4F = createAstro("https://hi2ma-bu4.github.io/");
-const $$ArrowRightOnRectangle = createComponent(($$result, $$props, $$slots) => {
+const $$ArrowRightEndOnRectangle = createComponent(($$result, $$props, $$slots) => {
   const Astro2 = $$result.createAstro($$Astro$4F, $$props, $$slots);
-  Astro2.self = $$ArrowRightOnRectangle;
-  return renderTemplate`${maybeRenderHead()}<svg${spreadAttributes(Astro2.props)} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-slot="icon"> <path fill-rule="evenodd" d="M7.5 3.75A1.5 1.5 0 0 0 6 5.25v13.5a1.5 1.5 0 0 0 1.5 1.5h6a1.5 1.5 0 0 0 1.5-1.5V15a.75.75 0 0 1 1.5 0v3.75a3 3 0 0 1-3 3h-6a3 3 0 0 1-3-3V5.25a3 3 0 0 1 3-3h6a3 3 0 0 1 3 3V9A.75.75 0 0 1 15 9V5.25a1.5 1.5 0 0 0-1.5-1.5h-6Zm10.72 4.72a.75.75 0 0 1 1.06 0l3 3a.75.75 0 0 1 0 1.06l-3 3a.75.75 0 1 1-1.06-1.06l1.72-1.72H9a.75.75 0 0 1 0-1.5h10.94l-1.72-1.72a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd"></path> </svg>`;
-}, "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArrowRightOnRectangle.astro", void 0);
+  Astro2.self = $$ArrowRightEndOnRectangle;
+  return renderTemplate`${maybeRenderHead()}<svg${spreadAttributes(Astro2.props)} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-slot="icon"> <path fill-rule="evenodd" d="M16.5 3.75a1.5 1.5 0 0 1 1.5 1.5v13.5a1.5 1.5 0 0 1-1.5 1.5h-6a1.5 1.5 0 0 1-1.5-1.5V15a.75.75 0 0 0-1.5 0v3.75a3 3 0 0 0 3 3h6a3 3 0 0 0 3-3V5.25a3 3 0 0 0-3-3h-6a3 3 0 0 0-3 3V9A.75.75 0 1 0 9 9V5.25a1.5 1.5 0 0 1 1.5-1.5h6Zm-5.03 4.72a.75.75 0 0 0 0 1.06l1.72 1.72H2.25a.75.75 0 0 0 0 1.5h10.94l-1.72 1.72a.75.75 0 1 0 1.06 1.06l3-3a.75.75 0 0 0 0-1.06l-3-3a.75.75 0 0 0-1.06 0Z" clip-rule="evenodd"></path> </svg>`;
+}, "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArrowRightEndOnRectangle.astro", void 0);
 
-const $$file$4B = "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArrowRightOnRectangle.astro";
+const $$file$4B = "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArrowRightEndOnRectangle.astro";
 const $$url$4B = undefined;
 
-const __vite_glob_1_27 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+const __vite_glob_1_26 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
-  default: $$ArrowRightOnRectangle,
+  default: $$ArrowRightEndOnRectangle,
   file: $$file$4B,
   url: $$url$4B
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const $$Astro$4E = createAstro("https://hi2ma-bu4.github.io/");
-const $$ArrowRightStartOnRectangle = createComponent(($$result, $$props, $$slots) => {
+const $$ArrowRightOnRectangle = createComponent(($$result, $$props, $$slots) => {
   const Astro2 = $$result.createAstro($$Astro$4E, $$props, $$slots);
-  Astro2.self = $$ArrowRightStartOnRectangle;
+  Astro2.self = $$ArrowRightOnRectangle;
   return renderTemplate`${maybeRenderHead()}<svg${spreadAttributes(Astro2.props)} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-slot="icon"> <path fill-rule="evenodd" d="M7.5 3.75A1.5 1.5 0 0 0 6 5.25v13.5a1.5 1.5 0 0 0 1.5 1.5h6a1.5 1.5 0 0 0 1.5-1.5V15a.75.75 0 0 1 1.5 0v3.75a3 3 0 0 1-3 3h-6a3 3 0 0 1-3-3V5.25a3 3 0 0 1 3-3h6a3 3 0 0 1 3 3V9A.75.75 0 0 1 15 9V5.25a1.5 1.5 0 0 0-1.5-1.5h-6Zm10.72 4.72a.75.75 0 0 1 1.06 0l3 3a.75.75 0 0 1 0 1.06l-3 3a.75.75 0 1 1-1.06-1.06l1.72-1.72H9a.75.75 0 0 1 0-1.5h10.94l-1.72-1.72a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd"></path> </svg>`;
-}, "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArrowRightStartOnRectangle.astro", void 0);
+}, "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArrowRightOnRectangle.astro", void 0);
 
-const $$file$4A = "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArrowRightStartOnRectangle.astro";
+const $$file$4A = "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArrowRightOnRectangle.astro";
 const $$url$4A = undefined;
 
-const __vite_glob_1_28 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+const __vite_glob_1_27 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
-  default: $$ArrowRightStartOnRectangle,
+  default: $$ArrowRightOnRectangle,
   file: $$file$4A,
   url: $$url$4A
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const $$Astro$4D = createAstro("https://hi2ma-bu4.github.io/");
-const $$ArrowSmallDown = createComponent(($$result, $$props, $$slots) => {
+const $$ArrowRightStartOnRectangle = createComponent(($$result, $$props, $$slots) => {
   const Astro2 = $$result.createAstro($$Astro$4D, $$props, $$slots);
-  Astro2.self = $$ArrowSmallDown;
-  return renderTemplate`${maybeRenderHead()}<svg${spreadAttributes(Astro2.props)} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-slot="icon"> <path fill-rule="evenodd" d="M12 3.75a.75.75 0 0 1 .75.75v13.19l5.47-5.47a.75.75 0 1 1 1.06 1.06l-6.75 6.75a.75.75 0 0 1-1.06 0l-6.75-6.75a.75.75 0 1 1 1.06-1.06l5.47 5.47V4.5a.75.75 0 0 1 .75-.75Z" clip-rule="evenodd"></path> </svg>`;
-}, "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArrowSmallDown.astro", void 0);
+  Astro2.self = $$ArrowRightStartOnRectangle;
+  return renderTemplate`${maybeRenderHead()}<svg${spreadAttributes(Astro2.props)} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-slot="icon"> <path fill-rule="evenodd" d="M7.5 3.75A1.5 1.5 0 0 0 6 5.25v13.5a1.5 1.5 0 0 0 1.5 1.5h6a1.5 1.5 0 0 0 1.5-1.5V15a.75.75 0 0 1 1.5 0v3.75a3 3 0 0 1-3 3h-6a3 3 0 0 1-3-3V5.25a3 3 0 0 1 3-3h6a3 3 0 0 1 3 3V9A.75.75 0 0 1 15 9V5.25a1.5 1.5 0 0 0-1.5-1.5h-6Zm10.72 4.72a.75.75 0 0 1 1.06 0l3 3a.75.75 0 0 1 0 1.06l-3 3a.75.75 0 1 1-1.06-1.06l1.72-1.72H9a.75.75 0 0 1 0-1.5h10.94l-1.72-1.72a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd"></path> </svg>`;
+}, "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArrowRightStartOnRectangle.astro", void 0);
 
-const $$file$4z = "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArrowSmallDown.astro";
+const $$file$4z = "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArrowRightStartOnRectangle.astro";
 const $$url$4z = undefined;
 
-const __vite_glob_1_29 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+const __vite_glob_1_28 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
-  default: $$ArrowSmallDown,
+  default: $$ArrowRightStartOnRectangle,
   file: $$file$4z,
   url: $$url$4z
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const $$Astro$4C = createAstro("https://hi2ma-bu4.github.io/");
-const $$ArrowSmallLeft = createComponent(($$result, $$props, $$slots) => {
+const $$ArrowSmallDown = createComponent(($$result, $$props, $$slots) => {
   const Astro2 = $$result.createAstro($$Astro$4C, $$props, $$slots);
-  Astro2.self = $$ArrowSmallLeft;
-  return renderTemplate`${maybeRenderHead()}<svg${spreadAttributes(Astro2.props)} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-slot="icon"> <path fill-rule="evenodd" d="M20.25 12a.75.75 0 0 1-.75.75H6.31l5.47 5.47a.75.75 0 1 1-1.06 1.06l-6.75-6.75a.75.75 0 0 1 0-1.06l6.75-6.75a.75.75 0 1 1 1.06 1.06l-5.47 5.47H19.5a.75.75 0 0 1 .75.75Z" clip-rule="evenodd"></path> </svg>`;
-}, "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArrowSmallLeft.astro", void 0);
+  Astro2.self = $$ArrowSmallDown;
+  return renderTemplate`${maybeRenderHead()}<svg${spreadAttributes(Astro2.props)} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-slot="icon"> <path fill-rule="evenodd" d="M12 3.75a.75.75 0 0 1 .75.75v13.19l5.47-5.47a.75.75 0 1 1 1.06 1.06l-6.75 6.75a.75.75 0 0 1-1.06 0l-6.75-6.75a.75.75 0 1 1 1.06-1.06l5.47 5.47V4.5a.75.75 0 0 1 .75-.75Z" clip-rule="evenodd"></path> </svg>`;
+}, "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArrowSmallDown.astro", void 0);
 
-const $$file$4y = "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArrowSmallLeft.astro";
+const $$file$4y = "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArrowSmallDown.astro";
 const $$url$4y = undefined;
 
-const __vite_glob_1_30 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+const __vite_glob_1_29 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
-  default: $$ArrowSmallLeft,
+  default: $$ArrowSmallDown,
   file: $$file$4y,
   url: $$url$4y
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const $$Astro$4B = createAstro("https://hi2ma-bu4.github.io/");
-const $$ArrowSmallRight = createComponent(($$result, $$props, $$slots) => {
+const $$ArrowSmallLeft = createComponent(($$result, $$props, $$slots) => {
   const Astro2 = $$result.createAstro($$Astro$4B, $$props, $$slots);
-  Astro2.self = $$ArrowSmallRight;
-  return renderTemplate`${maybeRenderHead()}<svg${spreadAttributes(Astro2.props)} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-slot="icon"> <path fill-rule="evenodd" d="M3.75 12a.75.75 0 0 1 .75-.75h13.19l-5.47-5.47a.75.75 0 0 1 1.06-1.06l6.75 6.75a.75.75 0 0 1 0 1.06l-6.75 6.75a.75.75 0 1 1-1.06-1.06l5.47-5.47H4.5a.75.75 0 0 1-.75-.75Z" clip-rule="evenodd"></path> </svg>`;
-}, "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArrowSmallRight.astro", void 0);
+  Astro2.self = $$ArrowSmallLeft;
+  return renderTemplate`${maybeRenderHead()}<svg${spreadAttributes(Astro2.props)} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-slot="icon"> <path fill-rule="evenodd" d="M20.25 12a.75.75 0 0 1-.75.75H6.31l5.47 5.47a.75.75 0 1 1-1.06 1.06l-6.75-6.75a.75.75 0 0 1 0-1.06l6.75-6.75a.75.75 0 1 1 1.06 1.06l-5.47 5.47H19.5a.75.75 0 0 1 .75.75Z" clip-rule="evenodd"></path> </svg>`;
+}, "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArrowSmallLeft.astro", void 0);
 
-const $$file$4x = "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArrowSmallRight.astro";
+const $$file$4x = "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArrowSmallLeft.astro";
 const $$url$4x = undefined;
 
-const __vite_glob_1_31 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+const __vite_glob_1_30 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
-  default: $$ArrowSmallRight,
+  default: $$ArrowSmallLeft,
   file: $$file$4x,
   url: $$url$4x
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const $$Astro$4A = createAstro("https://hi2ma-bu4.github.io/");
-const $$ArrowSmallUp = createComponent(($$result, $$props, $$slots) => {
+const $$ArrowSmallRight = createComponent(($$result, $$props, $$slots) => {
   const Astro2 = $$result.createAstro($$Astro$4A, $$props, $$slots);
-  Astro2.self = $$ArrowSmallUp;
-  return renderTemplate`${maybeRenderHead()}<svg${spreadAttributes(Astro2.props)} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-slot="icon"> <path fill-rule="evenodd" d="M12 20.25a.75.75 0 0 1-.75-.75V6.31l-5.47 5.47a.75.75 0 0 1-1.06-1.06l6.75-6.75a.75.75 0 0 1 1.06 0l6.75 6.75a.75.75 0 1 1-1.06 1.06l-5.47-5.47V19.5a.75.75 0 0 1-.75.75Z" clip-rule="evenodd"></path> </svg>`;
-}, "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArrowSmallUp.astro", void 0);
+  Astro2.self = $$ArrowSmallRight;
+  return renderTemplate`${maybeRenderHead()}<svg${spreadAttributes(Astro2.props)} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-slot="icon"> <path fill-rule="evenodd" d="M3.75 12a.75.75 0 0 1 .75-.75h13.19l-5.47-5.47a.75.75 0 0 1 1.06-1.06l6.75 6.75a.75.75 0 0 1 0 1.06l-6.75 6.75a.75.75 0 1 1-1.06-1.06l5.47-5.47H4.5a.75.75 0 0 1-.75-.75Z" clip-rule="evenodd"></path> </svg>`;
+}, "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArrowSmallRight.astro", void 0);
 
-const $$file$4w = "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArrowSmallUp.astro";
+const $$file$4w = "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArrowSmallRight.astro";
 const $$url$4w = undefined;
 
-const __vite_glob_1_32 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+const __vite_glob_1_31 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
-  default: $$ArrowSmallUp,
+  default: $$ArrowSmallRight,
   file: $$file$4w,
   url: $$url$4w
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const $$Astro$4z = createAstro("https://hi2ma-bu4.github.io/");
-const $$ArrowTopRightOnSquare = createComponent(($$result, $$props, $$slots) => {
+const $$ArrowSmallUp = createComponent(($$result, $$props, $$slots) => {
   const Astro2 = $$result.createAstro($$Astro$4z, $$props, $$slots);
-  Astro2.self = $$ArrowTopRightOnSquare;
-  return renderTemplate`${maybeRenderHead()}<svg${spreadAttributes(Astro2.props)} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-slot="icon"> <path fill-rule="evenodd" d="M15.75 2.25H21a.75.75 0 0 1 .75.75v5.25a.75.75 0 0 1-1.5 0V4.81L8.03 17.03a.75.75 0 0 1-1.06-1.06L19.19 3.75h-3.44a.75.75 0 0 1 0-1.5Zm-10.5 4.5a1.5 1.5 0 0 0-1.5 1.5v10.5a1.5 1.5 0 0 0 1.5 1.5h10.5a1.5 1.5 0 0 0 1.5-1.5V10.5a.75.75 0 0 1 1.5 0v8.25a3 3 0 0 1-3 3H5.25a3 3 0 0 1-3-3V8.25a3 3 0 0 1 3-3h8.25a.75.75 0 0 1 0 1.5H5.25Z" clip-rule="evenodd"></path> </svg>`;
-}, "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArrowTopRightOnSquare.astro", void 0);
+  Astro2.self = $$ArrowSmallUp;
+  return renderTemplate`${maybeRenderHead()}<svg${spreadAttributes(Astro2.props)} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-slot="icon"> <path fill-rule="evenodd" d="M12 20.25a.75.75 0 0 1-.75-.75V6.31l-5.47 5.47a.75.75 0 0 1-1.06-1.06l6.75-6.75a.75.75 0 0 1 1.06 0l6.75 6.75a.75.75 0 1 1-1.06 1.06l-5.47-5.47V19.5a.75.75 0 0 1-.75.75Z" clip-rule="evenodd"></path> </svg>`;
+}, "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArrowSmallUp.astro", void 0);
 
-const $$file$4v = "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArrowTopRightOnSquare.astro";
+const $$file$4v = "C:/Users/snows/Documents/Program/js/bio/node_modules/astro-heroicons/solid/ArrowSmallUp.astro";
 const $$url$4v = undefined;
 
-const __vite_glob_1_33 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+const __vite_glob_1_32 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
-  default: $$ArrowTopRightOnSquare,
+  default: $$ArrowSmallUp,
   file: $$file$4v,
   url: $$url$4v
 }, Symbol.toStringTag, { value: 'Module' }));
@@ -9839,4 +9839,4 @@ const sharp$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   default: sharp_default
 }, Symbol.toStringTag, { value: 'Module' }));
 
-export { $$SEO as $, __vite_glob_1_308 as A, __vite_glob_1_307 as B, __vite_glob_1_306 as C, __vite_glob_1_305 as D, __vite_glob_1_304 as E, __vite_glob_1_303 as F, __vite_glob_1_302 as G, __vite_glob_1_301 as H, __vite_glob_1_300 as I, __vite_glob_1_299 as J, __vite_glob_1_298 as K, __vite_glob_1_297 as L, __vite_glob_1_296 as M, __vite_glob_1_295 as N, __vite_glob_1_294 as O, __vite_glob_1_293 as P, __vite_glob_1_292 as Q, __vite_glob_1_291 as R, __vite_glob_1_290 as S, __vite_glob_1_289 as T, __vite_glob_1_288 as U, __vite_glob_1_287 as V, __vite_glob_1_286 as W, __vite_glob_1_285 as X, __vite_glob_1_284 as Y, __vite_glob_1_283 as Z, __vite_glob_1_323 as _, createComponent as a, __vite_glob_1_219 as a$, __vite_glob_1_282 as a0, __vite_glob_1_281 as a1, __vite_glob_1_280 as a2, __vite_glob_1_279 as a3, __vite_glob_1_278 as a4, __vite_glob_1_277 as a5, __vite_glob_1_276 as a6, __vite_glob_1_275 as a7, __vite_glob_1_274 as a8, __vite_glob_1_273 as a9, __vite_glob_1_246 as aA, __vite_glob_1_245 as aB, __vite_glob_1_244 as aC, __vite_glob_1_243 as aD, __vite_glob_1_242 as aE, __vite_glob_1_241 as aF, __vite_glob_1_240 as aG, __vite_glob_1_239 as aH, __vite_glob_1_238 as aI, __vite_glob_1_237 as aJ, __vite_glob_1_236 as aK, __vite_glob_1_235 as aL, __vite_glob_1_234 as aM, __vite_glob_1_233 as aN, __vite_glob_1_232 as aO, __vite_glob_1_231 as aP, __vite_glob_1_230 as aQ, __vite_glob_1_229 as aR, __vite_glob_1_228 as aS, __vite_glob_1_227 as aT, __vite_glob_1_226 as aU, __vite_glob_1_225 as aV, __vite_glob_1_224 as aW, __vite_glob_1_223 as aX, __vite_glob_1_222 as aY, __vite_glob_1_221 as aZ, __vite_glob_1_220 as a_, __vite_glob_1_272 as aa, __vite_glob_1_271 as ab, __vite_glob_1_270 as ac, __vite_glob_1_269 as ad, __vite_glob_1_268 as ae, __vite_glob_1_267 as af, __vite_glob_1_266 as ag, __vite_glob_1_265 as ah, __vite_glob_1_264 as ai, __vite_glob_1_263 as aj, __vite_glob_1_262 as ak, __vite_glob_1_261 as al, __vite_glob_1_260 as am, __vite_glob_1_259 as an, __vite_glob_1_258 as ao, __vite_glob_1_257 as ap, __vite_glob_1_256 as aq, __vite_glob_1_255 as ar, __vite_glob_1_254 as as, __vite_glob_1_253 as at, __vite_glob_1_252 as au, __vite_glob_1_251 as av, __vite_glob_1_250 as aw, __vite_glob_1_249 as ax, __vite_glob_1_248 as ay, __vite_glob_1_247 as az, renderScript as b, __vite_glob_1_155 as b$, __vite_glob_1_218 as b0, __vite_glob_1_217 as b1, __vite_glob_1_216 as b2, __vite_glob_1_215 as b3, __vite_glob_1_214 as b4, __vite_glob_1_213 as b5, __vite_glob_1_212 as b6, __vite_glob_1_211 as b7, __vite_glob_1_210 as b8, __vite_glob_1_209 as b9, __vite_glob_1_182 as bA, __vite_glob_1_181 as bB, __vite_glob_1_180 as bC, __vite_glob_1_179 as bD, __vite_glob_1_178 as bE, __vite_glob_1_177 as bF, __vite_glob_1_176 as bG, __vite_glob_1_175 as bH, __vite_glob_1_174 as bI, __vite_glob_1_173 as bJ, __vite_glob_1_172 as bK, __vite_glob_1_171 as bL, __vite_glob_1_170 as bM, __vite_glob_1_169 as bN, __vite_glob_1_168 as bO, __vite_glob_1_167 as bP, __vite_glob_1_166 as bQ, __vite_glob_1_165 as bR, __vite_glob_1_164 as bS, __vite_glob_1_163 as bT, __vite_glob_1_162 as bU, __vite_glob_1_161 as bV, __vite_glob_1_160 as bW, __vite_glob_1_159 as bX, __vite_glob_1_158 as bY, __vite_glob_1_157 as bZ, __vite_glob_1_156 as b_, __vite_glob_1_208 as ba, __vite_glob_1_207 as bb, __vite_glob_1_206 as bc, __vite_glob_1_205 as bd, __vite_glob_1_204 as be, __vite_glob_1_203 as bf, __vite_glob_1_202 as bg, __vite_glob_1_201 as bh, __vite_glob_1_200 as bi, __vite_glob_1_199 as bj, __vite_glob_1_198 as bk, __vite_glob_1_197 as bl, __vite_glob_1_196 as bm, __vite_glob_1_195 as bn, __vite_glob_1_194 as bo, __vite_glob_1_193 as bp, __vite_glob_1_192 as bq, __vite_glob_1_191 as br, __vite_glob_1_190 as bs, __vite_glob_1_189 as bt, __vite_glob_1_188 as bu, __vite_glob_1_187 as bv, __vite_glob_1_186 as bw, __vite_glob_1_185 as bx, __vite_glob_1_184 as by, __vite_glob_1_183 as bz, createAstro as c, __vite_glob_1_91 as c$, __vite_glob_1_154 as c0, __vite_glob_1_153 as c1, __vite_glob_1_152 as c2, __vite_glob_1_151 as c3, __vite_glob_1_150 as c4, __vite_glob_1_149 as c5, __vite_glob_1_148 as c6, __vite_glob_1_147 as c7, __vite_glob_1_146 as c8, __vite_glob_1_145 as c9, __vite_glob_1_118 as cA, __vite_glob_1_117 as cB, __vite_glob_1_116 as cC, __vite_glob_1_115 as cD, __vite_glob_1_114 as cE, __vite_glob_1_113 as cF, __vite_glob_1_112 as cG, __vite_glob_1_111 as cH, __vite_glob_1_110 as cI, __vite_glob_1_109 as cJ, __vite_glob_1_108 as cK, __vite_glob_1_107 as cL, __vite_glob_1_106 as cM, __vite_glob_1_105 as cN, __vite_glob_1_104 as cO, __vite_glob_1_103 as cP, __vite_glob_1_102 as cQ, __vite_glob_1_101 as cR, __vite_glob_1_100 as cS, __vite_glob_1_99 as cT, __vite_glob_1_98 as cU, __vite_glob_1_97 as cV, __vite_glob_1_96 as cW, __vite_glob_1_95 as cX, __vite_glob_1_94 as cY, __vite_glob_1_93 as cZ, __vite_glob_1_92 as c_, __vite_glob_1_144 as ca, __vite_glob_1_143 as cb, __vite_glob_1_142 as cc, __vite_glob_1_141 as cd, __vite_glob_1_140 as ce, __vite_glob_1_139 as cf, __vite_glob_1_138 as cg, __vite_glob_1_137 as ch, __vite_glob_1_136 as ci, __vite_glob_1_135 as cj, __vite_glob_1_134 as ck, __vite_glob_1_133 as cl, __vite_glob_1_132 as cm, __vite_glob_1_131 as cn, __vite_glob_1_130 as co, __vite_glob_1_129 as cp, __vite_glob_1_128 as cq, __vite_glob_1_127 as cr, __vite_glob_1_126 as cs, __vite_glob_1_125 as ct, __vite_glob_1_124 as cu, __vite_glob_1_123 as cv, __vite_glob_1_122 as cw, __vite_glob_1_121 as cx, __vite_glob_1_120 as cy, __vite_glob_1_119 as cz, $$GoogleFontsOptimizer as d, __vite_glob_1_28 as d$, __vite_glob_1_90 as d0, __vite_glob_1_89 as d1, __vite_glob_1_88 as d2, __vite_glob_1_87 as d3, __vite_glob_1_86 as d4, __vite_glob_1_85 as d5, __vite_glob_1_84 as d6, __vite_glob_1_83 as d7, __vite_glob_1_82 as d8, __vite_glob_1_81 as d9, __vite_glob_1_55 as dA, __vite_glob_1_54 as dB, __vite_glob_1_53 as dC, __vite_glob_1_52 as dD, __vite_glob_1_51 as dE, __vite_glob_1_50 as dF, __vite_glob_1_49 as dG, __vite_glob_1_48 as dH, __vite_glob_1_47 as dI, __vite_glob_1_46 as dJ, __vite_glob_1_45 as dK, __vite_glob_1_44 as dL, __vite_glob_1_43 as dM, __vite_glob_1_42 as dN, __vite_glob_1_41 as dO, __vite_glob_1_40 as dP, __vite_glob_1_39 as dQ, __vite_glob_1_38 as dR, __vite_glob_1_37 as dS, __vite_glob_1_36 as dT, __vite_glob_1_35 as dU, __vite_glob_1_34 as dV, __vite_glob_1_33 as dW, __vite_glob_1_32 as dX, __vite_glob_1_31 as dY, __vite_glob_1_30 as dZ, __vite_glob_1_29 as d_, __vite_glob_1_80 as da, __vite_glob_1_79 as db, __vite_glob_1_78 as dc, __vite_glob_1_77 as dd, __vite_glob_1_76 as de, __vite_glob_1_75 as df, __vite_glob_1_74 as dg, __vite_glob_1_73 as dh, __vite_glob_1_72 as di, __vite_glob_1_71 as dj, __vite_glob_1_70 as dk, __vite_glob_1_69 as dl, __vite_glob_1_68 as dm, __vite_glob_1_67 as dn, __vite_glob_1_66 as dp, __vite_glob_1_65 as dq, __vite_glob_1_64 as dr, __vite_glob_1_63 as ds, __vite_glob_1_62 as dt, __vite_glob_1_61 as du, __vite_glob_1_60 as dv, __vite_glob_1_59 as dw, __vite_glob_1_58 as dx, __vite_glob_1_57 as dy, __vite_glob_1_56 as dz, renderHead as e, __vite_glob_1_27 as e0, __vite_glob_1_26 as e1, __vite_glob_1_25 as e2, __vite_glob_1_24 as e3, __vite_glob_1_23 as e4, __vite_glob_1_22 as e5, __vite_glob_1_21 as e6, __vite_glob_1_20 as e7, __vite_glob_1_19 as e8, __vite_glob_1_18 as e9, $$ClientRouter as eA, $$Sun as eB, $$Moon as eC, server_default as eD, deserializeManifest as eE, __vite_glob_1_17 as ea, __vite_glob_1_16 as eb, __vite_glob_1_15 as ec, __vite_glob_1_14 as ed, __vite_glob_1_13 as ee, __vite_glob_1_12 as ef, __vite_glob_1_11 as eg, __vite_glob_1_10 as eh, __vite_glob_1_9 as ei, __vite_glob_1_8 as ej, __vite_glob_1_7 as ek, __vite_glob_1_6 as el, __vite_glob_1_5 as em, __vite_glob_1_4 as en, __vite_glob_1_3 as eo, __vite_glob_1_2 as ep, __vite_glob_1_1 as eq, __vite_glob_1_0 as er, $$ArrowTopRightOnSquare as es, $$Picture as et, $$XMark as eu, defineScriptVars as ev, $$Link as ew, $$Squares2X2 as ex, createTransitionScope as ey, $$Bars3 as ez, addAttribute as f, renderSlot as g, renderTemplate as h, $$Home as i, __vite_glob_1_322 as j, __vite_glob_1_321 as k, __vite_glob_1_320 as l, maybeRenderHead as m, __vite_glob_1_319 as n, __vite_glob_1_318 as o, __vite_glob_1_317 as p, __vite_glob_1_316 as q, renderComponent as r, spreadAttributes as s, __vite_glob_1_315 as t, __vite_glob_1_314 as u, __vite_glob_1_313 as v, __vite_glob_1_312 as w, __vite_glob_1_311 as x, __vite_glob_1_310 as y, __vite_glob_1_309 as z };
+export { $$SEO as $, __vite_glob_1_312 as A, __vite_glob_1_311 as B, __vite_glob_1_310 as C, __vite_glob_1_309 as D, __vite_glob_1_308 as E, __vite_glob_1_307 as F, __vite_glob_1_306 as G, __vite_glob_1_305 as H, __vite_glob_1_304 as I, __vite_glob_1_303 as J, __vite_glob_1_302 as K, __vite_glob_1_301 as L, __vite_glob_1_300 as M, __vite_glob_1_299 as N, __vite_glob_1_298 as O, __vite_glob_1_297 as P, __vite_glob_1_296 as Q, __vite_glob_1_295 as R, __vite_glob_1_294 as S, __vite_glob_1_293 as T, __vite_glob_1_292 as U, __vite_glob_1_291 as V, __vite_glob_1_290 as W, __vite_glob_1_289 as X, __vite_glob_1_288 as Y, __vite_glob_1_287 as Z, __vite_glob_1_323 as _, createComponent as a, __vite_glob_1_223 as a$, __vite_glob_1_286 as a0, __vite_glob_1_285 as a1, __vite_glob_1_284 as a2, __vite_glob_1_283 as a3, __vite_glob_1_282 as a4, __vite_glob_1_281 as a5, __vite_glob_1_280 as a6, __vite_glob_1_279 as a7, __vite_glob_1_278 as a8, __vite_glob_1_277 as a9, __vite_glob_1_250 as aA, __vite_glob_1_249 as aB, __vite_glob_1_248 as aC, __vite_glob_1_247 as aD, __vite_glob_1_246 as aE, __vite_glob_1_245 as aF, __vite_glob_1_244 as aG, __vite_glob_1_243 as aH, __vite_glob_1_242 as aI, __vite_glob_1_241 as aJ, __vite_glob_1_240 as aK, __vite_glob_1_239 as aL, __vite_glob_1_238 as aM, __vite_glob_1_237 as aN, __vite_glob_1_236 as aO, __vite_glob_1_235 as aP, __vite_glob_1_234 as aQ, __vite_glob_1_233 as aR, __vite_glob_1_232 as aS, __vite_glob_1_231 as aT, __vite_glob_1_230 as aU, __vite_glob_1_229 as aV, __vite_glob_1_228 as aW, __vite_glob_1_227 as aX, __vite_glob_1_226 as aY, __vite_glob_1_225 as aZ, __vite_glob_1_224 as a_, __vite_glob_1_276 as aa, __vite_glob_1_275 as ab, __vite_glob_1_274 as ac, __vite_glob_1_273 as ad, __vite_glob_1_272 as ae, __vite_glob_1_271 as af, __vite_glob_1_270 as ag, __vite_glob_1_269 as ah, __vite_glob_1_268 as ai, __vite_glob_1_267 as aj, __vite_glob_1_266 as ak, __vite_glob_1_265 as al, __vite_glob_1_264 as am, __vite_glob_1_263 as an, __vite_glob_1_262 as ao, __vite_glob_1_261 as ap, __vite_glob_1_260 as aq, __vite_glob_1_259 as ar, __vite_glob_1_258 as as, __vite_glob_1_257 as at, __vite_glob_1_256 as au, __vite_glob_1_255 as av, __vite_glob_1_254 as aw, __vite_glob_1_253 as ax, __vite_glob_1_252 as ay, __vite_glob_1_251 as az, renderScript as b, __vite_glob_1_159 as b$, __vite_glob_1_222 as b0, __vite_glob_1_221 as b1, __vite_glob_1_220 as b2, __vite_glob_1_219 as b3, __vite_glob_1_218 as b4, __vite_glob_1_217 as b5, __vite_glob_1_216 as b6, __vite_glob_1_215 as b7, __vite_glob_1_214 as b8, __vite_glob_1_213 as b9, __vite_glob_1_186 as bA, __vite_glob_1_185 as bB, __vite_glob_1_184 as bC, __vite_glob_1_183 as bD, __vite_glob_1_182 as bE, __vite_glob_1_181 as bF, __vite_glob_1_180 as bG, __vite_glob_1_179 as bH, __vite_glob_1_178 as bI, __vite_glob_1_177 as bJ, __vite_glob_1_176 as bK, __vite_glob_1_175 as bL, __vite_glob_1_174 as bM, __vite_glob_1_173 as bN, __vite_glob_1_172 as bO, __vite_glob_1_171 as bP, __vite_glob_1_170 as bQ, __vite_glob_1_169 as bR, __vite_glob_1_168 as bS, __vite_glob_1_167 as bT, __vite_glob_1_166 as bU, __vite_glob_1_165 as bV, __vite_glob_1_164 as bW, __vite_glob_1_163 as bX, __vite_glob_1_162 as bY, __vite_glob_1_161 as bZ, __vite_glob_1_160 as b_, __vite_glob_1_212 as ba, __vite_glob_1_211 as bb, __vite_glob_1_210 as bc, __vite_glob_1_209 as bd, __vite_glob_1_208 as be, __vite_glob_1_207 as bf, __vite_glob_1_206 as bg, __vite_glob_1_205 as bh, __vite_glob_1_204 as bi, __vite_glob_1_203 as bj, __vite_glob_1_202 as bk, __vite_glob_1_201 as bl, __vite_glob_1_200 as bm, __vite_glob_1_199 as bn, __vite_glob_1_198 as bo, __vite_glob_1_197 as bp, __vite_glob_1_196 as bq, __vite_glob_1_195 as br, __vite_glob_1_194 as bs, __vite_glob_1_193 as bt, __vite_glob_1_192 as bu, __vite_glob_1_191 as bv, __vite_glob_1_190 as bw, __vite_glob_1_189 as bx, __vite_glob_1_188 as by, __vite_glob_1_187 as bz, createAstro as c, __vite_glob_1_95 as c$, __vite_glob_1_158 as c0, __vite_glob_1_157 as c1, __vite_glob_1_156 as c2, __vite_glob_1_155 as c3, __vite_glob_1_154 as c4, __vite_glob_1_153 as c5, __vite_glob_1_152 as c6, __vite_glob_1_151 as c7, __vite_glob_1_150 as c8, __vite_glob_1_149 as c9, __vite_glob_1_122 as cA, __vite_glob_1_121 as cB, __vite_glob_1_120 as cC, __vite_glob_1_119 as cD, __vite_glob_1_118 as cE, __vite_glob_1_117 as cF, __vite_glob_1_116 as cG, __vite_glob_1_115 as cH, __vite_glob_1_114 as cI, __vite_glob_1_113 as cJ, __vite_glob_1_112 as cK, __vite_glob_1_111 as cL, __vite_glob_1_110 as cM, __vite_glob_1_109 as cN, __vite_glob_1_108 as cO, __vite_glob_1_107 as cP, __vite_glob_1_106 as cQ, __vite_glob_1_105 as cR, __vite_glob_1_104 as cS, __vite_glob_1_103 as cT, __vite_glob_1_102 as cU, __vite_glob_1_101 as cV, __vite_glob_1_100 as cW, __vite_glob_1_99 as cX, __vite_glob_1_98 as cY, __vite_glob_1_97 as cZ, __vite_glob_1_96 as c_, __vite_glob_1_148 as ca, __vite_glob_1_147 as cb, __vite_glob_1_146 as cc, __vite_glob_1_145 as cd, __vite_glob_1_144 as ce, __vite_glob_1_143 as cf, __vite_glob_1_142 as cg, __vite_glob_1_141 as ch, __vite_glob_1_140 as ci, __vite_glob_1_139 as cj, __vite_glob_1_138 as ck, __vite_glob_1_137 as cl, __vite_glob_1_136 as cm, __vite_glob_1_135 as cn, __vite_glob_1_134 as co, __vite_glob_1_133 as cp, __vite_glob_1_132 as cq, __vite_glob_1_131 as cr, __vite_glob_1_130 as cs, __vite_glob_1_129 as ct, __vite_glob_1_128 as cu, __vite_glob_1_127 as cv, __vite_glob_1_126 as cw, __vite_glob_1_125 as cx, __vite_glob_1_124 as cy, __vite_glob_1_123 as cz, $$GoogleFontsOptimizer as d, __vite_glob_1_32 as d$, __vite_glob_1_94 as d0, __vite_glob_1_93 as d1, __vite_glob_1_92 as d2, __vite_glob_1_91 as d3, __vite_glob_1_90 as d4, __vite_glob_1_89 as d5, __vite_glob_1_88 as d6, __vite_glob_1_87 as d7, __vite_glob_1_86 as d8, __vite_glob_1_85 as d9, __vite_glob_1_59 as dA, __vite_glob_1_58 as dB, __vite_glob_1_57 as dC, __vite_glob_1_56 as dD, __vite_glob_1_55 as dE, __vite_glob_1_54 as dF, __vite_glob_1_53 as dG, __vite_glob_1_52 as dH, __vite_glob_1_51 as dI, __vite_glob_1_50 as dJ, __vite_glob_1_49 as dK, __vite_glob_1_48 as dL, __vite_glob_1_47 as dM, __vite_glob_1_46 as dN, __vite_glob_1_45 as dO, __vite_glob_1_44 as dP, __vite_glob_1_43 as dQ, __vite_glob_1_42 as dR, __vite_glob_1_41 as dS, __vite_glob_1_40 as dT, __vite_glob_1_39 as dU, __vite_glob_1_38 as dV, __vite_glob_1_37 as dW, __vite_glob_1_36 as dX, __vite_glob_1_35 as dY, __vite_glob_1_34 as dZ, __vite_glob_1_33 as d_, __vite_glob_1_84 as da, __vite_glob_1_83 as db, __vite_glob_1_82 as dc, __vite_glob_1_81 as dd, __vite_glob_1_80 as de, __vite_glob_1_79 as df, __vite_glob_1_78 as dg, __vite_glob_1_77 as dh, __vite_glob_1_76 as di, __vite_glob_1_75 as dj, __vite_glob_1_74 as dk, __vite_glob_1_73 as dl, __vite_glob_1_72 as dm, __vite_glob_1_71 as dn, __vite_glob_1_70 as dp, __vite_glob_1_69 as dq, __vite_glob_1_68 as dr, __vite_glob_1_67 as ds, __vite_glob_1_66 as dt, __vite_glob_1_65 as du, __vite_glob_1_64 as dv, __vite_glob_1_63 as dw, __vite_glob_1_62 as dx, __vite_glob_1_61 as dy, __vite_glob_1_60 as dz, renderHead as e, __vite_glob_1_31 as e0, __vite_glob_1_30 as e1, __vite_glob_1_29 as e2, __vite_glob_1_28 as e3, __vite_glob_1_27 as e4, __vite_glob_1_26 as e5, __vite_glob_1_25 as e6, __vite_glob_1_24 as e7, __vite_glob_1_23 as e8, __vite_glob_1_22 as e9, $$Bars3 as eA, $$ClientRouter as eB, $$Sun as eC, $$Moon as eD, server_default as eE, deserializeManifest as eF, __vite_glob_1_21 as ea, __vite_glob_1_20 as eb, __vite_glob_1_19 as ec, __vite_glob_1_18 as ed, __vite_glob_1_17 as ee, __vite_glob_1_16 as ef, __vite_glob_1_15 as eg, __vite_glob_1_14 as eh, __vite_glob_1_13 as ei, __vite_glob_1_12 as ej, __vite_glob_1_11 as ek, __vite_glob_1_10 as el, __vite_glob_1_9 as em, __vite_glob_1_8 as en, __vite_glob_1_7 as eo, __vite_glob_1_6 as ep, __vite_glob_1_5 as eq, __vite_glob_1_4 as er, __vite_glob_1_3 as es, __vite_glob_1_2 as et, __vite_glob_1_1 as eu, __vite_glob_1_0 as ev, $$Picture as ew, $$XMark as ex, defineScriptVars as ey, createTransitionScope as ez, addAttribute as f, renderSlot as g, renderTemplate as h, $$Home as i, $$ArrowTopRightOnSquare as j, $$ArrowRight as k, $$Link as l, maybeRenderHead as m, $$Squares2X2 as n, __vite_glob_1_322 as o, __vite_glob_1_321 as p, __vite_glob_1_320 as q, renderComponent as r, spreadAttributes as s, __vite_glob_1_319 as t, __vite_glob_1_318 as u, __vite_glob_1_317 as v, __vite_glob_1_316 as w, __vite_glob_1_315 as x, __vite_glob_1_314 as y, __vite_glob_1_313 as z };
