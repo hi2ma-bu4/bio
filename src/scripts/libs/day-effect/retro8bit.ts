@@ -131,8 +131,9 @@ export function startRetro8bit(): void {
 	function retroizeImage(img: HTMLImageElement): void {
 		if (img.classList.contains(EXCLUDE_CLASS)) return;
 
-		const processImage = (): void => {
+		const processImage = async (): Promise<void> => {
 			if (!img.parentNode || img.naturalWidth === 0 || img.naturalHeight === 0) return;
+			await img.decode();
 
 			const targetWidth = Math.max(1, Math.floor(img.width / DOT_SIZE));
 			const targetHeight = Math.max(1, Math.floor(img.height / DOT_SIZE));
