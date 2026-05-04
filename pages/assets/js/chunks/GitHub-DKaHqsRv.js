@@ -11,11 +11,11 @@ const $$GitHub = createComponent(($$result, $$props, $$slots) => {
 const $$file = "C:/Users/snows/Documents/Program/js/bio/src/components/icon/GitHub.astro";
 const $$url = undefined;
 
-const __vite_glob_0_1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+const __vite_glob_0_2 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
 	__proto__: null,
 	default: $$GitHub,
 	file: $$file,
 	url: $$url
 }, Symbol.toStringTag, { value: 'Module' }));
 
-export { $$GitHub as $, __vite_glob_0_1 as _ };
+export { $$GitHub as $, __vite_glob_0_2 as _ };
