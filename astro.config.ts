@@ -61,11 +61,16 @@ const terserOpt: MinifyOptions = {
 const browserTargets = browserslistToTargets(browserslist("> 3% in JP"));
 
 const PREFIX_RULES = [
+	// node_modules
 	{ keyword: "@tsparticles", name: "@tsparticles" },
 	{ keyword: "matter-js", name: "matter-js" },
 	{ keyword: "qrcode", name: "qrcode" },
+	// その他vendor
 	{ keyword: "node_modules", name: "vendor" },
+	// libs
 	{ keyword: "pseudo-debugkit", name: "pseudo-debugkit" },
+	{ keyword: "theme-utils", name: "theme-utils" },
+	{ keyword: "ui-utils", name: "ui-utils" },
 ];
 
 const DYNAMIC_RULES = [
