@@ -1,8 +1,8 @@
-import { a as createComponent, m as maybeRenderHead, h as renderTemplate, ey as defineScriptVars, f as addAttribute, c as createAstro, s as spreadAttributes, ez as createTransitionScope, r as renderComponent, eC as $$Sun, eD as $$Moon } from './vendor-qhX5JPlG.js';
+import { a as createComponent, m as maybeRenderHead, r as renderTemplate, c as createAstro, s as spreadAttributes, f as addAttribute, ez as createTransitionScope, d as renderComponent, eC as $$Sun, eD as $$Moon } from './vendor-4I_TtZJH.js';
 import 'piccolore';
 import 'clsx';
 
-const BASE_DIR = "/bio/";const AUTHOR = "hi2ma-bu4";const SITE_TITLE = "snowsSite";const SITE_DESCRIPTION = "snows(hi2ma-bu4)の個人サイトです。";const DEBUG_GTAG = false;const GTAG_ID = "GTM-N2NZ68ZJ";
+const BASE_DIR = "/bio/";const AUTHOR = "hi2ma-bu4";const SITE_TITLE = "snowsSite";const SITE_DESCRIPTION = "snows(hi2ma-bu4)の個人サイトです。";const GTAG_ID = "GTM-N2NZ68ZJ";
 
 const NAV_LINKS = [
   { href: BASE_DIR, text: "Top" },
@@ -17,14 +17,6 @@ const $$Footer = createComponent(($$result, $$props, $$slots) => {
 &copy; ${year} <a href="https://github.com/hi2ma-bu4" target="_blank" rel="noopener noreferrer" class="hover:text-slate-400 dark:hover:text-slate-600 hover:underline transition-colors">${AUTHOR}</a>. All rights reserved.
 </p> </div> </footer>`;
 }, "C:/Users/snows/Documents/Program/js/bio/src/components/Footer.astro", void 0);
-
-var __freeze = Object.freeze;
-var __defProp = Object.defineProperty;
-var __template = (cooked, raw) => __freeze(__defProp(cooked, "raw", { value: __freeze(cooked.slice()) }));
-var _b;
-const $$GoogleAnalytics = createComponent(($$result, $$props, $$slots) => {
-  return renderTemplate`${DEBUG_GTAG}${renderTemplate(_b || (_b = __template(['<script type="text/partytown"', ' data-astro-rerun><\/script>\n	<script type="text/partytown" data-astro-rerun>(function(){', '\n		window.dataLayer = window.dataLayer || [];\n		window.gtag = function gtag() {\n			dataLayer.push(arguments);\n		};\n		gtag("js", new Date());\n		gtag("config", GTAG_ID);\n	})();<\/script>'])), addAttribute(`https://www.googletagmanager.com/gtag/js?id=${GTAG_ID}`, "src"), defineScriptVars({ GTAG_ID }))}`;
-}, "C:/Users/snows/Documents/Program/js/bio/src/components/GoogleAnalytics.astro", void 0);
 
 const $$Astro$1 = createAstro("https://hi2ma-bu4.github.io/");
 const $$CircleHalfStroke = createComponent(($$result, $$props, $$slots) => {
@@ -54,4 +46,4 @@ const $$Header = createComponent(($$result, $$props, $$slots) => {
   return renderTemplate`${maybeRenderHead()}<header id="main-header" class="w-full py-4 px-4 md:px-8 transition-transform duration-300" role="banner"${addAttribute(createTransitionScope($$result, "l7r54iwe"), "data-astro-transition-persist")}> <nav class="max-w-5xl mx-auto flex justify-between items-center"> <a${addAttribute(BASE_DIR, "href")} id="logo" class="text-2xl font-bold text-primary-600 dark:text-primary-400" data-astro-reload>${SITE_TITLE}</a> <div class="hidden md:flex items-center space-x-6"> ${NAV_LINKS.map((link) => renderTemplate`<a${addAttribute(link.href, "href")}${addAttribute(["text-lg font-medium text-slate-700 dark:text-slate-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors", { "font-bold text-primary-600 dark:text-primary-400": Astro2.url.pathname === link.href }], "class:list")}${addAttribute(Astro2.url.pathname === link.href ? "page" : false, "aria-current")}> ${link.text} </a>`)} ${renderComponent($$result, "ThemeToggle", $$ThemeToggle, {})} </div> </nav> </header>`;
 }, "C:/Users/snows/Documents/Program/js/bio/src/components/Header.astro", "self");
 
-export { $$GoogleAnalytics as $, AUTHOR as A, BASE_DIR as B, CLASS_AUTO_IMG_ALT as C, GTAG_ID as G, NAV_LINKS as N, SITE_TITLE as S, __vite_glob_0_2 as _, SITE_DESCRIPTION as a, $$Header as b, $$Footer as c, $$ThemeToggle as d };
+export { $$Footer as $, AUTHOR as A, BASE_DIR as B, CLASS_AUTO_IMG_ALT as C, GTAG_ID as G, NAV_LINKS as N, SITE_TITLE as S, __vite_glob_0_2 as _, SITE_DESCRIPTION as a, $$Header as b, $$ThemeToggle as c };
