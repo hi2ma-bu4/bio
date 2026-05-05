@@ -13,13 +13,31 @@ const workUrl = `${BASE_DIR}works/`;
 
 const skillData: Skill[] = [
 	{
+		name: "HTML",
+		icon: "HTML",
+		children: [{ name: "Astro", icon: "Astro" }],
+	},
+	{ name: "CSS", icon: "CSS", children: [{ name: "Tailwind CSS", icon: "TailwindCSS" }] },
+	{
 		name: "JavaScript",
 		icon: "JavaScript",
-		children: [{ name: "TypeScript", icon: "TypeScript" }],
+		children: [
+			{ name: "TypeScript", icon: "TypeScript" },
+			{ name: "Node.js", icon: "NodeJS" },
+			{ name: "EJS", icon: "EJS" },
+		],
 	},
 	{ name: "Java", icon: "Java" },
-	{ name: "C#", icon: "CSharp" },
-	{ name: "Python", icon: "Python" },
+	{ name: "C#/VB.NET", icon: "NET" },
+	{
+		name: "Python",
+		icon: "Python",
+		children: [
+			{ name: "Flask", icon: "Flask" },
+			{ name: "Django", icon: "Django" },
+			{ name: "Jinja2", icon: "Jinja" },
+		],
+	},
 	{
 		name: "Rust",
 		icon: "Rust",

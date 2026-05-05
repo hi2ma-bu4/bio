@@ -22,7 +22,7 @@ const $$Astro$1 = createAstro("https://hi2ma-bu4.github.io/");
 const $$CircleHalfStroke = createComponent(($$result, $$props, $$slots) => {
   const Astro2 = $$result.createAstro($$Astro$1, $$props, $$slots);
   Astro2.self = $$CircleHalfStroke;
-  return renderTemplate`${maybeRenderHead()}<svg${spreadAttributes(Astro2.props)} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" fill="currentColor" aria-hidden="true" data-slot="icon"> <!--!Font Awesome Free v7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--> <path d="M512 320C512 214 426 128 320 128L320 512C426 512 512 426 512 320zM64 320C64 178.6 178.6 64 320 64C461.4 64 576 178.6 576 320C576 461.4 461.4 576 320 576C178.6 576 64 461.4 64 320z"></path> </svg>`;
+  return renderTemplate`${maybeRenderHead()}<svg${spreadAttributes(Astro2.props)} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" fill="currentColor" aria-hidden="true" role="img" data-slot="icon"> <!--!Font Awesome Free v7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--> <path d="M512 320C512 214 426 128 320 128L320 512C426 512 512 426 512 320zM64 320C64 178.6 178.6 64 320 64C461.4 64 576 178.6 576 320C576 461.4 461.4 576 320 576C178.6 576 64 461.4 64 320z"></path> </svg>`;
 }, "C:/Users/snows/Documents/Program/js/bio/src/components/icon/CircleHalfStroke.astro", void 0);
 
 const $$file = "C:/Users/snows/Documents/Program/js/bio/src/components/icon/CircleHalfStroke.astro";
@@ -47,4 +47,4 @@ const $$Header = createComponent(($$result, $$props, $$slots) => {
 }, "C:/Users/snows/Documents/Program/js/bio/src/components/Header.astro", "self");
 
 export { $$Footer as $, AUTHOR as A, BASE_DIR as B, CLASS_AUTO_IMG_ALT as C, GTAG_ID as G, NAV_LINKS as N, SITE_TITLE as S, __vite_glob_0_1 as _, SITE_DESCRIPTION as a, $$Header as b, $$ThemeToggle as c };
-//# sourceMappingURL=Header-HWLU_HVw.js.map
+//# sourceMappingURL=Header-B8VrYPDt.js.map
