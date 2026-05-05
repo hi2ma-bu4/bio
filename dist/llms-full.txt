@@ -28,6 +28,8 @@ Python
 
 Rust
 
+WebAssembly
+
 ## Featured Works
 
 ### [RepoShowcase](/bio/works/#work-card-RepoShowcase)
