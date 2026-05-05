@@ -3,7 +3,7 @@ import { Picture } from "astro:assets";
 
 import ArrowTopRightOnSquareIcon from "astro-heroicons/solid/ArrowTopRightOnSquare.astro";
 import GitHub from "./icon/GitHub.astro";
-import { isImageMetadata, type Work } from "../types/work-item";
+import { getImageWidths, isImageMetadata, type Work } from "../types/work-item";
 
 type Props = Work;
 
@@ -15,7 +15,13 @@ const isCardFooter = directLink || githubLink;
 <div id={`work-card-${id}`} class="flex flex-col justify-between flex-nowrap group rounded-lg overflow-hidden shadow-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
 	<button class="work-modal-trigger w-full h-full flex flex-col text-left" data-work-id={id} aria-haspopup="dialog">
 		<div class="aspect-video overflow-hidden">
-			{isImageMetadata(imageUrl) ? <Picture src={imageUrl} formats={["avif", "webp"]} alt={`${title}のスクリーンショット`} fetchpriority="low" pictureAttributes={{ class: "w-full h-full" }} class="object-cover transition-transform duration-300 group-hover:scale-105" /> : <img src={imageUrl} alt={`${title}のスクリーンショット`} loading="lazy" decoding="async" fetchpriority="low" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" />}
+			{
+				isImageMetadata(imageUrl) ? (
+					<Picture src={imageUrl} widths={getImageWidths(imageUrl)} formats={["avif", "webp"]} alt={`${title}のスクリーンショット`} fetchpriority="low" pictureAttributes={{ class: "w-full h-full" }} class="object-cover transition-transform duration-300 group-hover:scale-105" />
+				) : (
+					<img src={imageUrl} alt={`${title}のスクリーンショット`} loading="lazy" decoding="async" fetchpriority="low" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" />
+				)
+			}
 		</div>
 
 		<div class="p-4 md:p-6 pb-2 md:pb-2">
