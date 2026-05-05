@@ -5,7 +5,6 @@ import path from "node:path";
 import { defineConfig, envField } from "astro/config";
 
 import astroLlmsTxt from "@4hse/astro-llms-txt";
-import partytown from "@astrojs/partytown";
 import sitemap from "@astrojs/sitemap";
 import solidJs from "@astrojs/solid-js";
 import tailwindVite from "@tailwindcss/vite";
@@ -184,16 +183,6 @@ export default defineConfig({
 				],
 			},
 		}),
-		partytown({
-			config: {
-				forward: [
-					// GoogleTagManager
-					"dataLayer.push",
-					"gtag",
-				],
-				resolveUrl: (url) => url,
-			},
-		}),
 		sitemap({
 			changefreq: "weekly",
 			priority: 0.8,
@@ -317,7 +306,6 @@ export default defineConfig({
 			SITE_TITLE: envField.string(envFieldSetting),
 			SITE_DESCRIPTION: envField.string(envFieldSetting),
 
-			DEBUG_GTAG: envField.boolean(envFieldSetting),
 			GTAG_ID: envField.string(envFieldSetting),
 			GA4_TAG: envField.string(envFieldSetting),
 		},

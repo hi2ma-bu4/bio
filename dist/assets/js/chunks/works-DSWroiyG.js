@@ -1,7 +1,7 @@
-import { c as createAstro, a as createComponent, m as maybeRenderHead, f as addAttribute, r as renderComponent, ew as $$Picture, h as renderTemplate, j as $$ArrowTopRightOnSquare, ex as $$XMark, b as renderScript, ey as defineScriptVars } from './vendor-qhX5JPlG.js';
+import { c as createAstro, a as createComponent, m as maybeRenderHead, f as addAttribute, d as renderComponent, ew as $$Picture, r as renderTemplate, j as $$ArrowTopRightOnSquare, ex as $$XMark, b as renderScript, ey as defineScriptVars } from './vendor-4I_TtZJH.js';
 import 'piccolore';
-import { a as $$GitHub, $ as $$Layout } from './Layout-CU2Zxm9J.js';
-import { C as CLASS_AUTO_IMG_ALT, B as BASE_DIR } from './Header-C1g5yFl3.js';
+import { a as $$GitHub, $ as $$Layout } from './Layout-scqUeqIv.js';
+import { C as CLASS_AUTO_IMG_ALT, B as BASE_DIR } from './Header-CozmUSZs.js';
 
 function isImageMetadata(v) {
   return typeof v === "object" && v !== null && "src" in v;

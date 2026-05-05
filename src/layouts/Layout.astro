@@ -6,7 +6,6 @@ import { pwaAssetsHead, type PWAAssetHeadLink } from "virtual:pwa-assets/head";
 import { pwaInfo } from "virtual:pwa-info";
 import FloatingHeader from "../components/FloatingHeader.astro";
 import Footer from "../components/Footer.astro";
-import GoogleAnalytics from "../components/GoogleAnalytics.astro";
 import Header from "../components/Header.astro";
 import { AUTHOR, BASE_DIR, GTAG_ID, SITE_DESCRIPTION, SITE_TITLE } from "../config";
 
@@ -104,7 +103,7 @@ const { title, description = SITE_DESCRIPTION } = Astro.props;
 		<script src="../scripts/page-afterimage.ts"></script>
 		<script src="../scripts/hash-scroll.ts"></script>
 
-		<GoogleAnalytics />
+		<script async src={`${BASE_DIR}assets/js/static/auto-gtag.js`} is:inline></script>
 		<ClientRouter />
 
 		<link rel="preconnect" href="https://fonts.googleapis.com" />

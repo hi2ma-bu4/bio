@@ -6,7 +6,7 @@ import { mkdir, readdir, readFile, writeFile } from "node:fs/promises";
 import { extname, join, relative } from "node:path";
 import { minify, type MinifyOptions } from "terser";
 
-const PUBLIC_ENV_KEYS = ["DEBUG_GTAG", "GTAG_ID", "GA4_TAG"] as const;
+const PUBLIC_ENV_KEYS = ["GTAG_ID", "GA4_TAG"] as const;
 
 const manifest: Record<string, string> = {};
 

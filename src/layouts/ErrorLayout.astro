@@ -2,7 +2,6 @@
 import { GoogleFontsOptimizer } from "astro-google-fonts-optimizer";
 import { SEO } from "astro-seo";
 import Footer from "../components/Footer.astro";
-import GoogleAnalytics from "../components/GoogleAnalytics.astro";
 import Header from "../components/Header.astro";
 import { AUTHOR, BASE_DIR, GTAG_ID, SITE_DESCRIPTION, SITE_TITLE } from "../config";
 
@@ -45,8 +44,7 @@ const { title, description = SITE_DESCRIPTION } = Astro.props;
 		/>
 
 		<script src="../scripts/theme-toggle.ts"></script>
-
-		<GoogleAnalytics />
+		<script async src={`${BASE_DIR}assets/js/static/auto-gtag.js`} is:inline></script>
 
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
 		<GoogleFontsOptimizer url="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Noto+Sans+JP:wght@400;700&display=swap" />
