@@ -16,19 +16,7 @@ URL: https://hi2ma-bu4.github.io/bio/
 
 ## Skills
 
-TypeScript
-
-JavaScript
-
-Java
-
-C#
-
-Python
-
-Rust
-
-WebAssembly
+JavaScript Java C#Python Rust
 
 ## Featured Works
 

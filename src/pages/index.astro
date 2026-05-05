@@ -3,23 +3,29 @@ import ArrowRightIcon from "astro-heroicons/solid/ArrowRight.astro";
 import LinkIcon from "astro-heroicons/solid/Link.astro";
 import Squares2X2Icon from "astro-heroicons/solid/Squares2X2.astro";
 
-import GlobIcon from "../components/GlobIcon.astro";
+import SkillsAccordion from "../components/SkillsAccordion";
 import { BASE_DIR } from "../config";
 import Layout from "../layouts/Layout.astro";
+import type { Skill } from "../types/skill";
 import { worksData } from "./works.astro";
 
 const workUrl = `${BASE_DIR}works/`;
 
-const languages = [
-	//
-	{ name: "TypeScript", icon: "TypeScript" },
-	{ name: "JavaScript", icon: "JavaScript" },
+const skillData: Skill[] = [
+	{
+		name: "JavaScript",
+		icon: "JavaScript",
+		children: [{ name: "TypeScript", icon: "TypeScript" }],
+	},
 	{ name: "Java", icon: "Java" },
 	{ name: "C#", icon: "CSharp" },
 	{ name: "Python", icon: "Python" },
-	{ name: "Rust", icon: "Rust" },
-	{ name: "WebAssembly", icon: "WebAssembly" },
-] as const;
+	{
+		name: "Rust",
+		icon: "Rust",
+		children: [{ name: "WebAssembly", icon: "WebAssembly" }],
+	},
+];
 ---
 
 <Layout title="Top" description="JavaScript を中心に、個人開発したページ・スクリプトを掲載しています。トップページ。">
@@ -51,18 +57,7 @@ const languages = [
 	<section class="py-32 border-t border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50">
 		<div class="max-w-4xl mx-auto text-center">
 			<h2 class="text-4xl font-bold mb-16 tracking-tight">Skills</h2>
-			<div class="flex flex-wrap justify-center gap-10 md:gap-14 text-slate-700 dark:text-slate-300">
-				{
-					languages.map((lang) => (
-						<div class="group relative" title={lang.name}>
-							<div class="w-14 h-14 md:w-16 md:h-16 fill-slate-400 group-hover:fill-primary-500 group-hover:scale-110 transition-all duration-300 ease-out">
-								<GlobIcon iconName={lang.icon} />
-							</div>
-							<span class="absolute -bottom-10 left-1/2 -translate-x-1/2 text-sm font-bold opacity-0 group-hover:opacity-100 transition-all duration-300 whitespace-nowrap bg-slate-900 text-white px-3 py-1.5 rounded-lg shadow-xl translate-y-2 group-hover:translate-y-0">{lang.name}</span>
-						</div>
-					))
-				}
-			</div>
+			<SkillsAccordion skills={skillData} client:load />
 		</div>
 	</section>
 

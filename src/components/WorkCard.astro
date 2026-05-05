@@ -5,7 +5,7 @@ import ArrowTopRightOnSquareIcon from "astro-heroicons/solid/ArrowTopRightOnSqua
 import GitHub from "./icon/GitHub.astro";
 import { getImageWidths, isImageMetadata, type Work } from "../types/work-item";
 
-type Props = Work;
+export type Props = Work;
 
 const { id, title, description, imageUrl, tags, directLink, githubLink } = Astro.props;
 

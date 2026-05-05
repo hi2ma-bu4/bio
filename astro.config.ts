@@ -14,6 +14,7 @@ import htmlMinifierNext from "astro-html-minifier-next";
 import browserslist from "browserslist";
 import { browserslistToTargets } from "lightningcss";
 import type { PreRenderedAsset, PreRenderedChunk } from "rollup";
+import { visualizer } from "rollup-plugin-visualizer";
 import { type MinifyOptions } from "terser";
 
 import generateDarkIcons from "./dev/integrations/generateDarkIcons";
@@ -63,6 +64,7 @@ const PREFIX_RULES = [
 	// node_modules
 	{ keyword: "@tsparticles", name: "@tsparticles" },
 	{ keyword: "matter-js", name: "matter-js" },
+	{ keyword: "solid-js", name: "solid-js" },
 	{ keyword: "qrcode", name: "qrcode" },
 	// その他vendor
 	{ keyword: "node_modules", name: "vendor" },
@@ -244,13 +246,20 @@ export default defineConfig({
 					minify: true,
 				},
 			}) as Plugin[],
+			visualizer({
+				filename: "./reports/stats.html",
+				open: false,
+				gzipSize: true,
+				brotliSize: true,
+				sourcemap: true,
+			}),
 		],
 		optimizeDeps: {
 			exclude: [],
 		},
 		build: {
 			minify: true,
-			sourcemap: false,
+			sourcemap: true,
 			copyPublicDir: true,
 			assetsInlineLimit: 0,
 			terserOptions: terserOpt,
@@ -296,6 +305,11 @@ export default defineConfig({
 					strict: true,
 				},
 				external: [],
+				onwarn(warning, warn) {
+					// 不要な警告を無視
+					if (warning.message.includes("Sourcemap is likely to be incorrect")) return;
+					warn(warning);
+				},
 			},
 		},
 	},

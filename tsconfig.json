@@ -7,7 +7,12 @@
     "forceConsistentCasingInFileNames": true,
     "sourceMap": true,
     "incremental": true,
-    "tsBuildInfoFile": "./.cache/tsbuildinfo.json"
+    "tsBuildInfoFile": "./.cache/tsbuildinfo.json",
+    "jsx": "preserve",
+    "jsxImportSource": "solid-js",
+    "types": [
+      "solid-js"
+    ]
   },
   "include": [
     ".astro/types.d.ts",

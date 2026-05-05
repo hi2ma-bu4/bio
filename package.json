@@ -47,6 +47,7 @@
         "patch-package": "^8.0.1",
         "postcss": "^8.5.12",
         "postinstall-postinstall": "^2.1.0",
+        "rollup-plugin-visualizer": "^7.0.1",
         "tailwindcss": "^4.2.4",
         "terser": "^5.46.2",
         "typescript": "~5.9.3"
