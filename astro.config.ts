@@ -191,6 +191,7 @@ export default defineConfig({
 					"dataLayer.push",
 					"gtag",
 				],
+				resolveUrl: (url) => url,
 			},
 		}),
 		sitemap({
