@@ -1,5 +1,6 @@
 **/node_modules/**
 **/.astro/**
+**/.cache/astro/assets/**
 
 .DS_Store
 *.log
