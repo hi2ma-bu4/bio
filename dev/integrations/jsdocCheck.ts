@@ -20,7 +20,7 @@ export default function jsdocCheckIntegration(options: JSDocCheckOptions = {}): 
 	};
 
 	return {
-		name: "jsdoc-check-integration",
+		name: "jsdoc-check",
 		hooks: {
 			"astro:config:setup": ({ updateConfig }) => {
 				updateConfig({
