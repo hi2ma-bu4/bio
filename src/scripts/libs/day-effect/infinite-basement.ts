@@ -1,5 +1,6 @@
 import { deviceType } from "detect-it";
 
+import { addStyle, removeStyle } from "../ui-utils";
 import basementStyles from "./infinite-basement.css?inline";
 
 export interface BasementLog {
@@ -105,11 +106,7 @@ export class InfiniteBasement {
 	}
 
 	private ensureStyles() {
-		if (document.getElementById("basement-styles")) return;
-		const style = document.createElement("style");
-		style.id = "basement-styles";
-		style.textContent = basementStyles;
-		document.head.appendChild(style);
+		addStyle(basementStyles, "basement-styles");
 	}
 
 	private handleScroll = () => {
@@ -332,6 +329,7 @@ export class InfiniteBasement {
 	public destroy() {
 		this.container?.remove();
 		this.container = null;
+		removeStyle("basement-styles");
 		this.observer?.disconnect();
 		this.observer = null;
 		this.basementActive = false;

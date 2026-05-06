@@ -1,3 +1,6 @@
+import { addStyle } from "../ui-utils";
+import boomStyles from "./boom.css?inline";
+
 function copyComputedStyle(src: Element, target: HTMLElement) {
 	const computed = getComputedStyle(src);
 	for (let prop of computed) {
@@ -7,15 +10,10 @@ function copyComputedStyle(src: Element, target: HTMLElement) {
 
 function createParticle(x: number, y: number, color: string) {
 	const p = document.createElement("div");
-	p.style.position = "fixed";
+	p.className = "bomb-particle";
 	p.style.left = x + "px";
 	p.style.top = y + "px";
-	p.style.width = "5px";
-	p.style.height = "5px";
 	p.style.background = color;
-	p.style.borderRadius = "50%";
-	p.style.pointerEvents = "none";
-	p.style.transition = "transform 0.8s ease-out, opacity 0.8s ease-out";
 	document.body.appendChild(p);
 
 	const dx = (Math.random() - 0.5) * 200;
@@ -29,6 +27,8 @@ function createParticle(x: number, y: number, color: string) {
 }
 
 export function domOnBomb(e: PointerEvent) {
+	addStyle(boomStyles, "boom-style");
+
 	const el = e.target as HTMLElement | null;
 	if (!el || el.tagName === "BODY") return; // body除外
 	if (getComputedStyle(el).opacity === "0") return; // 透過除外
@@ -41,17 +41,13 @@ export function domOnBomb(e: PointerEvent) {
 
 	// クローン作成
 	const clone = el.cloneNode(true) as HTMLElement;
-	clone.style.pointerEvents = "none";
+	clone.className += " bomb-clone";
 	copyComputedStyle(el, clone);
 
-	clone.style.position = "fixed";
 	clone.style.left = rect.left + "px";
 	clone.style.top = rect.top + "px";
 	clone.style.width = rect.width + "px";
 	clone.style.height = rect.height + "px";
-	clone.style.margin = "0";
-	clone.style.zIndex = "999";
-	clone.style.pointerEvents = "none";
 
 	document.body.appendChild(clone);
 

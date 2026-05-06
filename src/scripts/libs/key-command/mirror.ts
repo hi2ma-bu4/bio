@@ -1,8 +1,8 @@
+import { addStyle, removeStyle } from "../ui-utils";
 import mirrorStyles from "./mirror.css?inline";
 
 export class MirrorMode {
 	private mirrorMode: boolean = false;
-	private style: HTMLStyleElement | null = null;
 
 	constructor() {
 		this.init();
@@ -10,12 +10,7 @@ export class MirrorMode {
 
 	/** 初期化・イベント登録・CSS作成 */
 	public init(): void {
-		if (!this.style) {
-			this.style = document.createElement("style");
-			this.style.id = "mirror-style";
-			this.style.textContent = mirrorStyles;
-			document.head.appendChild(this.style);
-		}
+		addStyle(mirrorStyles, "mirror-style");
 	}
 
 	/** モード切替 */
@@ -26,10 +21,7 @@ export class MirrorMode {
 
 	/** destroy: CSS削除 */
 	public destroy(): void {
-		if (this.style?.parentNode) {
-			this.style.parentNode.removeChild(this.style);
-			this.style = null;
-		}
+		removeStyle("mirror-style");
 		document.body.classList.remove("mirror-mode");
 		this.mirrorMode = false;
 	}

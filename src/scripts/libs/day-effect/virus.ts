@@ -1,3 +1,6 @@
+import { addStyle, removeStyle } from "../ui-utils";
+import virusStyles from "./virus.css?inline";
+
 interface ElementSnapshot {
 	transform: string;
 	filter: string;
@@ -16,6 +19,7 @@ const FPS = 30;
 const TRAIL_LIFE = 320;
 const MIN_ELEMENT_SIZE = 10;
 const TRAIL_SELECTOR = "[data-virus-trail]";
+
 const SKIPPED_TAGS = new Set(["HTML", "BODY", "HEAD", "SCRIPT", "STYLE", "NOSCRIPT", "LINK", "META", "TITLE", "MAIN"]);
 
 function removeElementIds(root: HTMLElement): void {
@@ -37,6 +41,7 @@ class VirusEffectController {
 		}
 
 		this.started = true;
+		addStyle(virusStyles, "virus-style");
 		this.collectElements();
 		window.addEventListener("resize", this.handleResize, { passive: true });
 		window.addEventListener("orientationchange", this.handleResize);
@@ -62,6 +67,7 @@ class VirusEffectController {
 		this.state.clear();
 		this.removeTrails();
 		this.started = false;
+		removeStyle("virus-style");
 	}
 
 	private readonly handleResize = (): void => {
@@ -168,21 +174,13 @@ class VirusEffectController {
 		clone.setAttribute("data-virus-trail", "");
 		clone.setAttribute("aria-hidden", "true");
 
-		Object.assign(clone.style, {
-			position: "fixed",
-			left: `${rect.left}px`,
-			top: `${rect.top}px`,
-			width: `${rect.width}px`,
-			height: `${rect.height}px`,
-			margin: "0",
-			pointerEvents: "none",
-			opacity: String(trailOpacity),
-			transform: `translate3d(${state.dx.toFixed(2)}px, ${state.dy.toFixed(2)}px, 0) rotate(${state.rot.toFixed(2)}deg)`,
-			filter: `hue-rotate(${state.hue.toFixed(2)}deg)`,
-			zIndex: "60",
-			overflow: "hidden",
-			willChange: "opacity, transform, filter",
-		} satisfies Partial<CSSStyleDeclaration>);
+		clone.style.left = `${rect.left}px`;
+		clone.style.top = `${rect.top}px`;
+		clone.style.width = `${rect.width}px`;
+		clone.style.height = `${rect.height}px`;
+		clone.style.opacity = String(trailOpacity);
+		clone.style.transform = `translate3d(${state.dx.toFixed(2)}px, ${state.dy.toFixed(2)}px, 0) rotate(${state.rot.toFixed(2)}deg)`;
+		clone.style.filter = `hue-rotate(${state.hue.toFixed(2)}deg)`;
 
 		document.body.appendChild(clone);
 
@@ -191,7 +189,7 @@ class VirusEffectController {
 				{ opacity: trailOpacity, filter: clone.style.filter, transform: clone.style.transform },
 				{ opacity: 0, filter: `${clone.style.filter} blur(3px)`, transform: `${clone.style.transform} scale(1.01)` },
 			],
-			{ duration: TRAIL_LIFE, easing: "linear", fill: "forwards" }
+			{ duration: TRAIL_LIFE, easing: "linear", fill: "forwards" },
 		);
 
 		animation.addEventListener(
@@ -199,7 +197,7 @@ class VirusEffectController {
 			() => {
 				clone.remove();
 			},
-			{ once: true }
+			{ once: true },
 		);
 	}
 

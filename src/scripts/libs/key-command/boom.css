@@ -1,0 +1,17 @@
+.bomb-particle {
+	position: fixed;
+	width: 5px;
+	height: 5px;
+	border-radius: 50%;
+	pointer-events: none;
+	transition:
+		transform 0.8s ease-out,
+		opacity 0.8s ease-out;
+}
+
+.bomb-clone {
+	position: fixed;
+	margin: 0;
+	z-index: 999;
+	pointer-events: none;
+}

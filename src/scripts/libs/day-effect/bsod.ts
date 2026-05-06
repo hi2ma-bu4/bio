@@ -1,6 +1,6 @@
 import { toCanvas } from "qrcode";
 
-import { lockBodyScroll, unlockBodyScroll } from "../ui-utils";
+import { addStyle, lockBodyScroll, removeStyle, unlockBodyScroll } from "../ui-utils";
 import bsodStyles from "./bsod.css?inline";
 
 interface StartBsodEffectOptions {
@@ -107,11 +107,7 @@ function createSessionId(): string {
 }
 
 function ensureStyle(): void {
-	if (document.getElementById(STYLE_ID)) return;
-	const style = document.createElement("style");
-	style.id = STYLE_ID;
-	style.textContent = bsodStyles;
-	document.head.appendChild(style);
+	addStyle(bsodStyles, STYLE_ID);
 }
 
 class BsodController {
@@ -166,6 +162,7 @@ class BsodController {
 		this.overlay?.remove();
 		this.overlay = null;
 		this.progressLabel = null;
+		removeStyle(STYLE_ID);
 
 		if (this.didLockBodyScroll) {
 			unlockBodyScroll();

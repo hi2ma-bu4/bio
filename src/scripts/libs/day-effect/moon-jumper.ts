@@ -1,5 +1,7 @@
 import Matter from "matter-js";
 import { themeChangeLock, updateAllToggleButtonsUI, updateTheme } from "../theme-utils";
+import { addStyle, removeStyle } from "../ui-utils";
+import moonJumperStyles from "./moon-jumper.css?inline";
 
 const { Engine, Runner, Bodies, Composite, Body, Events } = Matter;
 
@@ -37,17 +39,10 @@ class MoonJumper {
 		// 2. Lock scroll
 		this.lockScroll();
 
+		addStyle(moonJumperStyles, "moon-jumper-style");
+
 		this.container = document.createElement("div");
 		this.container.id = "moon-jumper-container";
-		Object.assign(this.container.style, {
-			position: "fixed",
-			inset: "0",
-			zIndex: "9997",
-			pointerEvents: "none",
-			overflow: "hidden",
-			transition: "background 1s ease",
-			backgroundColor: "transparent",
-		});
 		document.body.appendChild(this.container);
 
 		this.initPhysics();
@@ -133,28 +128,9 @@ class MoonJumper {
 		this.rabbitEl = document.createElement("div");
 		this.rabbitEl.id = "rabbit-element";
 		this.rabbitEl.textContent = "🐇";
-		Object.assign(this.rabbitEl.style, {
-			position: "absolute",
-			fontSize: "40px",
-			pointerEvents: "none",
-			userSelect: "none",
-			zIndex: "1000",
-			lineHeight: "1",
-			transform: "translate(-50%, -50%)",
-		});
 
 		this.heightEl = document.createElement("div");
-		Object.assign(this.heightEl.style, {
-			position: "absolute",
-			fontSize: "14px",
-			fontWeight: "bold",
-			color: "#fff",
-			textShadow: "0 0 4px #000",
-			top: "40px",
-			left: "50%",
-			transform: "translateX(-50%)",
-			whiteSpace: "nowrap",
-		});
+		this.heightEl.className = "moon-jumper-height";
 		this.rabbitEl.appendChild(this.heightEl);
 
 		this.container?.appendChild(this.rabbitEl);
@@ -281,14 +257,7 @@ class MoonJumper {
 
 		const cloudEl = document.createElement("div");
 		cloudEl.textContent = "☁️";
-		Object.assign(cloudEl.style, {
-			position: "absolute",
-			fontSize: "30px",
-			transform: "translate(-50%, -50%)",
-			pointerEvents: "none",
-			opacity: "0.8",
-			transition: "opacity 2s ease",
-		});
+		cloudEl.className = "moon-jumper-cloud";
 		this.container?.appendChild(cloudEl);
 
 		const cloud = { body: cloudBody, el: cloudEl };
@@ -426,16 +395,13 @@ class MoonJumper {
 			for (let i = 0; i < 60; i++) {
 				const el = document.createElement("div");
 				const opacity = Math.random();
-				Object.assign(el.style, {
-					position: "absolute",
-					width: Math.random() > 0.8 ? "3px" : "1.5px",
-					height: Math.random() > 0.8 ? "3px" : "1.5px",
-					backgroundColor: "#fff",
-					borderRadius: "50%",
-					pointerEvents: "none",
-					opacity: "0",
-					boxShadow: Math.random() > 0.9 ? "0 0 5px #fff" : "none",
-				});
+				el.className = "moon-jumper-star";
+				const size = Math.random() > 0.8 ? "3px" : "1.5px";
+				el.style.width = size;
+				el.style.height = size;
+				if (Math.random() > 0.9) {
+					el.style.boxShadow = "0 0 5px #fff";
+				}
 				this.container?.appendChild(el);
 				this.stars.push({
 					el,
@@ -482,6 +448,7 @@ class MoonJumper {
 			setTimeout(() => {
 				this.container?.remove();
 				this.container = null;
+				removeStyle("moon-jumper-style");
 				this.engine = null;
 				this.runner = null;
 				this.rabbit = null;

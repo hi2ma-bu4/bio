@@ -1,9 +1,10 @@
+import { addStyle, removeStyle } from "../ui-utils";
+import retro8bitStyles from "./retro8bit.css?inline";
+
 let observer: MutationObserver | null = null;
 let loadedImages = new Map<HTMLImageElement, EventListener>();
 const originalBgMap = new WeakMap<HTMLElement, string | null>();
 const colorCache = new Map<string, [number, number, number]>();
-
-import retro8bitStyles from "./retro8bit.css?inline";
 
 let colorCanvas: HTMLCanvasElement | null = null;
 let colorCtx: CanvasRenderingContext2D | null = null;
@@ -85,17 +86,11 @@ export function startRetro8bit(): void {
 	colorCtx = colorCanvas.getContext("2d", { willReadFrequently: true });
 
 	// --- スタイル ---
-	let style = document.getElementById("retro8bit-style") as HTMLStyleElement | null;
-	if (!style) {
-		style = document.createElement("style");
-		style.id = "retro8bit-style";
-		style.textContent = retro8bitStyles;
-		document.head.appendChild(style);
+	addStyle(retro8bitStyles, "retro8bit-style");
 
-		document.body.style.setProperty("--retro-bg-color", BG_COLOR);
-		document.body.style.setProperty("--retro-main-color", MAIN_COLOR);
-		document.body.style.setProperty("--retro-sub-color", SUB_COLOR);
-	}
+	document.body.style.setProperty("--retro-bg-color", BG_COLOR);
+	document.body.style.setProperty("--retro-main-color", MAIN_COLOR);
+	document.body.style.setProperty("--retro-sub-color", SUB_COLOR);
 
 	function retroizeElement(el: HTMLElement): void {
 		if (el.classList.contains(EXCLUDE_CLASS)) return;
@@ -197,6 +192,7 @@ export function startRetro8bit(): void {
 
 // --- 破棄関数 ---
 export function destroyRetro8bit(): void {
+	removeStyle("retro8bit-style");
 	// MutationObserver停止
 	if (observer) {
 		observer.disconnect();

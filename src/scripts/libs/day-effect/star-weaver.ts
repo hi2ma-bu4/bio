@@ -1,3 +1,6 @@
+import { addStyle, removeStyle } from "../ui-utils";
+import starWeaverStyles from "./star-weaver.css?inline";
+
 interface ConstellationTemplate {
 	name: string;
 	stars: { x: number; y: number }[]; // 0 to 1 range
@@ -69,23 +72,14 @@ class StarWeaver {
 	public start() {
 		if (this.container) return;
 
+		addStyle(starWeaverStyles, "star-weaver-style");
+
 		this.container = document.createElement("div");
 		this.container.id = "star-weaver-container";
-		Object.assign(this.container.style, {
-			position: "fixed",
-			inset: "0",
-			zIndex: "9996",
-			pointerEvents: "none",
-			backgroundColor: "rgba(0, 0, 20, 0.2)",
-			transition: "background-color 2s ease",
-		});
+		this.container.className = "star-weaver-container";
 
 		this.canvas = document.createElement("canvas");
-		Object.assign(this.canvas.style, {
-			position: "absolute",
-			inset: "0",
-			pointerEvents: "auto",
-		});
+		this.canvas.className = "star-weaver-canvas";
 		this.container.appendChild(this.canvas);
 		document.body.appendChild(this.container);
 
@@ -238,6 +232,7 @@ class StarWeaver {
 		this.canvas = null;
 		this.ctx = null;
 		this.stars = [];
+		removeStyle("star-weaver-style");
 	}
 }
 

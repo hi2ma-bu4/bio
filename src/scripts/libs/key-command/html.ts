@@ -1,9 +1,8 @@
+import { addStyle, removeStyle } from "../ui-utils";
+import htmlStyles from "./html.css?inline";
+
 function escapeHtml(value: string): string {
-	return value
-		.replace(/&/g, "&amp;")
-		.replace(/</g, "&lt;")
-		.replace(/>/g, "&gt;")
-		.replace(/"/g, "&quot;");
+	return value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 }
 
 const RENDER_HOVER_CLASS = "__html-render-hover__";
@@ -13,30 +12,7 @@ const RENDER_HOVER_STYLE_ATTR = "data-render-hover-style";
 const RENDER_OVERLAY_ID = "__html-render-overlay__";
 const RENDER_PRE_ID = "__html-render-pre__";
 const ROOT_RENDER_ATTRIBUTES = ["class", "style", "data-theme", "lang", "dir"];
-const CONTENT_RENDER_ATTRIBUTES = [
-	"class",
-	"style",
-	"id",
-	"hidden",
-	"open",
-	"src",
-	"srcset",
-	"href",
-	"title",
-	"alt",
-	"value",
-	"checked",
-	"selected",
-	"disabled",
-	"role",
-	"type",
-	"download",
-	"target",
-	"rel",
-	"aria-label",
-	"aria-hidden",
-	"tabindex",
-];
+const CONTENT_RENDER_ATTRIBUTES = ["class", "style", "id", "hidden", "open", "src", "srcset", "href", "title", "alt", "value", "checked", "selected", "disabled", "role", "type", "download", "target", "rel", "aria-label", "aria-hidden", "tabindex"];
 
 type AstroBeforeSwapEvent = Event & {
 	newDocument: Document;
@@ -57,12 +33,7 @@ let renderState: HtmlRenderState | null = null;
 let isHtmlModeActive = false;
 let isRenderLifecycleBound = false;
 
-function addStyle(
-	css: string,
-	property: string,
-	value: string,
-	ignore: string[] = ["normal", "none", "auto"],
-): string {
+function concatStyle(css: string, property: string, value: string, ignore: string[] = ["normal", "none", "auto"]): string {
 	if (!value) return css;
 	if (ignore.includes(value)) return css;
 	return css + `${property}:${value};`;
@@ -75,13 +46,7 @@ function normalizeStyleValue(property: string, value: string): string {
 	return value;
 }
 
-function addInheritedStyle(
-	css: string,
-	property: string,
-	value: string,
-	parentValue?: string,
-	ignore: string[] = ["normal", "none", "auto"],
-): string {
+function addInheritedStyle(css: string, property: string, value: string, parentValue?: string, ignore: string[] = ["normal", "none", "auto"]): string {
 	const normalizedValue = normalizeStyleValue(property, value);
 	if (!normalizedValue) return css;
 	if (ignore.includes(normalizedValue)) return css;
@@ -92,26 +57,14 @@ function addInheritedStyle(
 	return css + `${property}:${normalizedValue};`;
 }
 
-function addStyleProperty(
-	css: string,
-	style: CSSStyleDeclaration,
-	property: string,
-	ignore: string[] = ["normal", "none", "auto"],
-	parentStyle?: CSSStyleDeclaration | null,
-): string {
-	return addInheritedStyle(
-		css,
-		property,
-		style.getPropertyValue(property),
-		parentStyle?.getPropertyValue(property),
-		ignore,
-	);
+function addStyleProperty(css: string, style: CSSStyleDeclaration, property: string, ignore: string[] = ["normal", "none", "auto"], parentStyle?: CSSStyleDeclaration | null): string {
+	return addInheritedStyle(css, property, style.getPropertyValue(property), parentStyle?.getPropertyValue(property), ignore);
 }
 
 function buildStyle(style: CSSStyleDeclaration, parentStyle: CSSStyleDeclaration | null = null): string {
 	let css = "";
 	css = addInheritedStyle(css, "color", style.color, parentStyle?.color);
-	css = addStyle(css, "background-color", style.backgroundColor, ["rgba(0, 0, 0, 0)"]);
+	css = concatStyle(css, "background-color", style.backgroundColor, ["rgba(0, 0, 0, 0)"]);
 
 	if (style.backgroundImage && style.backgroundImage !== "none") {
 		css += `background-image:${style.backgroundImage};`;
@@ -126,10 +79,10 @@ function buildStyle(style: CSSStyleDeclaration, parentStyle: CSSStyleDeclaration
 		}
 	}
 
-	css = addStyle(css, "filter", style.filter);
-	css = addStyle(css, "backdrop-filter", style.backdropFilter);
-	css = addStyle(css, "text-shadow", style.textShadow);
-	css = addStyle(css, "box-shadow", style.boxShadow);
+	css = concatStyle(css, "filter", style.filter);
+	css = concatStyle(css, "backdrop-filter", style.backdropFilter);
+	css = concatStyle(css, "text-shadow", style.textShadow);
+	css = concatStyle(css, "box-shadow", style.boxShadow);
 
 	css = addInheritedStyle(css, "font-style", style.fontStyle, parentStyle?.fontStyle);
 	css = addInheritedStyle(css, "font-variant", style.fontVariant, parentStyle?.fontVariant);
@@ -158,7 +111,7 @@ function buildStyle(style: CSSStyleDeclaration, parentStyle: CSSStyleDeclaration
 	css = addInheritedStyle(css, "letter-spacing", style.letterSpacing, parentStyle?.letterSpacing);
 	css = addInheritedStyle(css, "word-spacing", style.wordSpacing, parentStyle?.wordSpacing);
 
-	css = addStyle(css, "text-decoration", style.textDecoration);
+	css = concatStyle(css, "text-decoration", style.textDecoration);
 	css = addStyleProperty(css, style, "text-decoration-line", ["normal", "none", "auto"], parentStyle);
 	css = addStyleProperty(css, style, "text-decoration-style", ["normal", "none", "auto"], parentStyle);
 	css = addStyleProperty(css, style, "text-decoration-color", ["normal", "none", "auto"], parentStyle);
@@ -187,10 +140,10 @@ function buildStyle(style: CSSStyleDeclaration, parentStyle: CSSStyleDeclaration
 	css = addStyleProperty(css, style, "appearance");
 	css = addStyleProperty(css, style, "-webkit-appearance");
 
-	css = addStyle(css, "opacity", style.opacity, ["1"]);
-	css = addStyle(css, "visibility", style.visibility, ["visible"]);
-	css = addStyle(css, "mix-blend-mode", style.mixBlendMode);
-	css = addStyle(css, "isolation", style.isolation);
+	css = concatStyle(css, "opacity", style.opacity, ["1"]);
+	css = concatStyle(css, "visibility", style.visibility, ["visible"]);
+	css = concatStyle(css, "mix-blend-mode", style.mixBlendMode);
+	css = concatStyle(css, "isolation", style.isolation);
 
 	return css;
 }
@@ -210,15 +163,7 @@ function sanitizeSvg(svg: SVGElement): string {
 }
 
 function pickAnchorAttrs(node: Element): string {
-	const allow = new Set([
-		"href",
-		"target",
-		"rel",
-		"download",
-		"hreflang",
-		"type",
-		"referrerpolicy",
-	]);
+	const allow = new Set(["href", "target", "rel", "download", "hreflang", "type", "referrerpolicy"]);
 	let attrs = "";
 	for (const attribute of Array.from(node.attributes)) {
 		if (!allow.has(attribute.name)) continue;
@@ -247,12 +192,7 @@ function buildStyleAttr(baseCss: string): string {
 	return baseCss ? ` style="${escapeHtml(baseCss)}"` : "";
 }
 
-function serializeNode(
-	node: ChildNode,
-	hoverStyles: WeakMap<Element, string>,
-	elementIds: WeakMap<Element, string>,
-	parentStyle: CSSStyleDeclaration | null = null,
-): string {
+function serializeNode(node: ChildNode, hoverStyles: WeakMap<Element, string>, elementIds: WeakMap<Element, string>, parentStyle: CSSStyleDeclaration | null = null): string {
 	switch (node.nodeType) {
 		case Node.TEXT_NODE:
 			return escapeHtml(node.nodeValue ?? "");
@@ -315,8 +255,7 @@ function getAccessibleCssText(): string {
 		try {
 			cssText += Array.from(styleSheet.cssRules, (rule) => rule.cssText).join("\n");
 			cssText += "\n";
-		}
-		catch {
+		} catch {
 			// Ignore cross-origin or otherwise inaccessible stylesheets.
 		}
 	}
@@ -346,8 +285,7 @@ function getHoverCssText(): string {
 		try {
 			cssText += Array.from(styleSheet.cssRules, rewriteHoverRule).filter(Boolean).join("\n");
 			cssText += "\n";
-		}
-		catch {
+		} catch {
 			// Ignore cross-origin or otherwise inaccessible stylesheets.
 		}
 	}
@@ -396,10 +334,7 @@ function shouldScheduleRenderForMutation(mutation: MutationRecord): boolean {
 
 	if (mutation.type === "childList") {
 		if (!isSourceNode(mutation.target)) return false;
-		return (
-			Array.from(mutation.addedNodes).some(isSourceNode) ||
-			Array.from(mutation.removedNodes).some(isSourceNode)
-		);
+		return Array.from(mutation.addedNodes).some(isSourceNode) || Array.from(mutation.removedNodes).some(isSourceNode);
 	}
 
 	if (mutation.type !== "attributes") return false;
@@ -438,9 +373,7 @@ function clearElementRenderIds(elements: Element[]): void {
 	}
 }
 
-async function collectHoverStyles(
-	elements: Element[],
-): Promise<WeakMap<Element, string>> {
+async function collectHoverStyles(elements: Element[]): Promise<WeakMap<Element, string>> {
 	if (!elements.length) return new WeakMap();
 
 	const iframe = document.createElement("iframe");
@@ -505,9 +438,7 @@ async function collectHoverStyles(
 			}
 
 			const baseParentStyle = element.parentElement ? getComputedStyle(element.parentElement) : null;
-			const hoverParentStyle = cloneElement.parentElement
-				? iframeWindow.getComputedStyle(cloneElement.parentElement)
-				: null;
+			const hoverParentStyle = cloneElement.parentElement ? iframeWindow.getComputedStyle(cloneElement.parentElement) : null;
 			const baseCss = buildStyle(getComputedStyle(element), baseParentStyle);
 			const hoverCss = buildStyle(iframeWindow.getComputedStyle(cloneElement), hoverParentStyle);
 			if (hoverCss && hoverCss !== baseCss) {
@@ -520,8 +451,7 @@ async function collectHoverStyles(
 		}
 
 		return hoverStyles;
-	}
-	finally {
+	} finally {
 		iframe.remove();
 	}
 }
@@ -537,8 +467,7 @@ function attachHoverPreview(root: ParentNode): void {
 		const applyStyle = (css: string) => {
 			if (css) {
 				element.setAttribute("style", css);
-			}
-			else {
+			} else {
 				element.removeAttribute("style");
 			}
 		};
@@ -550,20 +479,12 @@ function attachHoverPreview(root: ParentNode): void {
 }
 
 function updateOverlayStyle(overlay: HTMLDivElement, pre: HTMLPreElement): void {
+	addStyle(htmlStyles, "html-render-style");
 	const bodyStyle = getComputedStyle(document.body);
 	const rootStyle = getComputedStyle(document.documentElement);
-	overlay.style.position = "fixed";
-	overlay.style.inset = "0";
-	overlay.style.zIndex = "2147483647";
-	overlay.style.overflow = "auto";
 	overlay.style.backgroundColor = resolveOverlayBackgroundColor(bodyStyle, rootStyle);
 	overlay.style.color = bodyStyle.color;
-	overlay.style.padding = "16px";
 
-	pre.style.margin = "0";
-	pre.style.whiteSpace = "normal";
-	pre.style.lineBreak = "anywhere";
-	pre.style.overflowWrap = "anywhere";
 	pre.style.font = bodyStyle.font;
 	pre.style.color = bodyStyle.color;
 }
@@ -572,10 +493,7 @@ function isTransparentColor(value: string): boolean {
 	return !value || value === "transparent" || value === "rgba(0, 0, 0, 0)";
 }
 
-function resolveOverlayBackgroundColor(
-	bodyStyle: CSSStyleDeclaration,
-	rootStyle: CSSStyleDeclaration,
-): string {
+function resolveOverlayBackgroundColor(bodyStyle: CSSStyleDeclaration, rootStyle: CSSStyleDeclaration): string {
 	if (!isTransparentColor(bodyStyle.backgroundColor)) return bodyStyle.backgroundColor;
 	if (!isTransparentColor(rootStyle.backgroundColor)) return rootStyle.backgroundColor;
 	return rootStyle.colorScheme.includes("dark") ? "#000000" : "#ffffff";
@@ -624,6 +542,7 @@ function disposeRenderState(state: HtmlRenderState): void {
 		state.renderTimer = null;
 	}
 	state.overlay.remove();
+	removeStyle("html-render-style");
 }
 
 function ensureRenderState(): HtmlRenderState {
@@ -743,8 +662,7 @@ async function renderHtmlOverlay(state: HtmlRenderState): Promise<void> {
 		updateOverlayStyle(state.overlay, state.pre);
 		state.pre.innerHTML = output;
 		attachHoverPreview(state.pre);
-	}
-	finally {
+	} finally {
 		clearElementRenderIds(sourceElements);
 		state.rendering = false;
 		if (!state.disposed) {

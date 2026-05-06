@@ -1,0 +1,14 @@
+.star-weaver-container {
+	position: fixed;
+	inset: 0;
+	z-index: 9996;
+	pointer-events: none;
+	background-color: rgba(0, 0, 20, 0.2);
+	transition: background-color 2s ease;
+}
+
+.star-weaver-canvas {
+	position: absolute;
+	inset: 0;
+	pointer-events: auto;
+}

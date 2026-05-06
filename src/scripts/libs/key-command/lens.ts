@@ -1,4 +1,6 @@
 import { showToast } from "../ui-toast";
+import { addStyle, removeStyle } from "../ui-utils";
+import lensStyles from "./lens.css?inline";
 
 class GravitationalLens {
 	private enabled: boolean = false;
@@ -17,15 +19,11 @@ class GravitationalLens {
 	public init() {
 		if (this.svgElement) return;
 
+		addStyle(lensStyles, "lens-style");
+
 		const svgNs = "http://www.w3.org/2000/svg";
 		this.svgElement = document.createElementNS(svgNs, "svg");
-		Object.assign(this.svgElement.style, {
-			position: "fixed",
-			width: "0",
-			height: "0",
-			pointerEvents: "none",
-			visibility: "hidden",
-		});
+		this.svgElement.classList.add("lens-svg");
 		this.svgElement.setAttribute("aria-hidden", "true");
 
 		const defs = document.createElementNS(svgNs, "defs");
@@ -53,22 +51,8 @@ class GravitationalLens {
 
 		this.lensDiv = document.createElement("div");
 		this.lensDiv.id = "lens-element";
-		Object.assign(this.lensDiv.style, {
-			position: "fixed",
-			width: "250px",
-			height: "250px",
-			borderRadius: "50%",
-			pointerEvents: "none",
-			zIndex: "9999",
-			backdropFilter: `url(#${this.filterId})`,
-			WebkitBackdropFilter: `url(#${this.filterId})`,
-			left: "0",
-			top: "0",
-			transform: "translate(-50%, -50%)",
-			display: "none",
-			border: "1px solid rgba(0, 166, 244, 0.4)",
-			boxShadow: "0 0 30px rgba(0,0,0,0.5), inset 0 0 10px rgba(255,255,255,0.2)",
-		});
+		this.lensDiv.style.backdropFilter = `url(#${this.filterId})`;
+		if ("webkitBackdropFilter" in this.lensDiv.style) (this.lensDiv.style as any).webkitBackdropFilter = `url(#${this.filterId})`;
 		document.body.appendChild(this.lensDiv);
 	}
 
@@ -122,6 +106,7 @@ class GravitationalLens {
 		this.lensDiv?.remove();
 		this.svgElement = null;
 		this.lensDiv = null;
+		removeStyle("lens-style");
 	}
 }
 

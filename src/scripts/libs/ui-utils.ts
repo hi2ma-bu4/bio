@@ -114,6 +114,35 @@ export function addEscapeListener(onClose: () => void) {
 	};
 }
 
+/**
+ * Add a <style> element to the <head>
+ * @param css CSS string
+ * @param id Optional ID for the style element. If not provided, a random ID will be generated.
+ * @returns The ID of the created style element.
+ */
+export function addStyle(css: string, id?: string): string {
+	const styleId = id || `style-${Math.random().toString(36).slice(2, 11)}`;
+	let style = document.getElementById(styleId) as HTMLStyleElement | null;
+	if (!style) {
+		style = document.createElement("style");
+		style.id = styleId;
+		document.head.appendChild(style);
+	}
+	style.textContent = css;
+	return styleId;
+}
+
+/**
+ * Remove a <style> element by ID
+ * @param id The ID of the style element to remove.
+ */
+export function removeStyle(id: string): void {
+	const style = document.getElementById(id);
+	if (style && style.tagName === "STYLE") {
+		style.remove();
+	}
+}
+
 export async function loadFont(fontName: string, fontUrl: string, querySelector: string = "html, body, *"): Promise<(() => void) | null> {
 	const ext = fontUrl.split(".").pop()?.split("?").shift()?.toLowerCase();
 

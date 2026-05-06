@@ -1,0 +1,14 @@
+#__html-render-overlay__ {
+	position: fixed;
+	inset: 0;
+	z-index: 2147483647;
+	overflow: auto;
+	padding: 16px;
+}
+
+#__html-render-pre__ {
+	margin: 0;
+	white-space: normal;
+	line-break: anywhere;
+	overflow-wrap: anywhere;
+}

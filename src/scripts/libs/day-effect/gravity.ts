@@ -1,5 +1,6 @@
 import Matter from "matter-js";
 
+import { addStyle, removeStyle } from "../ui-utils";
 import gravityStyles from "./gravity.css?inline";
 
 // --- 型定義 ---
@@ -325,10 +326,7 @@ export function initializePhysicsEngine(selectors: string[] | string = defaultSe
 	const width: number = window.innerWidth;
 	const height: number = window.innerHeight;
 	const viewport = getViewportRect();
-	const selectionLockStyle = document.createElement("style");
-	selectionLockStyle.setAttribute("data-gravity-selection-lock", "true");
-	selectionLockStyle.textContent = gravityStyles;
-	document.head.appendChild(selectionLockStyle);
+	addStyle(gravityStyles, "gravity-selection-lock");
 
 	// --- ターゲット要素の収集とフィルタリング ---
 
@@ -589,7 +587,7 @@ export function initializePhysicsEngine(selectors: string[] | string = defaultSe
 	try {
 		syncManagedElements(false);
 	} catch (e) {
-		selectionLockStyle.remove();
+		removeStyle("gravity-selection-lock");
 		console.error("Invalid CSS selector provided:", e);
 		return;
 	}
@@ -651,7 +649,7 @@ export function initializePhysicsEngine(selectors: string[] | string = defaultSe
 		World.remove(world, mouseConstraint);
 		Composite.clear(world, false);
 		Engine.clear(engine);
-		selectionLockStyle.remove();
+		removeStyle("gravity-selection-lock");
 
 		activeCleanup = null;
 	};

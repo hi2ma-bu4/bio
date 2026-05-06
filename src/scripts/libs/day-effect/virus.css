@@ -1,0 +1,8 @@
+[data-virus-trail] {
+	position: fixed;
+	margin: 0;
+	pointer-events: none;
+	z-index: 60;
+	overflow: hidden;
+	will-change: opacity, transform, filter;
+}

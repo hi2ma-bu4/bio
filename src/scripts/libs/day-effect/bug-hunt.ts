@@ -1,3 +1,4 @@
+import { addStyle, removeStyle } from "../ui-utils";
 import bugHuntStyles from "./bug-hunt.css?inline";
 
 interface BuggyElement {
@@ -78,11 +79,7 @@ class BugHunt {
 	}
 
 	private injectStyles() {
-		if (this.styleElement) return;
-		this.styleElement = document.createElement("style");
-		this.styleElement.id = "bug-hunt-style";
-		this.styleElement.textContent = bugHuntStyles;
-		document.head.appendChild(this.styleElement);
+		addStyle(bugHuntStyles, "bug-hunt-style");
 	}
 
 	private spawnBug() {
@@ -200,8 +197,7 @@ class BugHunt {
 			this.restoreElement(b);
 		});
 		this.buggyElements = [];
-		this.styleElement?.remove();
-		this.styleElement = null;
+		removeStyle("bug-hunt-style");
 	}
 }
 

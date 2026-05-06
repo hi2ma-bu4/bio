@@ -1,3 +1,6 @@
+import { addStyle, removeStyle } from "../ui-utils";
+import lifegameStyles from "./lifegame.css?inline";
+
 const DEFAULT_CELL_SIZE = 6;
 const TARGET_FPS = 30;
 const DEFAULT_SPAWN_RATE = 0.3;
@@ -36,17 +39,10 @@ class LifeGameEffect {
 		this.frameInterval = 1000 / TARGET_FPS;
 
 		this.canvas.id = "back-canvas-lifegame";
-		Object.assign(this.canvas.style, {
-			position: "absolute",
-			inset: "0",
-			width: "100%",
-			height: "100%",
-			pointerEvents: "none",
-			zIndex: "-1",
-		});
 	}
 
 	start(): void {
+		addStyle(lifegameStyles, "lifegame-style");
 		this.container.appendChild(this.canvas);
 		window.addEventListener("resize", this.handleResize, { passive: true });
 		window.addEventListener("pointermove", this.handlePointerMove, { passive: true });
@@ -69,6 +65,7 @@ class LifeGameEffect {
 		window.removeEventListener("pointercancel", this.handlePointerLeave);
 		this.pointerCell = null;
 		this.canvas.remove();
+		removeStyle("lifegame-style");
 	}
 
 	private readonly handleResize = (): void => {
