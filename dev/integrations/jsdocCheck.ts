@@ -29,8 +29,7 @@ export default function jsdocCheckIntegration(options: JSDocCheckOptions = {}): 
 							{
 								name: "vite-plugin-jsdoc-check",
 								transform(code, id) {
-									// .ts ファイルのみをチェックし、node_modules とユーザー定義の除外を除外します。
-									if (!id.endsWith(".ts") || id.includes("node_modules") || isExcluded(id)) {
+									if (!id.endsWith(".ts") || isExcluded(id)) {
 										return null;
 									}
 
@@ -47,10 +46,7 @@ export default function jsdocCheckIntegration(options: JSDocCheckOptions = {}): 
 			},
 			"astro:build:done": ({ logger }) => {
 				if (warnings.length > 0) {
-					// 重複排除の警告 (Vite は、transform を複数回呼び出す可能性があります)
 					const uniqueWarnings = Array.from(new Set(warnings.map((w) => JSON.stringify(w)))).map((s) => JSON.parse(s) as Warning);
-
-					// 警告をファイルおよび行ごとに並べ替える
 					uniqueWarnings.sort((a, b) => {
 						if (a.file !== b.file) return a.file.localeCompare(b.file);
 						return a.line - b.line;
@@ -69,6 +65,35 @@ export default function jsdocCheckIntegration(options: JSDocCheckOptions = {}): 
 	};
 }
 
+/**
+ * NodeのJSDocを取得
+ */
+function getJSDocs(node: ts.Node, sourceFile: ts.SourceFile): ts.JSDoc[] {
+	if ((node as any).jsDoc) {
+		return (node as any).jsDoc;
+	}
+
+	const fullText = sourceFile.getFullText();
+	const comments = ts.getLeadingCommentRanges(fullText, node.getFullStart());
+	const jsDocs: ts.JSDoc[] = [];
+
+	if (comments) {
+		for (const comment of comments) {
+			if (comment.kind === ts.SyntaxKind.MultiLineCommentTrivia) {
+				const text = fullText.substring(comment.pos, comment.end);
+				if (text.startsWith("/**")) {
+					const tempSource = ts.createSourceFile("temp.ts", text + "\nfunction dummy() {}", ts.ScriptTarget.Latest, true);
+					const dummy = tempSource.statements[0];
+					if ((dummy as any).jsDoc) {
+						jsDocs.push(...(dummy as any).jsDoc);
+					}
+				}
+			}
+		}
+	}
+	return jsDocs;
+}
+
 function checkJSDoc(sourceFile: ts.SourceFile, fileName: string): Warning[] {
 	const warnings: Warning[] = [];
 
@@ -83,11 +108,11 @@ function checkJSDoc(sourceFile: ts.SourceFile, fileName: string): Warning[] {
 
 	ts.forEachChild(sourceFile, (node) => {
 		if (ts.isFunctionDeclaration(node)) {
-			validateFunction(node, addWarning);
+			validateFunction(node, addWarning, sourceFile);
 		} else if (ts.isClassDeclaration(node)) {
-			validateClass(node, addWarning);
+			validateClass(node, addWarning, sourceFile);
 		} else if (ts.isVariableStatement(node)) {
-			validateVariable(node, addWarning);
+			validateVariable(node, addWarning, sourceFile);
 		}
 	});
 
@@ -100,38 +125,33 @@ function getCommentText(comment: string | ts.NodeArray<ts.JSDocComment> | undefi
 	return ts.displayPartsToString(comment as any);
 }
 
-function validateFunction(node: ts.FunctionDeclaration | ts.MethodDeclaration, addWarning: (node: ts.Node, message: string) => void) {
-	const jsDoc = (node as any).jsDoc as ts.JSDoc[] | undefined;
+function validateFunction(node: ts.FunctionDeclaration | ts.MethodDeclaration, addWarning: (node: ts.Node, message: string) => void, sourceFile: ts.SourceFile) {
+	const jsDocs = getJSDocs(node, sourceFile);
 	const name = node.name?.getText() || "anonymous";
 
-	if (!jsDoc || jsDoc.length === 0) {
+	if (jsDocs.length === 0) {
 		addWarning(node, `Missing JSDoc for function/method "${name}"`);
 		return;
 	}
 
-	const doc = jsDoc[0];
+	const doc = jsDocs[0];
 	const params = node.parameters;
 	const jsDocParams = doc.tags?.filter(ts.isJSDocParameterTag) || [];
 
-	// Check each parameter of the function
 	params.forEach((param) => {
 		const paramName = param.name.getText();
-		const jsDocParam = jsDocParams.find((tag) => tag.name.getText() === paramName) as ts.JSDocParameterTag | undefined;
+		const jsDocParam = jsDocParams.find((tag) => (tag as ts.JSDocParameterTag).name.getText() === paramName) as ts.JSDocParameterTag | undefined;
 
 		if (!jsDocParam) {
 			addWarning(node, `Missing JSDoc @param for "${paramName}" in function "${name}"`);
 		} else {
 			const commentText = getCommentText(jsDocParam.comment);
-
-			// Format check: @param name - desc
-			// We expect the comment to start with " - " followed by something
 			if (!commentText || !/^ - \S+/.test(commentText)) {
 				addWarning(jsDocParam, `JSDoc @param "${paramName}" must follow the format "@param ${paramName} - description" (with space before and after hyphen)`);
 			}
 		}
 	});
 
-	// 余分な JSDoc パラメータを確認する
 	jsDocParams.forEach((jsDocParam) => {
 		const jsDocParamName = (jsDocParam as ts.JSDocParameterTag).name.getText();
 		if (!params.some((p) => p.name.getText() === jsDocParamName)) {
@@ -139,9 +159,7 @@ function validateFunction(node: ts.FunctionDeclaration | ts.MethodDeclaration, a
 		}
 	});
 
-	// Check returns
 	const isVoid = node.type?.kind === ts.SyntaxKind.VoidKeyword;
-
 	if (!isVoid) {
 		const returnTag = doc.tags?.find((tag) => tag.tagName.getText() === "returns" || tag.tagName.getText() === "return");
 		if (!returnTag) {
@@ -157,31 +175,31 @@ function validateFunction(node: ts.FunctionDeclaration | ts.MethodDeclaration, a
 	}
 }
 
-function validateClass(node: ts.ClassDeclaration, addWarning: (node: ts.Node, message: string) => void) {
-	const jsDoc = (node as any).jsDoc as ts.JSDoc[] | undefined;
+function validateClass(node: ts.ClassDeclaration, addWarning: (node: ts.Node, message: string) => void, sourceFile: ts.SourceFile) {
+	const jsDocs = getJSDocs(node, sourceFile);
 	const className = node.name?.getText() || "anonymous";
 
-	if (!jsDoc || jsDoc.length === 0) {
+	if (jsDocs.length === 0) {
 		addWarning(node, `Missing JSDoc for class "${className}"`);
 	}
 
 	node.members.forEach((member) => {
 		if (ts.isMethodDeclaration(member)) {
-			validateFunction(member, addWarning);
+			validateFunction(member, addWarning, sourceFile);
 		} else if (ts.isPropertyDeclaration(member)) {
-			validateProperty(member, addWarning);
+			validateProperty(member, addWarning, sourceFile);
 		}
 	});
 }
 
-function validateProperty(node: ts.PropertyDeclaration, addWarning: (node: ts.Node, message: string) => void) {
-	const jsDoc = (node as any).jsDoc as ts.JSDoc[] | undefined;
+function validateProperty(node: ts.PropertyDeclaration, addWarning: (node: ts.Node, message: string) => void, sourceFile: ts.SourceFile) {
+	const jsDocs = getJSDocs(node, sourceFile);
 	const propName = node.name.getText();
 
-	if (!jsDoc || jsDoc.length === 0) {
+	if (jsDocs.length === 0) {
 		addWarning(node, `Missing JSDoc for property "${propName}"`);
 	} else {
-		const doc = jsDoc[0];
+		const doc = jsDocs[0];
 		const hasComment = getCommentText(doc.comment).trim().length > 0;
 		const hasSummaryTag = doc.tags?.some((tag) => tag.tagName.getText() === "summary" && getCommentText(tag.comment).trim().length > 0);
 
@@ -191,17 +209,17 @@ function validateProperty(node: ts.PropertyDeclaration, addWarning: (node: ts.No
 	}
 }
 
-function validateVariable(node: ts.VariableStatement, addWarning: (node: ts.Node, message: string) => void) {
+function validateVariable(node: ts.VariableStatement, addWarning: (node: ts.Node, message: string) => void, sourceFile: ts.SourceFile) {
 	const isExported = node.modifiers?.some((m) => m.kind === ts.SyntaxKind.ExportKeyword);
 	if (!isExported) return;
 
-	const jsDoc = (node as any).jsDoc as ts.JSDoc[] | undefined;
+	const jsDocs = getJSDocs(node, sourceFile);
 	const varNames = node.declarationList.declarations.map((d) => d.name.getText()).join(", ");
 
-	if (!jsDoc || jsDoc.length === 0) {
+	if (jsDocs.length === 0) {
 		addWarning(node, `Missing JSDoc for exported variable(s): ${varNames}`);
 	} else {
-		const doc = jsDoc[0];
+		const doc = jsDocs[0];
 		const hasComment = getCommentText(doc.comment).trim().length > 0;
 
 		if (!hasComment) {
