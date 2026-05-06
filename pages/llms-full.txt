@@ -16,7 +16,7 @@ URL: https://hi2ma-bu4.github.io/bio/
 
 ## Skills
 
-HTML CSS JavaScript Java C#/VB.NET Python Rust
+HTML5 CSS JavaScript Java C#/VB.NET Python Rust
 
 ## Featured Works
 
