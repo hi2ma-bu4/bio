@@ -3,6 +3,9 @@ import "overlayscrollbars/overlayscrollbars.css";
 
 OverlayScrollbars.plugin([ScrollbarsHidingPlugin, SizeObserverPlugin, ClickScrollPlugin]);
 
+/**
+ * カスタムスクロールバーを適用する
+ */
 function overrideScroll() {
 	OverlayScrollbars(document.body, {
 		showNativeOverlaidScrollbars: true,

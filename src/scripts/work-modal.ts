@@ -4,6 +4,9 @@ import { OverlayScrollbars } from "overlayscrollbars";
 import { isImageMetadata, type WorkItemData } from "../types/work-item";
 import { addEscapeListener, createFocusTrap, lockBodyScroll, unlockBodyScroll } from "./libs/ui-utils";
 
+/**
+ * 作品詳細表示モーダルの初期化処理を行う
+ */
 function initWorkModal() {
 	const modal = document.getElementById("work-modal") as HTMLDialogElement | null;
 	const modalWrapper = document.getElementById("work-modal-wrapper") as HTMLDivElement | null;

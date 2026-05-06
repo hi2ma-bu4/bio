@@ -1,6 +1,8 @@
 import { applyTheme, getNextTheme, safeGet, safeSet, updateAllToggleButtonsUI, updateTheme, updateToggleButtonUI } from "./libs/theme-utils";
 
-// バインド UI 要素
+/**
+ * テーマ切り替えボタンにイベントをバインドする
+ */
 function bindThemeUI() {
 	const checkThemeBtnClass = "theme-toggle-check";
 	const toggleButtons = document.querySelectorAll<HTMLButtonElement>(`.theme-toggle:not(.${checkThemeBtnClass})`);
@@ -25,6 +27,9 @@ function bindThemeUI() {
 }
 
 let _mqListenerAdded = false;
+/**
+ * システムのテーマ設定変更を監視するリスナーを登録する
+ */
 function ensureSystemListener() {
 	if (_mqListenerAdded) return;
 	_mqListenerAdded = true;
@@ -40,6 +45,9 @@ function ensureSystemListener() {
 	else mq.addListener(onChange);
 }
 
+/**
+ * テーマUIの初期化処理を行う
+ */
 function initThemeUI() {
 	updateTheme();
 	bindThemeUI();

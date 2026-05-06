@@ -9,14 +9,26 @@ type AstroBeforeSwapEvent = Event & {
 
 let pendingSnapshot: HTMLElement | null = null;
 
+/**
+ * 残像エフェクトをスキップすべきかどうかを判定する
+ * @returns スキップすべきであれば true
+ */
 function shouldSkipAfterimage(): boolean {
 	return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 }
 
+/**
+ * 既存の残像要素を全て削除する
+ * @param root - 対象のルートノード
+ */
 function cleanupAfterimages(root: ParentNode = document): void {
 	root.querySelectorAll<HTMLElement>(`[${AFTERIMAGE_ATTR}]`).forEach((element) => element.remove());
 }
 
+/**
+ * 現在のメインコンテンツのスナップショットを作成する
+ * @returns スナップショット要素、またはnull
+ */
 function createSnapshot(): HTMLElement | null {
 	const source = document.querySelector(MAIN_SELECTOR);
 	if (!(source instanceof HTMLElement)) return null;
@@ -50,10 +62,17 @@ function createSnapshot(): HTMLElement | null {
 	return wrapper;
 }
 
+/**
+ * 遷移前の準備としてスナップショットを生成・保持する
+ */
 function prepareAfterimage(): void {
 	pendingSnapshot = shouldSkipAfterimage() ? null : createSnapshot();
 }
 
+/**
+ * 保持していたスナップショットを新しいドキュメントに転送する
+ * @param event - 遷移イベント
+ */
 function transferSnapshot(event: AstroBeforeSwapEvent): void {
 	if (!pendingSnapshot || shouldSkipAfterimage()) {
 		pendingSnapshot = null;
@@ -67,6 +86,9 @@ function transferSnapshot(event: AstroBeforeSwapEvent): void {
 	pendingSnapshot = null;
 }
 
+/**
+ * 遷移後に残像エフェクトを有効化し、一定時間後に削除する
+ */
 function activateAfterimage(): void {
 	const snapshot = document.querySelector<HTMLElement>(`[${AFTERIMAGE_ATTR}]`);
 	if (!snapshot) return;
