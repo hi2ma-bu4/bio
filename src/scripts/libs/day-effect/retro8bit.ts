@@ -3,6 +3,8 @@ let loadedImages = new Map<HTMLImageElement, EventListener>();
 const originalBgMap = new WeakMap<HTMLElement, string | null>();
 const colorCache = new Map<string, [number, number, number]>();
 
+import retro8bitStyles from "./retro8bit.css?inline";
+
 let colorCanvas: HTMLCanvasElement | null = null;
 let colorCtx: CanvasRenderingContext2D | null = null;
 
@@ -87,21 +89,12 @@ export function startRetro8bit(): void {
 	if (!style) {
 		style = document.createElement("style");
 		style.id = "retro8bit-style";
-		style.innerHTML = `
-            body {
-                background-color: ${BG_COLOR} !important;
-            }
-            body, body *:not(.${EXCLUDE_CLASS}) {
-                font-family: 'EnkaDotGothic24', 'Courier New', Courier, 'ＭＳ ゴシック', 'MS UI Gothic	', monospace !important;
-                color: ${MAIN_COLOR} !important;
-                text-shadow:
-                    1px 1px ${SUB_COLOR},
-                    -1px -1px ${SUB_COLOR},
-                    1px -1px ${SUB_COLOR},
-                    -1px 1px ${SUB_COLOR} !important;
-            }
-        `;
+		style.textContent = retro8bitStyles;
 		document.head.appendChild(style);
+
+		document.body.style.setProperty("--retro-bg-color", BG_COLOR);
+		document.body.style.setProperty("--retro-main-color", MAIN_COLOR);
+		document.body.style.setProperty("--retro-sub-color", SUB_COLOR);
 	}
 
 	function retroizeElement(el: HTMLElement): void {

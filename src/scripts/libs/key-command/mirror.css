@@ -1,0 +1,9 @@
+body.mirror-mode {
+	transform: scaleX(-1);
+	direction: rtl;
+	transition: transform 0.2s ease;
+}
+
+body.mirror-mode dialog {
+	transform: scaleX(-1);
+}

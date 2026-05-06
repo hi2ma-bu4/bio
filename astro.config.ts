@@ -289,15 +289,18 @@ export default defineConfig({
 						return `assets/${name}-[hash][extname]`;
 					},
 					manualChunks(id) {
+						const clean = id.split("?")[0];
+						const base = clean.replace(/\.[^/.]+$/, "");
+
 						// 単純マッチ
 						for (const rule of PREFIX_RULES) {
-							if (id.includes(rule.keyword)) return rule.name;
+							if (base.includes(rule.keyword)) return rule.name;
 						}
 
 						// 動的マッチ
 						for (const rule of DYNAMIC_RULES) {
-							if (id.includes(rule.keyword)) {
-								const match = id.match(new RegExp(`${rule.keyword}/[^/]+`));
+							if (base.includes(rule.keyword)) {
+								const match = base.match(new RegExp(`${rule.keyword}/[^/]+`));
 								return match ? `${rule.prefix}-${match[0]}` : rule.prefix;
 							}
 						}

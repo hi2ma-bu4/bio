@@ -1,5 +1,7 @@
 import { deviceType } from "detect-it";
 
+import basementStyles from "./infinite-basement.css?inline";
+
 export interface BasementLog {
 	message: string;
 	color?: string;
@@ -98,23 +100,15 @@ export class InfiniteBasement {
 		window.addEventListener("touchend", this.handleTouchEnd, { passive: true });
 		window.addEventListener("touchcancel", this.handleTouchEnd, { passive: true });
 
-		this.ensureBlinkStyle();
+		this.ensureStyles();
 		this.tick();
 	}
 
-	private ensureBlinkStyle() {
-		if (document.getElementById("basement-blink-style")) return;
+	private ensureStyles() {
+		if (document.getElementById("basement-styles")) return;
 		const style = document.createElement("style");
-		style.id = "basement-blink-style";
-		style.textContent = `
-			@keyframes basement-blink {
-				0%, 49% { opacity: 1; }
-				50%, 100% { opacity: 0; }
-			}
-			.basement-blink {
-				animation: basement-blink 1s infinite;
-			}
-		`;
+		style.id = "basement-styles";
+		style.textContent = basementStyles;
 		document.head.appendChild(style);
 	}
 
@@ -203,24 +197,7 @@ export class InfiniteBasement {
 
 		this.container = document.createElement("div");
 		this.container.id = "infinite-basement";
-		Object.assign(this.container.style, {
-			width: "100%",
-			backgroundColor: "#050505",
-			color: "#00ff00",
-			fontFamily: "Consolas, 'Courier New', Courier, monospace",
-			padding: "40px 20px",
-			overflow: "hidden",
-			minHeight: "100vh",
-			display: "flex",
-			flexDirection: "column",
-			gap: "2px",
-			fontSize: deviceType === "mouseOnly" ? "13px" : "7px",
-			lineHeight: "1.2",
-			boxShadow: "inset 0 10px 20px rgba(0,0,0,1)",
-			position: "relative",
-			zIndex: "9999",
-			textShadow: "0 0 2px rgba(0, 255, 0, 0.4)",
-		});
+		this.container.style.setProperty("--basement-font-size", deviceType === "mouseOnly" ? "13px" : "7px");
 
 		document.body.appendChild(this.container);
 
@@ -291,10 +268,6 @@ export class InfiniteBasement {
 			if (logEntry.bold) logDiv.style.fontWeight = "bold";
 			if (logEntry.underline) logDiv.style.textDecoration = "underline";
 			if (logEntry.blink) logDiv.classList.add("basement-blink");
-
-			logDiv.style.whiteSpace = "pre-wrap";
-			logDiv.style.wordBreak = "break-all";
-			logDiv.style.padding = "2px 4px";
 
 			if (sentinel) {
 				this.container!.insertBefore(logDiv, sentinel);

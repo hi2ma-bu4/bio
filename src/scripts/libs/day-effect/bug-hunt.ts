@@ -1,3 +1,5 @@
+import bugHuntStyles from "./bug-hunt.css?inline";
+
 interface BuggyElement {
 	element: HTMLElement;
 	originalTextMap: Map<Text, string>;
@@ -79,25 +81,7 @@ class BugHunt {
 		if (this.styleElement) return;
 		this.styleElement = document.createElement("style");
 		this.styleElement.id = "bug-hunt-style";
-		this.styleElement.textContent = `
-			@keyframes glitch-jitter {
-				0% { transform: translate(0); }
-				20% { transform: translate(-2px, 2px); }
-				40% { transform: translate(-2px, -2px); }
-				60% { transform: translate(2px, 2px); }
-				80% { transform: translate(2px, -2px); }
-				100% { transform: translate(0); }
-			}
-			.buggy-glitch {
-				animation: glitch-jitter 0.15s infinite;
-				position: relative;
-				z-index: 9999;
-				cursor: pointer !important;
-			}
-			.buggy-chromatic {
-				text-shadow: 2px 0 #ff0000, -2px 0 #00ffff !important;
-			}
-		`;
+		this.styleElement.textContent = bugHuntStyles;
 		document.head.appendChild(this.styleElement);
 	}
 
@@ -180,20 +164,7 @@ class BugHunt {
 
 		// Create a "System Cleaned" terminal overlay
 		const overlay = document.createElement("div");
-		overlay.style.cssText = `
-			position: fixed;
-			top: 50%;
-			left: 50%;
-			transform: translate(-50%, -50%);
-			background: #000;
-			color: #0f0;
-			padding: 20px;
-			border: 2px solid #0f0;
-			font-family: monospace;
-			z-index: 10000;
-			box-shadow: 0 0 20px #0f0;
-			min-width: 300px;
-		`;
+		overlay.className = "bug-victory-overlay";
 
 		const lines = ["> INITIALIZING SYSTEM SCAN...", `> BUGS DETECTED: ${finalBugCount}`, "> OPTIMIZING ASSETS...", "> CACHE PURGED.", "> PERFORMANCE: 100%", `> SCORE: ${this.score}`, "> STATUS: SYSTEM PROTECTED", "", "[ THANK YOU FOR TESTING ]"];
 

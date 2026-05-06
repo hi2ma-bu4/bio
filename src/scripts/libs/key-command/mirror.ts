@@ -1,3 +1,5 @@
+import mirrorStyles from "./mirror.css?inline";
+
 export class MirrorMode {
 	private mirrorMode: boolean = false;
 	private style: HTMLStyleElement | null = null;
@@ -11,16 +13,7 @@ export class MirrorMode {
 		if (!this.style) {
 			this.style = document.createElement("style");
 			this.style.id = "mirror-style";
-			this.style.innerHTML = `
-                body.mirror-mode {
-                    transform: scaleX(-1);
-                    direction: rtl;
-                    transition: transform 0.2s ease;
-                }
-                body.mirror-mode dialog {
-                    transform: scaleX(-1);
-                }
-            `;
+			this.style.textContent = mirrorStyles;
 			document.head.appendChild(this.style);
 		}
 	}

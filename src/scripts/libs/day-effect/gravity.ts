@@ -1,5 +1,7 @@
 import Matter from "matter-js";
 
+import gravityStyles from "./gravity.css?inline";
+
 // --- 型定義 ---
 interface PhysicsBox {
 	element: HTMLElement;
@@ -325,7 +327,7 @@ export function initializePhysicsEngine(selectors: string[] | string = defaultSe
 	const viewport = getViewportRect();
 	const selectionLockStyle = document.createElement("style");
 	selectionLockStyle.setAttribute("data-gravity-selection-lock", "true");
-	selectionLockStyle.textContent = "html, body, body * { user-select: none !important; -webkit-user-select: none !important; }";
+	selectionLockStyle.textContent = gravityStyles;
 	document.head.appendChild(selectionLockStyle);
 
 	// --- ターゲット要素の収集とフィルタリング ---
