@@ -6,6 +6,13 @@ export type LogPart = {
 	gradientTo?: string; // gradientモード用
 };
 
+/**
+ * HSV表色系からRGB文字列に変換する
+ * @param h - 色相 (0-360)
+ * @param s - 彩度 (0-1)
+ * @param v - 明度 (0-1)
+ * @returns RGB文字列
+ */
 function hsvToRgb(h: number, s: number, v: number) {
 	const c = v * s;
 	const x = c * (1 - Math.abs(((h / 60) % 2) - 1));
@@ -24,6 +31,13 @@ function hsvToRgb(h: number, s: number, v: number) {
 	return `rgb(${Math.round((r + m) * 255)},${Math.round((g + m) * 255)},${Math.round((b + m) * 255)})`;
 }
 
+/**
+ * 2つの色を線形補間する
+ * @param a - 開始色 (16進数)
+ * @param b - 終了色 (16進数)
+ * @param t - 補間係数 (0-1)
+ * @returns 補間後のRGB文字列
+ */
 function lerpColor(a: string, b: string, t: number) {
 	const ah = parseInt(a.replace("#", ""), 16);
 	const bh = parseInt(b.replace("#", ""), 16);

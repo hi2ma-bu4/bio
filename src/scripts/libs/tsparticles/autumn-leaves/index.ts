@@ -7,9 +7,9 @@ import { loadWobbleUpdater } from "@tsparticles/updater-wobble";
 import { initOptions } from "./options.js";
 
 /**
- *
- * @param engine -
- * @param refresh -
+ * 紅葉（落ち葉）プリセットをロードする
+ * @param engine - tsparticlesエンジン
+ * @param refresh - ロード後にリフレッシュするかどうか
  */
 export async function loadAutumnLeavesPreset(engine: Engine, refresh = true): Promise<void> {
 	await loadBasic(engine, false);

@@ -5,6 +5,10 @@ export interface EffectLifecycle {
 	update(): void;
 }
 
+/**
+ * エフェクトのライフサイクル管理オブジェクトを作成する
+ * @returns ライフサイクル管理オブジェクト
+ */
 export function createEffectLifecycle(): EffectLifecycle {
 	const stopCallbacks = new Set<() => void>();
 	const updateCallbacks = new Set<() => void>();

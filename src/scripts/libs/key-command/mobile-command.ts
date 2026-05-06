@@ -1,10 +1,18 @@
 import { addStyle, removeStyle } from "../ui-utils";
 import mobileCommandStyles from "./mobile-command.css?inline";
 
+/**
+ * モバイル端末でキーボードコマンドを入力するためのUIを制御するクラス
+ */
 class MobileCommandCenter {
+	/** オーバーレイ要素 */
 	private overlay: HTMLDivElement | null = null;
+	/** 入力バッファ */
 	private inputBuffer: string = "";
 
+	/**
+	 * 初期化処理を行う（タップ検出イベントの登録）
+	 */
 	public init() {
 		// より確実なモバイルタップ検出のためにドキュメントリスナーを使用
 		let tapCount = 0;
@@ -35,6 +43,9 @@ class MobileCommandCenter {
 		document.addEventListener("click", handleTap);
 	}
 
+	/**
+	 * 仮想キーボードを表示する
+	 */
 	private showKeyboard() {
 		if (this.overlay) return;
 
@@ -110,6 +121,9 @@ class MobileCommandCenter {
 		document.body.appendChild(this.overlay);
 	}
 
+	/**
+	 * 仮想キーボードを非表示にする
+	 */
 	private hideKeyboard() {
 		if (this.overlay) {
 			this.overlay.style.transform = "translateY(100%)";
@@ -122,6 +136,10 @@ class MobileCommandCenter {
 		}
 	}
 
+	/**
+	 * 入力されたコマンドを実行する（KeyboardEventをエミュレート）
+	 * @param cmd - コマンド文字列
+	 */
 	private executeCommand(cmd: string) {
 		const chars = cmd.split("");
 		chars.forEach((char) => {
@@ -133,4 +151,5 @@ class MobileCommandCenter {
 	}
 }
 
+/** MobileCommandCenterインスタンス */
 export const mobileCommandCenter = new MobileCommandCenter();

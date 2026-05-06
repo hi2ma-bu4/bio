@@ -2,8 +2,8 @@ import { MoveDirection, OutMode, type Engine, type ISourceOptions } from "@tspar
 import { SVGs } from "./svgs";
 
 /**
- *
- * @param engine -
+ * 桜プリセットのオプションを初期化する
+ * @param engine - tsparticlesエンジン
  * @returns 桜プリセットのオプション
  */
 export function initOptions(engine: Engine): ISourceOptions {

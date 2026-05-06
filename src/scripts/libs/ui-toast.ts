@@ -2,6 +2,12 @@ type Toast = HTMLDivElement;
 
 const toasts: Toast[] = [];
 
+/**
+ * トースト通知を表示する
+ * @param message - 表示するメッセージ
+ * @param duration - 表示時間（ミリ秒）
+ * @param maxLineLength - 1行あたりの最大文字数
+ */
 export function showToast(message: string, duration: number = 3000, maxLineLength: number = 30): void {
 	const toast: Toast = document.createElement("div");
 
@@ -33,6 +39,10 @@ export function showToast(message: string, duration: number = 3000, maxLineLengt
 	updateToastPositions();
 }
 
+/**
+ * トースト通知を削除する
+ * @param toast - 削除対象のトースト要素
+ */
 function removeToast(toast: Toast): void {
 	if (!toast.parentNode) return;
 
@@ -46,10 +56,13 @@ function removeToast(toast: Toast): void {
 			if (index > -1) toasts.splice(index, 1);
 			updateToastPositions();
 		},
-		{ once: true }
+		{ once: true },
 	);
 }
 
+/**
+ * 表示中の全てのトーストの位置を再計算する
+ */
 function updateToastPositions(): void {
 	let offset = 20;
 	toasts.forEach((toast) => {

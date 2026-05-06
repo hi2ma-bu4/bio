@@ -7,9 +7,9 @@ import { loadWobbleUpdater } from "@tsparticles/updater-wobble";
 import { initOptions } from "./options.js";
 
 /**
- *
- * @param engine -
- * @param refresh -
+ * 桜プリセットをロードする
+ * @param engine - tsparticlesエンジン
+ * @param refresh - ロード後にリフレッシュするかどうか
  */
 export async function loadSakuraPreset(engine: Engine, refresh = true): Promise<void> {
 	await loadBasic(engine, false);

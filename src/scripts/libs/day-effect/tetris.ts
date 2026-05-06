@@ -1,14 +1,21 @@
 type Matrix = number[][];
 type Shape = number[][];
 
+/**
+ * テトリスゲームを制御するクラス（AI機能付き）
+ */
 export class Tetris {
 	// -------------------------
 	// 定数・設定
 	// -------------------------
+	/** フィールドの横幅（ブロック数） */
 	private static readonly W = 10;
+	/** フィールドの縦幅（ブロック数） */
 	private static readonly H = 20;
+	/** ブロック1つのサイズ（ピクセル） */
 	private static readonly BLOCK_SIZE = 24;
 
+	/** 各ミノの色 */
 	private static readonly COLORS = [
 		"#00f0f0", // I (Cyan)
 		"#f0f000", // O (Yellow)
@@ -19,7 +26,7 @@ export class Tetris {
 		"#f00000", // Z (Red)
 	];
 
-	// 形の定義 (Index: 0:I, 1:O, 2:T, 3:L, 4:J, 5:S, 6:Z)
+	/** ミノの形状定義 */
 	private static readonly SHAPES: Shape[] = [
 		[[1, 1, 1, 1]], // I
 		[
@@ -52,7 +59,9 @@ export class Tetris {
 	// 開幕テンプレ（DT砲もどき）用の固定シーケンス
 	// ※オートモード開始時のみ使用し、技を見せる
 	// -------------------------
+	/** 開幕時のミノ出現順序 */
 	private static readonly OPENER_SEQUENCE = [3, 4, 1, 6, 5, 0, 0]; // L, J, O, Z, S, I, I (予備)
+	/** 開幕時の各ミノの移動目標 */
 	private static readonly OPENER_MOVES = [
 		{ x: -1, r: 3 }, // L: 左端へ縦置き
 		{ x: 8, r: 1 }, // J: 右端へ縦置き
@@ -65,34 +74,54 @@ export class Tetris {
 	// -------------------------
 	// プロパティ
 	// -------------------------
+	/** 描画コンテキスト */
 	private ctx: CanvasRenderingContext2D;
+	/** 盤面データ */
 	private field: Matrix;
+	/** 現在操作中のミノ */
 	private piece: Shape | null = null;
+	/** 現在のミノの種類インデックス */
 	private pieceIndex = 0; // 0~6
 
+	/** ミノの現在位置 X */
 	private px = 3;
+	/** ミノの現在位置 Y */
 	private py = 0;
+	/** ゴースト（着地点予測）の Y 座標 */
 	private ghostY = 0;
 
+	/** 現在のスコア */
 	private score = 0;
+	/** ゲームオーバーフラグ */
 	private gameOver = false;
+	/** 再開始までのタイマー */
 	private restartTimer = 0;
 
-	// 落下・操作関連
+	/** 落下タイマーのカウンター */
 	private fallCounter = 0;
+	/** 落下間隔（フレーム数） */
 	private fallInterval = 30;
+	/** オートモードフラグ */
 	private isAutoMode = true;
+	/** 最後の入力時間 */
 	private lastInputTime = Date.now();
+	/** 入力がない場合にオートモードに移行するまでの遅延（ミリ秒） */
 	private readonly AUTO_MODE_DELAY = 10000;
 
-	// AI思考用
+	/** AIの移動目標位置 */
 	private aiTarget: { x: number; rotation: number } | null = null;
+	/** AIの移動遅延カウンター */
 	private aiMoveDelay = 0;
 
-	// オープナー制御用
+	/** 開幕定石の進行インデックス */
 	private openerIndex = 0;
+	/** 開幕定石が有効かどうか */
 	private isOpenerActive = true;
 
+	/**
+	 * コンストラクタ
+	 * @param canvas - 描画対象のキャンバス要素
+	 */
 	constructor(canvas: HTMLCanvasElement) {
 		canvas.width = Tetris.W * Tetris.BLOCK_SIZE;
 		canvas.height = Tetris.H * Tetris.BLOCK_SIZE;
@@ -103,10 +132,17 @@ export class Tetris {
 	// -------------------------
 	// 基本処理
 	// -------------------------
+	/**
+	 * 空のフィールドデータを作成する
+	 * @returns 空の行列
+	 */
 	private createField(): Matrix {
 		return Array.from({ length: Tetris.H }, () => Array(Tetris.W).fill(0));
 	}
 
+	/**
+	 * 新しいミノを生成する
+	 */
 	private newPiece() {
 		// オープナー（開幕定石）実行中の判定
 		if (this.isAutoMode && this.isOpenerActive && this.openerIndex < Tetris.OPENER_SEQUENCE.length) {
@@ -131,6 +167,14 @@ export class Tetris {
 		this.updateGhost();
 	}
 
+	/**
+	 * 指定した位置での衝突判定を行う
+	 * @param nx - 移動先 X
+	 * @param ny - 移動先 Y
+	 * @param shape - ミノの形状
+	 * @param field - 判定対象のフィールド
+	 * @returns 衝突していれば true
+	 */
 	private collide(nx: number, ny: number, shape: Shape = this.piece!, field: Matrix = this.field): boolean {
 		for (let y = 0; y < shape.length; y++) {
 			for (let x = 0; x < shape[y].length; x++) {
@@ -144,6 +188,9 @@ export class Tetris {
 		return false;
 	}
 
+	/**
+	 * ゴースト（着地点予測）の位置を更新する
+	 */
 	private updateGhost() {
 		if (!this.piece) return;
 		let gy = this.py;
@@ -151,6 +198,9 @@ export class Tetris {
 		this.ghostY = gy;
 	}
 
+	/**
+	 * 現在のミノをフィールドに固定する
+	 */
 	private merge() {
 		if (!this.piece) return;
 		for (let y = 0; y < this.piece.length; y++) {
@@ -167,6 +217,9 @@ export class Tetris {
 		}
 	}
 
+	/**
+	 * 揃ったラインを消去し、スコアを加算する
+	 */
 	private clearLines() {
 		let cleared = 0;
 		for (let y = Tetris.H - 1; y >= 0; y--) {
@@ -186,6 +239,11 @@ export class Tetris {
 		}
 	}
 
+	/**
+	 * 形状を右に90度回転させる
+	 * @param shape - 回転前の形状
+	 * @returns 回転後の形状
+	 */
 	private rotate(shape: Shape): Shape {
 		const h = shape.length;
 		const w = shape[0].length;
@@ -194,6 +252,9 @@ export class Tetris {
 		return result;
 	}
 
+	/**
+	 * 回転を試みる（壁蹴り処理を含む）
+	 */
 	private tryRotate() {
 		if (!this.piece) return;
 		const rotated = this.rotate(this.piece);
@@ -224,6 +285,9 @@ export class Tetris {
 	// -------------------------
 	// AI アルゴリズム
 	// -------------------------
+	/**
+	 * AIによる次の一手の思考を行う
+	 */
 	private think() {
 		if (!this.piece) return;
 
@@ -269,7 +333,15 @@ export class Tetris {
 		this.aiTarget = bestMove;
 	}
 
-	// 盤面評価関数
+	/**
+	 * 指定した配置案の盤面評価を行う
+	 * @param tx - 配置先 X
+	 * @param ty - 配置先 Y
+	 * @param shape - 配置するミノの形状
+	 * @param rotation - 回転回数
+	 * @param isDanger - 危険状態かどうか
+	 * @returns 評価スコア
+	 */
 	private evaluateGrid(tx: number, ty: number, shape: Shape, rotation: number, isDanger: boolean): number {
 		// 1. 仮の盤面を作成
 		const grid = this.field.map((row) => [...row]);
@@ -367,6 +439,11 @@ export class Tetris {
 		return score;
 	}
 
+	/**
+	 * フィールドの最大高さを取得する
+	 * @param field - 対象のフィールド
+	 * @returns 最大高さ
+	 */
 	private getMaxHeight(field: Matrix): number {
 		for (let y = 0; y < Tetris.H; y++) {
 			if (field[y].some((v) => v !== 0)) return Tetris.H - y;
@@ -374,6 +451,9 @@ export class Tetris {
 		return 0;
 	}
 
+	/**
+	 * AIによる操作を毎フレーム更新する
+	 */
 	private updateAI() {
 		if (this.gameOver || !this.piece) return;
 
@@ -421,6 +501,9 @@ export class Tetris {
 	// -------------------------
 	// 描画・更新
 	// -------------------------
+	/**
+	 * キャンバスにゲームの状態を描画する
+	 */
 	draw() {
 		const ctx = this.ctx;
 		ctx.clearRect(0, 0, Tetris.W * Tetris.BLOCK_SIZE, Tetris.H * Tetris.BLOCK_SIZE);
@@ -496,6 +579,12 @@ export class Tetris {
 		}
 	}
 
+	/**
+	 * 単一のブロックを描画する
+	 * @param x - フィールド座標 X
+	 * @param y - フィールド座標 Y
+	 * @param color - 色
+	 */
 	private drawBlock(x: number, y: number, color: string) {
 		const s = Tetris.BLOCK_SIZE;
 		this.ctx.fillStyle = color;
@@ -507,6 +596,9 @@ export class Tetris {
 		this.ctx.fillRect(x * s, y * s, s * 0.2, s * 0.2);
 	}
 
+	/**
+	 * ゲームロジックを毎フレーム更新する
+	 */
 	update() {
 		// オートモード遷移判定
 		if (!this.isAutoMode && Date.now() - this.lastInputTime > this.AUTO_MODE_DELAY) {
@@ -541,6 +633,9 @@ export class Tetris {
 		}
 	}
 
+	/**
+	 * ゲームを再開始する
+	 */
 	private restart() {
 		this.field = this.createField();
 		this.score = 0;
@@ -555,6 +650,10 @@ export class Tetris {
 	// -------------------------
 	// ユーザー入力
 	// -------------------------
+	/**
+	 * キー入力イベントを処理する
+	 * @param e - キーボードイベント
+	 */
 	handleKey(e: KeyboardEvent) {
 		this.isAutoMode = false;
 		this.isOpenerActive = false; // ユーザーが触ったら定石中止

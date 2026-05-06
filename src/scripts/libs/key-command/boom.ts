@@ -1,6 +1,11 @@
 import { addStyle } from "../ui-utils";
 import boomStyles from "./boom.css?inline";
 
+/**
+ * 要素の計算済みスタイルを別の要素にコピーする
+ * @param src - コピー元の要素
+ * @param target - コピー先の要素
+ */
 function copyComputedStyle(src: Element, target: HTMLElement) {
 	const computed = getComputedStyle(src);
 	for (let prop of computed) {
@@ -8,6 +13,12 @@ function copyComputedStyle(src: Element, target: HTMLElement) {
 	}
 }
 
+/**
+ * 爆発エフェクトのパーティクルを作成する
+ * @param x - 生成位置 X
+ * @param y - 生成位置 Y
+ * @param color - パーティクルの色
+ */
 function createParticle(x: number, y: number, color: string) {
 	const p = document.createElement("div");
 	p.className = "bomb-particle";
@@ -26,6 +37,10 @@ function createParticle(x: number, y: number, color: string) {
 	setTimeout(() => p.remove(), 800);
 }
 
+/**
+ * 要素をクリックした際に爆発させるイベントハンドラ
+ * @param e - ポインターイベント
+ */
 export function domOnBomb(e: PointerEvent) {
 	addStyle(boomStyles, "boom-style");
 

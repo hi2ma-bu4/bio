@@ -5,9 +5,9 @@ import { loadHeartShape } from "@tsparticles/shape-heart";
 import { initOptions } from "./options.js";
 
 /**
- *
- * @param engine -
- * @param refresh -
+ * ハートの泡プリセットをロードする
+ * @param engine - tsparticlesエンジン
+ * @param refresh - ロード後にリフレッシュするかどうか
  */
 export async function loadHeartBubblePreset(engine: Engine, refresh = true): Promise<void> {
 	await loadBasic(engine, false);

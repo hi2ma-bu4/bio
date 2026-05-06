@@ -45,20 +45,35 @@ const CANDIDATE_CHARS = Array.from(
 				chars.push(char);
 			}
 			return chars;
-		})
-	)
+		}),
+	),
 );
 
 let activeController: RandomEffectController | null = null;
 
+/**
+ * 文字が空白文字かどうかを判定する
+ * @param char - 対象の文字
+ * @returns 空白文字であれば true
+ */
 function isWhitespace(char: string): boolean {
 	return /\s/u.test(char);
 }
 
+/**
+ * スタイルオブジェクトからフォント設定値を解決する
+ * @param style - CSSスタイル
+ * @returns フォント設定文字列
+ */
 function resolveFontValue(style: CSSStyleDeclaration): string {
 	return style.font || `${style.fontStyle} ${style.fontVariant} ${style.fontWeight} ${style.fontSize} / ${style.lineHeight} ${style.fontFamily}`;
 }
 
+/**
+ * テキストノードがレンダリング対象かどうかを判定する
+ * @param node - 対象のテキストノード
+ * @returns レンダリング対象であれば true
+ */
 function isRenderableTextNode(node: Text): boolean {
 	const parent = node.parentElement;
 	if (!parent) return false;
@@ -67,15 +82,30 @@ function isRenderableTextNode(node: Text): boolean {
 	return true;
 }
 
+/**
+ * 要素のvalue属性を管理対象とするかどうかを判定する
+ * @param element - 対象の要素
+ * @returns 管理対象であれば true
+ */
 function isValueManagedInput(element: Element): element is HTMLInputElement {
 	return element instanceof HTMLInputElement && VALUE_INPUT_TYPES.has(element.type.toLowerCase());
 }
 
+/**
+ * フォントごとの文字幅プロファイルを管理するクラス
+ */
 class WidthProfile {
+	/** 計測用コンテキスト */
 	private readonly context: CanvasRenderingContext2D | null;
+	/** 幅ごとの文字バケット */
 	private readonly widthBuckets = new Map<string, readonly string[]>();
+	/** 文字幅のキャッシュ */
 	private readonly widthCache = new Map<string, string>();
 
+	/**
+	 * コンストラクタ
+	 * @param font - フォント設定文字列
+	 */
 	constructor(font: string) {
 		const canvas = document.createElement("canvas");
 		this.context = canvas.getContext("2d");
@@ -85,6 +115,11 @@ class WidthProfile {
 		this.buildWidthBuckets();
 	}
 
+	/**
+	 * 文字列をランダム化するための関数を生成する
+	 * @param source - 元の文字列
+	 * @returns ランダム化関数
+	 */
 	createRandomizer(source: string): RandomizeString {
 		const slots = Array.from(source, (char) => this.createSlot(char));
 		const buffer = new Array<string>(slots.length);
@@ -98,6 +133,9 @@ class WidthProfile {
 		};
 	}
 
+	/**
+	 * 文字幅ごとのバケットを構築する
+	 */
 	private buildWidthBuckets(): void {
 		const mutableBuckets = new Map<string, string[]>();
 
@@ -118,6 +156,11 @@ class WidthProfile {
 		}
 	}
 
+	/**
+	 * 指定した文字の置換スロットを作成する
+	 * @param char - 対象の文字
+	 * @returns スロット情報
+	 */
 	private createSlot(char: string): RandomSlot {
 		if (isWhitespace(char)) return char;
 
@@ -134,6 +177,11 @@ class WidthProfile {
 		};
 	}
 
+	/**
+	 * バケットからランダムに文字を選択する
+	 * @param slot - バケット情報
+	 * @returns 選択された文字
+	 */
 	private pickFromBucket(slot: RandomBucketSlot): string {
 		const { bucket, originalIndex } = slot;
 		if (bucket.length === 0) return "";
@@ -147,6 +195,11 @@ class WidthProfile {
 		return bucket[index] ?? bucket[0] ?? "";
 	}
 
+	/**
+	 * 文字幅を計測し、キーを取得する
+	 * @param char - 対象の文字
+	 * @returns 幅キー
+	 */
 	private measureWidthKey(char: string): string | null {
 		const cached = this.widthCache.get(char);
 		if (cached) return cached;
@@ -161,15 +214,28 @@ class WidthProfile {
 	}
 }
 
+/**
+ * ランダム文字エフェクトを制御するクラス
+ */
 class RandomEffectController {
+	/** アニメーションフレームID */
 	private frameId: number | null = null;
+	/** 変更監視用オブザーバー */
 	private observer: MutationObserver | null = null;
+	/** 適用中フラグ（無限ループ防止用） */
 	private isApplying = false;
+	/** 管理対象のテキストノード */
 	private readonly textNodes = new Map<Text, RenderState>();
+	/** 管理対象の要素属性 */
 	private readonly managedElements = new Map<HTMLElement, ManagedElementState>();
+	/** フォントごとの幅プロファイル */
 	private readonly widthProfiles = new Map<string, WidthProfile>();
+	/** ドキュメントタイトルの状態 */
 	private titleState: RenderState | null = null;
 
+	/**
+	 * エフェクトを開始する
+	 */
 	start(): void {
 		this.collectFromNode(document.documentElement);
 		this.captureDocumentTitle();
@@ -211,6 +277,9 @@ class RandomEffectController {
 		});
 	}
 
+	/**
+	 * エフェクトを停止し、元の状態に戻す
+	 */
 	stop(): void {
 		if (this.frameId != null) {
 			cancelAnimationFrame(this.frameId);
@@ -221,6 +290,7 @@ class RandomEffectController {
 		this.restoreOriginals();
 	}
 
+	/** 描画ループ */
 	private render = (): void => {
 		this.isApplying = true;
 
@@ -268,6 +338,9 @@ class RandomEffectController {
 		this.frameId = requestAnimationFrame(this.render);
 	};
 
+	/**
+	 * 元の文字列を復元する
+	 */
 	private restoreOriginals(): void {
 		this.isApplying = true;
 
@@ -297,6 +370,10 @@ class RandomEffectController {
 		this.isApplying = false;
 	}
 
+	/**
+	 * ノードから管理対象を収集する
+	 * @param node - 対象のノード
+	 */
 	private collectFromNode(node: Node): void {
 		if (node instanceof Text) {
 			this.captureTextNode(node);
@@ -326,6 +403,10 @@ class RandomEffectController {
 		}
 	}
 
+	/**
+	 * 削除されたノードを管理対象から外す
+	 * @param node - 削除されたノード
+	 */
 	private cleanupRemovedNode(node: Node): void {
 		if (node instanceof Text) {
 			this.textNodes.delete(node);
@@ -352,6 +433,10 @@ class RandomEffectController {
 		});
 	}
 
+	/**
+	 * テキストノードをキャプチャし管理対象に追加する
+	 * @param node - 対象のテキストノード
+	 */
 	private captureTextNode(node: Text): void {
 		if (!isRenderableTextNode(node)) {
 			this.textNodes.delete(node);
@@ -370,6 +455,10 @@ class RandomEffectController {
 		});
 	}
 
+	/**
+	 * 要素の属性や状態をキャプチャし管理対象に追加する
+	 * @param element - 対象の要素
+	 */
 	private captureElementState(element: HTMLElement): void {
 		const attributes: ManagedElementState["attributes"] = {};
 
@@ -406,6 +495,9 @@ class RandomEffectController {
 		});
 	}
 
+	/**
+	 * ドキュメントタイトルをキャプチャする
+	 */
 	private captureDocumentTitle(): void {
 		const currentTitle = document.title;
 		if (!currentTitle) {
@@ -420,6 +512,12 @@ class RandomEffectController {
 		this.titleState = this.createRenderState(currentTitle, document.body ?? document.documentElement);
 	}
 
+	/**
+	 * レンダリング状態オブジェクトを作成する
+	 * @param original - 元の文字列
+	 * @param styleSource - フォントスタイルの参照元要素
+	 * @returns レンダリング状態
+	 */
 	private createRenderState(original: string, styleSource: Element | null): RenderState {
 		const widthProfile = this.getWidthProfile(styleSource);
 		return {
@@ -429,6 +527,11 @@ class RandomEffectController {
 		};
 	}
 
+	/**
+	 * 要素のフォントに対応する幅プロファイルを取得または作成する
+	 * @param styleSource - 参照元要素
+	 * @returns 幅プロファイル
+	 */
 	private getWidthProfile(styleSource: Element | null): WidthProfile {
 		const target = styleSource ?? document.body ?? document.documentElement;
 		const style = getComputedStyle(target);
@@ -442,12 +545,18 @@ class RandomEffectController {
 	}
 }
 
+/**
+ * ランダムエフェクトを開始する
+ */
 export function startRandomEffect(): void {
 	activeController?.stop();
 	activeController = new RandomEffectController();
 	activeController.start();
 }
 
+/**
+ * ランダムエフェクトを停止する
+ */
 export function stopRandomEffect(): void {
 	activeController?.stop();
 	activeController = null;

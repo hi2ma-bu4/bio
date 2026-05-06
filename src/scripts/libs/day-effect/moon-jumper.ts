@@ -9,25 +9,48 @@ interface Platform {
 	body: Matter.Body;
 }
 
+/**
+ * 「Moon Jumper」を制御するクラス
+ */
 class MoonJumper {
+	/** 物理エンジン */
 	private engine: Matter.Engine | null = null;
+	/** 実行ランナー */
 	private runner: Matter.Runner | null = null;
+	/** ゲーム用コンテナ */
 	private container: HTMLDivElement | null = null;
+	/** プレイヤー（ウサギ）の物理ボディ */
 	private rabbit: Matter.Body | null = null;
+	/** プレイヤー（ウサギ）の表示要素 */
 	private rabbitEl: HTMLDivElement | null = null;
+	/** 高度表示要素 */
 	private heightEl: HTMLDivElement | null = null;
+	/** 左側の壁 */
 	private leftWall: Matter.Body | null = null;
+	/** 右側の壁 */
 	private rightWall: Matter.Body | null = null;
+	/** 静的プラットフォームのリスト */
 	private platforms: Platform[] = [];
+	/** 足場（雲）のリスト */
 	private clouds: { body: Matter.Body; el: HTMLDivElement }[] = [];
+	/** 背景の星々のリスト */
 	private stars: { el: HTMLDivElement; x: number; y: number; parallax: number; opacity: number }[] = [];
+	/** 宇宙空間に到達したかどうか */
 	private inSpace = false;
+	/** 最後にクリックした時間 */
 	private lastClickTime = 0;
+	/** アニメーションフレームID */
 	private animationFrameId: number | null = null;
+	/** クリックハンドラ */
 	private clickHandler: ((e: MouseEvent) => void) | null = null;
+	/** リサイズハンドラ */
 	private resizeHandler: (() => void) | null = null;
+	/** スクロールロックハンドラ */
 	private scrollLockHandler: ((e: Event) => void) | null = null;
 
+	/**
+	 * ゲームを開始する
+	 */
 	public async start() {
 		if (this.container) return;
 
@@ -57,6 +80,9 @@ class MoonJumper {
 		window.addEventListener("resize", this.resizeHandler);
 	}
 
+	/**
+	 * スクロールをロックする
+	 */
 	private lockScroll() {
 		document.body.style.overflow = "hidden";
 		this.scrollLockHandler = (e: Event) => {
@@ -68,6 +94,9 @@ class MoonJumper {
 		window.addEventListener("touchmove", this.scrollLockHandler, { passive: false });
 	}
 
+	/**
+	 * スクロールロックを解除する
+	 */
 	private unlockScroll() {
 		document.body.style.overflow = "";
 		if (this.scrollLockHandler) {
@@ -76,6 +105,9 @@ class MoonJumper {
 		}
 	}
 
+	/**
+	 * 物理演算を初期化する
+	 */
 	private initPhysics() {
 		this.engine = Engine.create();
 		this.engine.gravity.y = 1.2;
@@ -114,6 +146,9 @@ class MoonJumper {
 		});
 	}
 
+	/**
+	 * プレイヤー（ウサギ）を生成する
+	 */
 	private spawnRabbit() {
 		const width = window.innerWidth;
 		const docHeight = document.body.scrollHeight;
@@ -136,6 +171,9 @@ class MoonJumper {
 		this.container?.appendChild(this.rabbitEl);
 	}
 
+	/**
+	 * DOM要素からプラットフォームを生成する
+	 */
 	private initPlatforms() {
 		// モバイルチェック: ウィンドウ幅が狭い場合、DOMベースのプラットフォームを生成しない
 		if (window.innerWidth < 768) return;
@@ -188,6 +226,12 @@ class MoonJumper {
 		});
 	}
 
+	/**
+	 * 矩形情報からプラットフォームを追加する
+	 * @param rect - 対象の矩形
+	 * @param currentScroll - 現在のスクロール位置
+	 * @param processedRects - すでに処理済みの矩形リスト
+	 */
 	private addPlatformFromRect(rect: DOMRect | DOMRectReadOnly, currentScroll: number, processedRects: { left: number; right: number; top: number; bottom: number }[]) {
 		if (rect.width < 10 || rect.height < 10) return;
 
@@ -215,6 +259,10 @@ class MoonJumper {
 		}
 	}
 
+	/**
+	 * クリック時のイベントハンドラ（雲を生成）
+	 * @param e - マウスイベント
+	 */
 	private handleClick(e: MouseEvent) {
 		if (!this.engine || !this.rabbit) return;
 
@@ -277,6 +325,9 @@ class MoonJumper {
 		}, 8000);
 	}
 
+	/**
+	 * ウィンドウリサイズ時のイベントハンドラ
+	 */
 	private handleResize() {
 		const width = window.innerWidth;
 		if (this.leftWall && this.rightWall) {
@@ -285,6 +336,9 @@ class MoonJumper {
 		}
 	}
 
+	/**
+	 * ゲームループを開始する
+	 */
 	private startLoop() {
 		const update = () => {
 			if (!this.rabbit || !this.rabbitEl || !this.container || !this.heightEl) return;
@@ -390,6 +444,10 @@ class MoonJumper {
 		update();
 	}
 
+	/**
+	 * 背景の星々を高度に合わせて更新する
+	 * @param altitude - 現在の高度
+	 */
 	private updateStars(altitude: number) {
 		if (this.stars.length === 0) {
 			for (let i = 0; i < 60; i++) {
@@ -422,10 +480,16 @@ class MoonJumper {
 		});
 	}
 
+	/**
+	 * 星々を非表示にする
+	 */
 	private hideStars() {
 		this.stars.forEach((s) => (s.el.style.opacity = "0"));
 	}
 
+	/**
+	 * ゲームを停止し、全リソースを解放する
+	 */
 	public stop() {
 		this.unlockScroll();
 		if (this.animationFrameId) cancelAnimationFrame(this.animationFrameId);
@@ -464,8 +528,11 @@ class MoonJumper {
 	}
 }
 
+/** MoonJumperインスタンス */
 export const moonJumper = new MoonJumper();
+/** ゲーム開始関数 */
 export const startMoonJumper = () => {
 	moonJumper.start();
 };
+/** ゲーム停止関数 */
 export const stopMoonJumper = () => moonJumper.stop();

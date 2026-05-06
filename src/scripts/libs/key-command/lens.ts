@@ -2,20 +2,35 @@ import { showToast } from "../ui-toast";
 import { addStyle, removeStyle } from "../ui-utils";
 import lensStyles from "./lens.css?inline";
 
+/**
+ * 重力レンズ（歪み）エフェクトを制御するクラス
+ */
 class GravitationalLens {
+	/** 有効フラグ */
 	private enabled: boolean = false;
+	/** SVG要素（フィルター定義用） */
 	private svgElement: SVGSVGElement | null = null;
+	/** レンズ表示用要素 */
 	private lensDiv: HTMLDivElement | null = null;
+	/** フィルターのID */
 	private filterId = "gravitational-lens-filter";
 
+	/** bind済みのマウス移動ハンドラ */
 	private handleMouseMoveBound: (e: MouseEvent) => void;
+	/** bind済みのタッチ移動ハンドラ */
 	private handleTouchMoveBound: (e: TouchEvent) => void;
 
+	/**
+	 * コンストラクタ
+	 */
 	constructor() {
 		this.handleMouseMoveBound = this.handleMouseMove.bind(this);
 		this.handleTouchMoveBound = this.handleTouchMove.bind(this);
 	}
 
+	/**
+	 * 初期化処理を行う
+	 */
 	public init() {
 		if (this.svgElement) return;
 
@@ -56,6 +71,9 @@ class GravitationalLens {
 		document.body.appendChild(this.lensDiv);
 	}
 
+	/**
+	 * 有効/無効を切り替える
+	 */
 	public toggle() {
 		if (this.enabled) {
 			this.disable();
@@ -64,6 +82,9 @@ class GravitationalLens {
 		}
 	}
 
+	/**
+	 * エフェクトを有効化する
+	 */
 	public enable() {
 		if (this.enabled) return;
 		this.init();
@@ -74,6 +95,9 @@ class GravitationalLens {
 		showToast("🔭GravitationalLens: Enabled!");
 	}
 
+	/**
+	 * エフェクトを無効化する
+	 */
 	public disable() {
 		if (!this.enabled) return;
 		this.enabled = false;
@@ -83,16 +107,29 @@ class GravitationalLens {
 		showToast("🔭GravitationalLens: Disabled");
 	}
 
+	/**
+	 * マウス移動イベントハンドラ
+	 * @param e - マウスイベント
+	 */
 	private handleMouseMove(e: MouseEvent) {
 		this.updatePosition(e.clientX, e.clientY);
 	}
 
+	/**
+	 * タッチ移動イベントハンドラ
+	 * @param e - タッチイベント
+	 */
 	private handleTouchMove(e: TouchEvent) {
 		if (e.touches.length > 0) {
 			this.updatePosition(e.touches[0].clientX, e.touches[0].clientY);
 		}
 	}
 
+	/**
+	 * レンズの位置を更新する
+	 * @param x - X座標
+	 * @param y - Y座標
+	 */
 	private updatePosition(x: number, y: number) {
 		if (this.lensDiv) {
 			this.lensDiv.style.left = `${x}px`;
@@ -100,6 +137,9 @@ class GravitationalLens {
 		}
 	}
 
+	/**
+	 * 破棄処理を行う
+	 */
 	public destroy() {
 		this.disable();
 		this.svgElement?.remove();
@@ -110,4 +150,5 @@ class GravitationalLens {
 	}
 }
 
+/** GravitationalLensインスタンス */
 export const lensMode = new GravitationalLens();

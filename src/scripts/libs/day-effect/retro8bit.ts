@@ -11,6 +11,10 @@ let colorCtx: CanvasRenderingContext2D | null = null;
 
 const DIFF_THRESHOLD = 25;
 
+/**
+ * 要素の元の背景色をキャプチャして保持する
+ * @param el - 対象の要素
+ */
 function captureOriginalBackground(el: HTMLElement): void {
 	if (originalBgMap.has(el)) return;
 
@@ -26,16 +30,32 @@ function captureOriginalBackground(el: HTMLElement): void {
 	originalBgMap.set(el, null);
 }
 
+/**
+ * 要素の元の背景色を取得する
+ * @param el - 対象の要素
+ * @returns 背景色（文字列）、またはnull
+ */
 function getOriginalBg(el: HTMLElement | null): string | null {
 	return el ? (originalBgMap.get(el) ?? null) : null;
 }
 
+/**
+ * 計算されたRGB文字列をパースする
+ * @param color - RGB文字列
+ * @returns [R, G, B]の配列、またはnull
+ */
 function parseComputedRGB(color: string): [number, number, number] | null {
 	const m = color.match(/rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)/);
 	if (!m) return null;
 	return [Number(m[1]), Number(m[2]), Number(m[3])];
 }
 
+/**
+ * 2つの色のユークリッド距離を計算する
+ * @param a - 色A
+ * @param b - 色B
+ * @returns 距離
+ */
 function colorDistance(a: [number, number, number], b: [number, number, number]): number {
 	const dr = a[0] - b[0];
 	const dg = a[1] - b[1];
@@ -43,6 +63,11 @@ function colorDistance(a: [number, number, number], b: [number, number, number])
 	return Math.sqrt(dr * dr + dg * dg + db * db);
 }
 
+/**
+ * 色文字列をRGB配列に正規化する
+ * @param color - 色文字列
+ * @returns [R, G, B]の配列、またはnull
+ */
 function normalizeToRGB(color: string): [number, number, number] | null {
 	const cached = colorCache.get(color);
 	if (cached) return cached;
@@ -61,6 +86,12 @@ function normalizeToRGB(color: string): [number, number, number] | null {
 	return rgb;
 }
 
+/**
+ * 2つの色が十分に異なっているかどうかを判定する
+ * @param a - 色A
+ * @param b - 色B
+ * @returns 異なっていれば true
+ */
 function isColorDifferent(a: string, b: string): boolean {
 	const ra = normalizeToRGB(a);
 	const rb = normalizeToRGB(b);
@@ -73,6 +104,9 @@ function isColorDifferent(a: string, b: string): boolean {
 	return dr * dr + dg * dg + db * db >= DIFF_THRESHOLD * DIFF_THRESHOLD;
 }
 
+/**
+ * レトロ8ビット風エフェクトを開始する
+ */
 export function startRetro8bit(): void {
 	const DOT_SIZE = 4;
 	const EXCLUDE_CLASS = "no-retro";
@@ -190,7 +224,9 @@ export function startRetro8bit(): void {
 	observer.observe(document.body, { childList: true, subtree: true });
 }
 
-// --- 破棄関数 ---
+/**
+ * レトロ8ビット風エフェクトを破棄する
+ */
 export function destroyRetro8bit(): void {
 	removeStyle("retro8bit-style");
 	// MutationObserver停止

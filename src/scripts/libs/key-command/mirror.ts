@@ -1,9 +1,16 @@
 import { addStyle, removeStyle } from "../ui-utils";
 import mirrorStyles from "./mirror.css?inline";
 
+/**
+ * ページ全体を左右反転させるミラーモードを制御するクラス
+ */
 export class MirrorMode {
+	/** 現在ミラーモードかどうか */
 	private mirrorMode: boolean = false;
 
+	/**
+	 * コンストラクタ
+	 */
 	constructor() {
 		this.init();
 	}

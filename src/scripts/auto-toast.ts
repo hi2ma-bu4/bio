@@ -5,6 +5,9 @@ import { showToast } from "./libs/ui-toast";
 
 const adDetector = new AdBlockDetector({ debug: false });
 
+/**
+ * 広告ブロックを検出し、トーストを表示する
+ */
 async function checkAd() {
 	if (await adDetector.detect()) {
 		showToast("👀");

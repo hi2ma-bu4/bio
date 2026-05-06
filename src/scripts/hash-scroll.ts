@@ -6,10 +6,18 @@ declare global {
 	}
 }
 
+/**
+ * 次のスクロール動作を取得する
+ * @returns スクロール動作
+ */
 function getScrollBehavior(): ScrollBehavior {
 	return window.__NEXT_SCROLL_BEHAVIOR__ || "smooth";
 }
 
+/**
+ * リンククリック時のイベントハンドラ
+ * @param e - マウスイベント
+ */
 function handleLinkClick(e: MouseEvent) {
 	const link = (e.target as HTMLElement).closest("a");
 	if (link && link.origin === window.location.origin) {
@@ -23,6 +31,9 @@ function handleLinkClick(e: MouseEvent) {
 	}
 }
 
+/**
+ * ハッシュ位置までスクロールする
+ */
 function scrollToHash() {
 	const hash = window.location.hash;
 	if (!hash) {

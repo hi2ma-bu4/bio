@@ -1,5 +1,10 @@
 import { type Engine, type ISourceOptions, MoveDirection, OutMode } from "@tsparticles/engine";
 
+/**
+ * ハートの泡プリセットのオプションを初期化する
+ * @param engine - tsparticlesエンジン
+ * @returns ハートの泡プリセットのオプション
+ */
 export function initOptions(engine: Engine): ISourceOptions {
 	return {
 		detectRetina: true,

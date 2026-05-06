@@ -4,6 +4,12 @@ type YearlyRange<T extends string> = {
 	end: { month: number; day: number };
 };
 
+/**
+ * 日付が指定された年間の期間リストのいずれかに該当するか判定する
+ * @param target - 判定対象の日付
+ * @param ranges - 期間のリスト
+ * @returns 該当する期間のID、なければnull
+ */
 export function matchYearlyRange<T extends string>(target: Date, ranges: readonly YearlyRange<T>[]): T | null {
 	const md = (target.getMonth() + 1) * 100 + target.getDate();
 
@@ -164,4 +170,5 @@ const yearlyRanges = [
 
 export type seasonEventId = (typeof yearlyRanges)[number]["id"];
 
+/** 現在の日付に基づいた年間イベントのID */
 export const nowYearlyEvent = matchYearlyRange(new Date(), yearlyRanges);

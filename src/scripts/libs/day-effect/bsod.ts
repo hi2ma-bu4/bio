@@ -25,6 +25,10 @@ const BSOD_SHORT_DELAY = 120;
 const OVERLAY_ID = "bsod-screen";
 const STYLE_ID = "bsod-screen-style";
 
+/**
+ * ブラウザを検出する
+ * @returns ブラウザ識別子
+ */
 function detectBrowser() {
 	const ua = navigator.userAgent;
 
@@ -36,6 +40,10 @@ function detectBrowser() {
 	return "browser";
 }
 
+/**
+ * OSを検出する
+ * @returns OS識別子
+ */
 function detectOS(): string {
 	const ua = navigator.userAgent;
 
@@ -46,6 +54,11 @@ function detectOS(): string {
 	return "unknown";
 }
 
+/**
+ * 実行ファイル名を取得する
+ * @param base - ベース名
+ * @returns OSに応じた実行ファイル名
+ */
 function getExecutableName(base: string): string {
 	const os = detectOS();
 
@@ -91,14 +104,29 @@ const QR_PAYLOAD_FACTORIES: Array<(ctx: PayloadContext) => string> = [
 
 let activeController: BsodController | null = null;
 
+/**
+ * 指定範囲のランダムな整数を生成する
+ * @param min - 最小値
+ * @param max - 最大値
+ * @returns ランダムな整数
+ */
 function randomInt(min: number, max: number): number {
 	return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+/**
+ * 配列からランダムに要素を選択する
+ * @param items - 要素の配列
+ * @returns 選択された要素
+ */
 function pickRandom<T>(items: readonly T[]): T {
 	return items[randomInt(0, items.length - 1)];
 }
 
+/**
+ * セッションIDを生成する
+ * @returns セッションID
+ */
 function createSessionId(): string {
 	if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
 		return crypto.randomUUID().slice(0, 8).toUpperCase();
@@ -106,32 +134,59 @@ function createSessionId(): string {
 	return Math.random().toString(16).slice(2, 10).toUpperCase();
 }
 
+/**
+ * スタイルを適用する
+ */
 function ensureStyle(): void {
 	addStyle(bsodStyles, STYLE_ID);
 }
 
+/**
+ * BSODエフェクトを制御するクラス
+ */
 class BsodController {
+	/** 強制表示フラグ */
 	private readonly force: boolean;
+	/** 失敗シナリオ */
 	private readonly scenario: FailureScenario;
+	/** セッションID */
 	private readonly sessionId = createSessionId();
+	/** タイムスタンプ */
 	private readonly timestamp = new Date().toISOString();
+	/** 進捗シード値 */
 	private readonly progressSeed = randomInt(1000, 9999);
 
+	/** 遅延タイマー */
 	private delayTimer: number | null = null;
+	/** 進捗タイマー */
 	private progressTimer: number | null = null;
+	/** 終了タイマー */
 	private finishTimer: number | null = null;
+	/** キーダウンイベント解除関数 */
 	private cleanupKeydown: (() => void) | null = null;
+	/** オーバーレイ要素 */
 	private overlay: HTMLElement | null = null;
+	/** 進捗表示ラベル */
 	private progressLabel: HTMLElement | null = null;
+	/** 破棄フラグ */
 	private destroyed = false;
+	/** ボディスクロールロックフラグ */
 	private didLockBodyScroll = false;
+	/** 現在の進捗率 */
 	private progress = 0;
 
+	/**
+	 * コンストラクタ
+	 * @param options - オプション
+	 */
 	constructor(options: StartBsodEffectOptions = {}) {
 		this.force = options.force ?? false;
 		this.scenario = pickRandom(FAILURE_SCENARIOS);
 	}
 
+	/**
+	 * エフェクトを開始する
+	 */
 	start(): void {
 		const delay = this.force ? BSOD_SHORT_DELAY : randomInt(BSOD_DELAY_MIN, BSOD_DELAY_MAX);
 		this.delayTimer = window.setTimeout(() => {
@@ -140,6 +195,9 @@ class BsodController {
 		}, delay);
 	}
 
+	/**
+	 * エフェクトを破棄する
+	 */
 	destroy(): void {
 		if (this.destroyed) return;
 		this.destroyed = true;
@@ -170,6 +228,9 @@ class BsodController {
 		}
 	}
 
+	/**
+	 * BSOD画面を表示する
+	 */
 	private async show(): Promise<void> {
 		if (this.destroyed || document.getElementById(OVERLAY_ID)) return;
 		ensureStyle();
@@ -214,6 +275,10 @@ class BsodController {
 		this.scheduleProgress();
 	}
 
+	/**
+	 * ESCキーのリスナーを登録する
+	 * @returns 解除関数
+	 */
 	private attachEscapeHandler(): () => void {
 		const onKeydown = (event: KeyboardEvent) => {
 			if (event.key !== "Escape") return;
@@ -226,6 +291,10 @@ class BsodController {
 		};
 	}
 
+	/**
+	 * QRコードを描画する
+	 * @param canvas - キャンバス要素
+	 */
 	private async renderQRCode(canvas: HTMLCanvasElement): Promise<void> {
 		const payloadFactory = pickRandom(QR_PAYLOAD_FACTORIES);
 		const payload = payloadFactory({
@@ -251,6 +320,10 @@ class BsodController {
 		}
 	}
 
+	/**
+	 * QRコードのプレースホルダーを作成する
+	 * @returns プレースホルダー要素
+	 */
 	private createQRPlaceholder(): HTMLElement {
 		const placeholder = document.createElement("div");
 		placeholder.className = "bsod-screen__qr bsod-screen__qr--fallback";
@@ -258,6 +331,9 @@ class BsodController {
 		return placeholder;
 	}
 
+	/**
+	 * 次の進捗更新をスケジュールする
+	 */
 	private scheduleProgress(): void {
 		if (this.destroyed) return;
 		const interval = randomInt(140, 420);
@@ -267,6 +343,9 @@ class BsodController {
 		}, interval);
 	}
 
+	/**
+	 * 進捗を進める
+	 */
 	private advanceProgress(): void {
 		if (this.destroyed) return;
 		const increment = this.progress < 24 ? randomInt(1, 4) : this.progress < 72 ? randomInt(1, 3) : randomInt(1, 2);
@@ -287,12 +366,19 @@ class BsodController {
 	}
 }
 
+/**
+ * BSODエフェクトを開始する
+ * @param options - オプション
+ */
 export function startBsodEffect(options: StartBsodEffectOptions = {}): void {
 	stopBsodEffect();
 	activeController = new BsodController(options);
 	activeController.start();
 }
 
+/**
+ * BSODエフェクトを停止する
+ */
 export function stopBsodEffect(): void {
 	activeController?.destroy();
 	activeController = null;

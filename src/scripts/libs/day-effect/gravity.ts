@@ -74,6 +74,11 @@ function hasDirectTextContent(element: HTMLElement, minLength: number = 3): bool
 	return false;
 }
 
+/**
+ * 要素の深さを取得する
+ * @param element - 対象の要素
+ * @returns 要素のネストの深さ
+ */
 function getElementDepth(element: HTMLElement): number {
 	let depth = 0;
 	let current: HTMLElement | null = element.parentElement;
@@ -84,6 +89,11 @@ function getElementDepth(element: HTMLElement): number {
 	return depth;
 }
 
+/**
+ * 対話可能な要素かどうかを判定する
+ * @param element - 対象の要素
+ * @returns 対話可能な要素であれば true
+ */
 function isInteractiveElement(element: HTMLElement): boolean {
 	if (element.tabIndex >= 0) return true;
 
@@ -95,6 +105,11 @@ function isInteractiveElement(element: HTMLElement): boolean {
 	return ["A", "BUTTON", "INPUT", "SELECT", "TEXTAREA", "SUMMARY", "LABEL", "DIALOG"].includes(element.tagName);
 }
 
+/**
+ * 要素が視覚的な装飾を持っているかどうかを判定する
+ * @param style - CSSスタイル
+ * @returns 装飾があれば true
+ */
 function hasVisualBoxDecoration(style: CSSStyleDeclaration): boolean {
 	const backgroundColor = style.backgroundColor;
 	const hasBackground = backgroundColor !== "transparent" && backgroundColor !== "rgba(0, 0, 0, 0)";
@@ -104,6 +119,11 @@ function hasVisualBoxDecoration(style: CSSStyleDeclaration): boolean {
 	return hasBackground || hasBorder || hasPadding || style.boxShadow !== "none";
 }
 
+/**
+ * DOMRectのリストから行数を計算する
+ * @param rects - DOMRectの配列
+ * @returns 行数
+ */
 function getRowCount(rects: DOMRect[]): number {
 	const rows: number[] = [];
 
@@ -121,6 +141,11 @@ function getRowCount(rects: DOMRect[]): number {
 	return rows.length;
 }
 
+/**
+ * DOMRectのリストを結合した外接矩形を取得する
+ * @param rects - DOMRectの配列
+ * @returns 結合された矩形、またはnull
+ */
 function getUnionRect(rects: DOMRect[]): PhysicsRect | null {
 	if (rects.length === 0) return null;
 
@@ -145,6 +170,10 @@ function getUnionRect(rects: DOMRect[]): PhysicsRect | null {
 	};
 }
 
+/**
+ * ビューポートの矩形情報を取得する
+ * @returns ビューポートの矩形
+ */
 function getViewportRect(): ViewportRect {
 	return {
 		left: 0,
@@ -154,10 +183,21 @@ function getViewportRect(): ViewportRect {
 	};
 }
 
+/**
+ * 矩形がビューポートと交差しているかどうかを判定する
+ * @param rect - 対象の矩形
+ * @param viewport - ビューポートの矩形
+ * @returns 交差していれば true
+ */
 function intersectsViewport(rect: DOMRect, viewport: ViewportRect): boolean {
 	return rect.right > viewport.left && rect.left < viewport.right && rect.bottom > viewport.top && rect.top < viewport.bottom;
 }
 
+/**
+ * 要素が支援技術から隠されているかどうかを判定する
+ * @param element - 対象の要素
+ * @returns 隠されていれば true
+ */
 function isAriaHidden(element: HTMLElement): boolean {
 	let current: HTMLElement | null = element;
 	while (current) {
@@ -170,6 +210,12 @@ function isAriaHidden(element: HTMLElement): boolean {
 	return false;
 }
 
+/**
+ * 要素がレンダリング可能（物理化対象）かどうかを判定する
+ * @param element - 対象の要素
+ * @param viewport - ビューポートの矩形
+ * @returns レンダリング可能であれば true
+ */
 function isRenderableElement(element: HTMLElement, viewport: ViewportRect): boolean {
 	if (!element.isConnected) return false;
 	if (isAriaHidden(element)) return false;
@@ -188,6 +234,11 @@ function isRenderableElement(element: HTMLElement, viewport: ViewportRect): bool
 	return true;
 }
 
+/**
+ * 物理演算に使用する矩形情報を取得する
+ * @param element - 対象の要素
+ * @returns 物理演算用矩形
+ */
 function getPhysicsRect(element: HTMLElement): PhysicsRect {
 	const rect = element.getBoundingClientRect();
 	const fallbackRect: PhysicsRect = {
@@ -655,6 +706,9 @@ export function initializePhysicsEngine(selectors: string[] | string = defaultSe
 	};
 }
 
+/**
+ * 物理エンジンを停止し、全要素を元の状態に復元する
+ */
 export function stopPhysicsEngine(): void {
 	activeCleanup?.();
 }

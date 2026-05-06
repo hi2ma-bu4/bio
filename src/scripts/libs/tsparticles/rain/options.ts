@@ -1,8 +1,8 @@
 import { MoveDirection, OutMode, type Engine, type ISourceOptions } from "@tsparticles/engine";
 
 /**
- *
- * @param engine -
+ * 雨プリセットのオプションを初期化する
+ * @param engine - tsparticlesエンジン
  * @returns 雨プリセットのオプション
  */
 export function initOptions(engine: Engine): ISourceOptions {

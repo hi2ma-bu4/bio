@@ -59,16 +59,30 @@ const CONSTELLATIONS: ConstellationTemplate[] = [
 	},
 ];
 
+/**
+ * 「Star Weaver」を制御するクラス
+ */
 class StarWeaver {
+	/** コンテナ要素 */
 	private container: HTMLDivElement | null = null;
+	/** キャンバス要素 */
 	private canvas: HTMLCanvasElement | null = null;
+	/** 描画コンテキスト */
 	private ctx: CanvasRenderingContext2D | null = null;
+	/** 配置された星々のリスト */
 	private stars: { x: number; y: number; opacity: number; size: number; templateIdx?: number }[] = [];
+	/** 現在作成中の星座テンプレート */
 	private currentTemplate: ConstellationTemplate | null = null;
+	/** 完了した星座名の表示リスト */
 	private completedNames: { name: string; x: number; y: number; life: number }[] = [];
+	/** アニメーションフレームID */
 	private animationFrameId: number | null = null;
+	/** クリックハンドラ */
 	private clickHandler: ((e: MouseEvent) => void) | null = null;
 
+	/**
+	 * ゲームを開始する
+	 */
 	public start() {
 		if (this.container) return;
 
@@ -93,6 +107,9 @@ class StarWeaver {
 		this.loop();
 	}
 
+	/**
+	 * 画面サイズに合わせてリサイズする
+	 */
 	private resize() {
 		if (this.canvas) {
 			this.canvas.width = window.innerWidth;
@@ -100,6 +117,11 @@ class StarWeaver {
 		}
 	}
 
+	/**
+	 * 指定した座標に星を追加する
+	 * @param x - X座標
+	 * @param y - Y座標
+	 */
 	private addStar(x: number, y: number) {
 		if (!this.currentTemplate) {
 			this.currentTemplate = CONSTELLATIONS[Math.floor(Math.random() * CONSTELLATIONS.length)];
@@ -154,6 +176,9 @@ class StarWeaver {
 		}
 	}
 
+	/**
+	 * 描画ループ
+	 */
 	private loop() {
 		if (!this.ctx || !this.canvas) return;
 
@@ -224,6 +249,9 @@ class StarWeaver {
 		this.animationFrameId = requestAnimationFrame(() => this.loop());
 	}
 
+	/**
+	 * ゲームを停止し、全要素を削除する
+	 */
 	public stop() {
 		if (this.animationFrameId) cancelAnimationFrame(this.animationFrameId);
 		if (this.clickHandler && this.canvas) this.canvas.removeEventListener("mousedown", this.clickHandler);
@@ -236,6 +264,9 @@ class StarWeaver {
 	}
 }
 
+/** StarWeaverインスタンス */
 export const starWeaver = new StarWeaver();
+/** ゲーム開始関数 */
 export const startStarWeaver = () => starWeaver.start();
+/** ゲーム停止関数 */
 export const stopStarWeaver = () => starWeaver.stop();

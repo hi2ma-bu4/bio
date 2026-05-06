@@ -12,19 +12,26 @@ export interface AdBlockDetectorOptions {
  * 検出結果の内部ステータス
  */
 interface DetectionResults {
+	/** スタイルのブロック状態 */
 	style?: boolean;
+	/** 要素のブロック状態 */
 	element?: boolean;
 }
 
 /**
- * AdBlockDetector v1.1 (TypeScript Silent Version)
- * ネットワークエラー（net::ERR_BLOCKED_BY_CLIENT）を発生させず、
- * 広告ブロッカーによるCSSやDOMの操作を静かに検知します。
+ * AdBlockDetector
+ * 広告ブロッカーを検知するクラス
  */
 export class AdBlockDetector {
+	/** オプション */
 	private options: Required<AdBlockDetectorOptions>;
+	/** 検出結果 */
 	private results: DetectionResults = {};
 
+	/**
+	 * コンストラクタ
+	 * @param options - オプション
+	 */
 	constructor(options: AdBlockDetectorOptions = {}) {
 		this.options = {
 			timeout: options.timeout ?? 200,
@@ -34,7 +41,7 @@ export class AdBlockDetector {
 
 	/**
 	 * 広告ブロッカーの検知を実行します
-	 * @returns {Promise<boolean>} ブロッカーが検出された場合は true
+	 * @returns ブロッカーが検出された場合は true
 	 */
 	public async detect(): Promise<boolean> {
 		const checks = [
@@ -61,8 +68,8 @@ export class AdBlockDetector {
 	}
 
 	/**
-	 * 1. CSSスタイルの整合性チェック
-	 * 広告ブロッカーが特定のクラス名に対して 'display: none !important' を注入する性質を利用します
+	 * CSSスタイルの整合性チェック
+	 * @returns ブロックされている場合は true
 	 */
 	private async _checkStyle(): Promise<boolean> {
 		const div = document.createElement("div");
@@ -86,8 +93,8 @@ export class AdBlockDetector {
 	}
 
 	/**
-	 * 2. ダミー要素のレンダリングチェック
-	 * 要素が物理的に削除される、または高さが 0 にされる挙動を検知します
+	 * ダミー要素のレンダリングチェック
+	 * @returns ブロックされている場合は true
 	 */
 	private async _checkElement(): Promise<boolean> {
 		const ad = document.createElement("div");

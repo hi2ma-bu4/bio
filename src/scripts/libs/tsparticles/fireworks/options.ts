@@ -1,8 +1,8 @@
 import { DestroyType, type Engine, type IParticlesOptions, type IRangeValue, type ISourceOptions, MoveDirection, OutMode, type RangeValue, type RecursivePartial, StartValueType, rgbToHsl, setRangeValue, stringToRgb } from "@tsparticles/engine";
 
 /**
- *
- * @param engine -
+ * 花火プリセットのオプションを初期化する
+ * @param engine - tsparticlesエンジン
  * @returns 花火プリセットのオプション
  */
 export function initOptions(engine: Engine): ISourceOptions {

@@ -15,13 +15,24 @@ interface BuggyElement {
 	repairHandler: (e: MouseEvent) => void;
 }
 
+/**
+ * 「Bug Hunt」を制御するクラス
+ */
 class BugHunt {
+	/** バグ化可能な要素のリスト */
 	private buggyElements: BuggyElement[] = [];
+	/** バグ発生用のインターバルタイマー */
 	private interval: number | null = null;
+	/** 現在のスコア */
 	private score = 0;
+	/** ゲームが進行中かどうか */
 	private isActive = false;
+	/** スタイル要素（未使用） */
 	private styleElement: HTMLStyleElement | null = null;
 
+	/**
+	 * ゲームを開始する
+	 */
 	public start() {
 		if (this.isActive) return;
 		this.isActive = true;
@@ -67,6 +78,11 @@ class BugHunt {
 		this.interval = window.setInterval(() => this.spawnBug(), 1500 + Math.random() * 3000);
 	}
 
+	/**
+	 * 要素内のテキストノードを再帰的に収集する
+	 * @param node - 対象のノード
+	 * @param map - 収集用のマップ
+	 */
 	private collectTextNodes(node: Node, map: Map<Text, string>) {
 		if (node.nodeType === Node.TEXT_NODE) {
 			const content = node.textContent?.trim();
@@ -78,10 +94,16 @@ class BugHunt {
 		}
 	}
 
+	/**
+	 * 必要なスタイルを注入する
+	 */
 	private injectStyles() {
 		addStyle(bugHuntStyles, "bug-hunt-style");
 	}
 
+	/**
+	 * ランダムにバグを発生させる
+	 */
 	private spawnBug() {
 		if (!this.isActive) return;
 
@@ -117,6 +139,11 @@ class BugHunt {
 		}
 	}
 
+	/**
+	 * テキストをランダムな記号でスクランブルする
+	 * @param text - 元のテキスト
+	 * @returns スクランブル後のテキスト
+	 */
 	private scramble(text: string): string {
 		const chars = "!@#$%^&*()_+-=[]{}|;':\",./<>?0123456789";
 		return text
@@ -125,6 +152,11 @@ class BugHunt {
 			.join("");
 	}
 
+	/**
+	 * バグを修理（クリックイベント）する
+	 * @param el - 修理対象の要素
+	 * @param e - マウスイベント
+	 */
 	private repair(el: HTMLElement, e: MouseEvent) {
 		const target = this.buggyElements.find((b) => b.element === el);
 		if (target && target.isBuggy) {
@@ -140,6 +172,10 @@ class BugHunt {
 		}
 	}
 
+	/**
+	 * 要素を元の状態に復元する
+	 * @param target - 復元対象のBuggyElement
+	 */
 	private restoreElement(target: BuggyElement) {
 		target.isBuggy = false;
 		const el = target.element;
@@ -155,6 +191,9 @@ class BugHunt {
 		});
 	}
 
+	/**
+	 * 勝利演出を表示する
+	 */
 	private showVictory() {
 		const finalBugCount = this.buggyElements.filter((b) => b.isBuggy).length;
 		this.stop();
@@ -187,6 +226,9 @@ class BugHunt {
 		typeLine();
 	}
 
+	/**
+	 * ゲームを停止し、全要素を復元する
+	 */
 	public stop() {
 		this.isActive = false;
 		if (this.interval) clearInterval(this.interval);
@@ -201,6 +243,9 @@ class BugHunt {
 	}
 }
 
+/** BugHuntインスタンス */
 export const bugHunt = new BugHunt();
+/** ゲーム開始関数 */
 export const startBugHunt = () => bugHunt.start();
+/** ゲーム停止関数 */
 export const stopBugHunt = () => bugHunt.stop();

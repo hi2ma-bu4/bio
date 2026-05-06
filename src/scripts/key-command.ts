@@ -7,6 +7,9 @@ import { showToast } from "./libs/ui-toast";
 
 const lifecycle = createEffectLifecycle();
 
+/**
+ * キーコマンドを初期化する
+ */
 function initKeyCommand() {
 	const fk = new FlowKeys(window);
 
@@ -73,6 +76,9 @@ function initKeyCommand() {
 	);
 }
 
+/**
+ * モバイル用コマンドセンターを初期化する
+ */
 async function initMobileCommand() {
 	const { mobileCommandCenter } = await import("./libs/key-command/mobile-command");
 	mobileCommandCenter.init();

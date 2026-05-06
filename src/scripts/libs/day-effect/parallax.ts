@@ -16,16 +16,29 @@ const defaultOptions: ParallaxOptions = {
 	],
 };
 
+/**
+ * パララックスエフェクトを制御するクラス
+ */
 class GyroParallax {
+	/** オプション設定 */
 	private options: ParallaxOptions;
+	/** 有効フラグ */
 	private enabled: boolean = false;
+	/** bind済みの向きイベントハンドラ */
 	private handleOrientationBound: (e: DeviceOrientationEvent) => void;
 
+	/**
+	 * コンストラクタ
+	 * @param options - オプション
+	 */
 	constructor(options: Partial<ParallaxOptions> = {}) {
 		this.options = { ...defaultOptions, ...options };
 		this.handleOrientationBound = this.handleOrientation.bind(this);
 	}
 
+	/**
+	 * パララックスエフェクトを有効化する
+	 */
 	public async enable() {
 		if (this.enabled) return;
 		if (isbot(navigator.userAgent)) return;
@@ -49,6 +62,9 @@ class GyroParallax {
 		document.documentElement.style.setProperty("--parallax-transition", "transform 0.1s ease-out");
 	}
 
+	/**
+	 * パララックスエフェクトを無効化する
+	 */
 	public disable() {
 		if (!this.enabled) return;
 		window.removeEventListener("deviceorientation", this.handleOrientationBound, true);
@@ -56,6 +72,10 @@ class GyroParallax {
 		this.resetStyles();
 	}
 
+	/**
+	 * デバイスの向きが変化した際のイベントハンドラ
+	 * @param event - デバイス向きイベント
+	 */
 	private handleOrientation(event: DeviceOrientationEvent) {
 		if (!this.enabled) return;
 
@@ -72,6 +92,11 @@ class GyroParallax {
 		this.applyParallax(x, y);
 	}
 
+	/**
+	 * パララックス効果を適用する
+	 * @param x - X軸の傾き
+	 * @param y - Y軸の傾き
+	 */
 	private applyParallax(x: number, y: number) {
 		const { intensity } = this.options;
 
@@ -84,6 +109,11 @@ class GyroParallax {
 		this.updateDynamicStyles(x * intensity, y * intensity);
 	}
 
+	/**
+	 * 指定レイヤーのスタイルを動的に更新する
+	 * @param moveX - X軸の移動量
+	 * @param moveY - Y軸の移動量
+	 */
 	private updateDynamicStyles(moveX: number, moveY: number) {
 		const layers = document.querySelectorAll(this.options.layers.join(", "));
 		layers.forEach((el, index) => {
@@ -96,6 +126,9 @@ class GyroParallax {
 		});
 	}
 
+	/**
+	 * スタイルをリセットする
+	 */
 	private resetStyles() {
 		const layers = document.querySelectorAll(this.options.layers.join(", "));
 		layers.forEach((el) => {
@@ -111,6 +144,9 @@ class GyroParallax {
 
 let parallaxInstance: GyroParallax | null = null;
 
+/**
+ * ジャイロパララックスエフェクトを開始する
+ */
 export function startGyroParallax() {
 	if (!parallaxInstance) {
 		parallaxInstance = new GyroParallax();
@@ -118,6 +154,9 @@ export function startGyroParallax() {
 	parallaxInstance.enable();
 }
 
+/**
+ * ジャイロパララックスエフェクトを停止する
+ */
 export function stopGyroParallax() {
 	parallaxInstance?.disable();
 }

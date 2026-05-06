@@ -7,9 +7,9 @@ import { loadStrokeColorUpdater } from "@tsparticles/updater-stroke-color";
 import { initOptions } from "./options.js";
 
 /**
- *
- * @param engine -
- * @param refresh -
+ * 雨プリセットをロードする
+ * @param engine - tsparticlesエンジン
+ * @param refresh - ロード後にリフレッシュするかどうか
  */
 export async function loadRainPreset(engine: Engine, refresh = true): Promise<void> {
 	await loadBasic(engine, false);

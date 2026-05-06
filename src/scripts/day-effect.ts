@@ -11,6 +11,12 @@ import { loadFont } from "./libs/ui-utils";
 
 const lifecycle = createEffectLifecycle();
 
+/**
+ * ライフサイクルに管理されたエフェクトを開始・登録する
+ * @param start - 開始関数
+ * @param stop - 停止関数
+ * @param options - オプション
+ */
 function attachManagedEffect(start: () => void | null, stop: () => void | null, options: { restartOnSwap?: boolean } = {}): void {
 	const { restartOnSwap = true } = options;
 	start?.();
@@ -22,6 +28,10 @@ function attachManagedEffect(start: () => void | null, stop: () => void | null, 
 	}
 }
 
+/**
+ * ページのテーマクラスを同期する
+ * @param pageThemeClass - テーマクラス名
+ */
 function syncPageTheme(pageThemeClass: string): void {
 	if (!pageThemeClass) return;
 
@@ -31,6 +41,9 @@ function syncPageTheme(pageThemeClass: string): void {
 	});
 }
 
+/**
+ * パーティクルエフェクトを初期化する
+ */
 async function initParticles() {
 	let preset: string | null = null;
 	let pageThemeClass: string = "";
@@ -292,6 +305,9 @@ async function initParticles() {
 	}
 }
 
+/**
+ * コンソールログのスタイル出力を初期化する
+ */
 function initLog() {
 	const logs: LogPart[] = [
 		{ text: "SnowsSite\n", style: "font-weight: bold; font-size: 20px;", mode: "gradient", gradientFrom: "#00a6f4", gradientTo: "#4f39f6" },

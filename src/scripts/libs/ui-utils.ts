@@ -2,6 +2,9 @@
 let _savedBodyStyle: { position: string; top: string; overflow: string } | null = null;
 let _scrollTop = 0;
 
+/**
+ * bodyのスクロールをロックする
+ */
 export function lockBodyScroll() {
 	_scrollTop = window.scrollY || document.documentElement.scrollTop || 0;
 	_savedBodyStyle = {
@@ -15,6 +18,9 @@ export function lockBodyScroll() {
 	document.documentElement.classList.add("no-scroll");
 }
 
+/**
+ * bodyのスクロールのロックを解除する
+ */
 export function unlockBodyScroll() {
 	if (_savedBodyStyle) {
 		document.body.style.position = _savedBodyStyle.position;
@@ -26,6 +32,11 @@ export function unlockBodyScroll() {
 	document.documentElement.classList.remove("no-scroll");
 }
 
+/**
+ * 指定した要素内のフォーカス可能な要素を全て取得する
+ * @param el - 対象の要素
+ * @returns フォーカス可能な要素の配列
+ */
 export function getFocusable(el: Element) {
 	return Array.from(el.querySelectorAll<HTMLElement>("a,button,input,textarea,select,[tabindex]")).filter((e) => {
 		if (e.hasAttribute("disabled")) return false;
@@ -35,26 +46,57 @@ export function getFocusable(el: Element) {
 }
 
 // キーボードヘルパー
+/**
+ * Tabキーかどうかを判定する
+ * @param e - キーボードイベント
+ * @returns Tabキーであれば true
+ */
 export function isTabKey(e: KeyboardEvent) {
 	return e.key === "Tab" || (e as any).keyCode === 9;
 }
 
+/**
+ * Enterキーかどうかを判定する
+ * @param e - キーボードイベント
+ * @returns Enterキーであれば true
+ */
 export function isEnterKey(e: KeyboardEvent) {
 	return e.key === "Enter" || (e as any).keyCode === 13;
 }
 
+/**
+ * Spaceキーかどうかを判定する
+ * @param e - キーボードイベント
+ * @returns Spaceキーであれば true
+ */
 export function isSpaceKey(e: KeyboardEvent) {
 	return e.key === " " || e.key === "Space" || (e as any).keyCode === 32;
 }
+
+/**
+ * Escapeキーかどうかを判定する
+ * @param e - キーボードイベント
+ * @returns Escapeキーであれば true
+ */
 export function isEscapeKey(e: KeyboardEvent) {
 	return e.key === "Escape" || e.key === "Esc" || (e as any).keyCode === 27;
 }
 
 // コントロールの有効化キー: Enter または Space
+/**
+ * 活性化キー（EnterまたはSpace）かどうかを判定する
+ * @param e - キーボードイベント
+ * @returns 活性化キーであれば true
+ */
 export function isActivationKey(e: KeyboardEvent) {
 	return isEnterKey(e) || isSpaceKey(e);
 }
 
+/**
+ * 指定した要素内でfocusを閉じ込めるトラップを作成する
+ * @param nav - 対象の要素
+ * @returns トラップ制御オブジェクト
+ */
 export function createFocusTrap(nav: HTMLElement) {
 	let _keydownHandler: ((e: KeyboardEvent) => void) | null = null;
 
@@ -101,6 +143,11 @@ export function createFocusTrap(nav: HTMLElement) {
 	return { activate, deactivate, focusFirst };
 }
 
+/**
+ * ESCキーが押された際のリスナーを登録する
+ * @param onClose - 実行するコールバック関数
+ * @returns 解除用の関数
+ */
 export function addEscapeListener(onClose: () => void) {
 	const _handler = (e: KeyboardEvent) => {
 		if (!isEscapeKey(e)) return;
@@ -116,8 +163,8 @@ export function addEscapeListener(onClose: () => void) {
 
 /**
  * <head> に <style> 要素を追加します
- * @param css CSS 文字列
- * @param id スタイル要素のオプション ID。指定しない場合はランダムな ID が生成されます。
+ * @param css - CSS 文字列
+ * @param id - スタイル要素のオプション ID。指定しない場合はランダムな ID が生成されます。
  * @returns 作成されたスタイル要素の ID。
  */
 export function addStyle(css: string, id?: string): string {
@@ -134,7 +181,7 @@ export function addStyle(css: string, id?: string): string {
 
 /**
  * 指定された ID の <style> 要素を削除します
- * @param id 削除するスタイル要素の ID。
+ * @param id - 削除するスタイル要素の ID。
  */
 export function removeStyle(id: string): void {
 	const style = document.getElementById(id);
@@ -143,6 +190,13 @@ export function removeStyle(id: string): void {
 	}
 }
 
+/**
+ * フォントを非同期でロードし、スタイルを適用する
+ * @param fontName - フォント名
+ * @param fontUrl - フォントファイルのURL
+ * @param querySelector - スタイルを適用するセレクタ
+ * @returns 初期化関数
+ */
 export async function loadFont(fontName: string, fontUrl: string, querySelector: string = "html, body, *"): Promise<(() => void) | null> {
 	const ext = fontUrl.split(".").pop()?.split("?").shift()?.toLowerCase();
 

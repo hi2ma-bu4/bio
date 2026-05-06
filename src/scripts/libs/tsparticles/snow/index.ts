@@ -5,9 +5,9 @@ import { loadExternalRepulseInteraction } from "@tsparticles/interaction-externa
 import { initOptions } from "./options.js";
 
 /**
- *
- * @param engine -
- * @param refresh -
+ * 雪プリセットをロードする
+ * @param engine - tsparticlesエンジン
+ * @param refresh - ロード後にリフレッシュするかどうか
  */
 export async function loadSnowPreset(engine: Engine, refresh = true): Promise<void> {
 	await loadBasic(engine, false);

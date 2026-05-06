@@ -1,3 +1,4 @@
+/** ローカルストレージで使用するキー */
 export const STORAGE_KEY = "theme";
 
 export type themeType = "light" | "dark" | "auto";
@@ -5,13 +6,28 @@ export type themeType = "light" | "dark" | "auto";
 let isThemeLock: boolean = false;
 let lockTheme: themeType | null = null;
 
+/**
+ * ローカルストレージからテーマ設定を取得する
+ * @returns 設定されているテーマ、またはnull
+ */
 export function safeGet(): themeType | null {
 	return typeof localStorage !== "undefined" ? (localStorage.getItem(STORAGE_KEY) as themeType | null) : null;
 }
+
+/**
+ * ローカルストレージにテーマ設定を保存する
+ * @param v - 設定するテーマ
+ */
 export function safeSet(v: themeType) {
 	if (typeof localStorage !== "undefined") localStorage.setItem(STORAGE_KEY, v);
 }
 
+/**
+ * 指定したドキュメントにテーマを適用する
+ * @param mode - 適用するテーマ
+ * @param doc - 対象のドキュメント（デフォルトは現在のdocument）
+ * @param transition - アニメーションを適用するかどうか
+ */
 export function applyTheme(mode: themeType, doc: Document = document, transition: boolean = true) {
 	// 変更禁止状態
 	if (isThemeLock) {
@@ -40,11 +56,18 @@ export function applyTheme(mode: themeType, doc: Document = document, transition
 	}
 }
 
-// テーマ変更
+/**
+ * ストレージの設定に基づきテーマを更新する
+ * @param transition - アニメーションを適用するかどうか
+ */
 export function updateTheme(transition: boolean = true) {
 	applyTheme(safeGet() ?? "auto", document, transition);
 }
 
+/**
+ * テーマ切り替えボタンの表示（アイコン・ラベル）を更新する
+ * @param btn - 対象のボタン要素
+ */
 export function updateToggleButtonUI(btn: HTMLElement) {
 	const state = safeGet() ?? "auto";
 	const sun = btn.querySelector<HTMLElement>(".icon-sun");
@@ -70,10 +93,18 @@ export function updateToggleButtonUI(btn: HTMLElement) {
 	}
 }
 
+/**
+ * ページ内の全てのテーマ切り替えボタンの表示を更新する
+ */
 export function updateAllToggleButtonsUI() {
 	document.querySelectorAll<HTMLButtonElement>(".theme-toggle").forEach((b) => updateToggleButtonUI(b));
 }
 
+/**
+ * 次のテーマ設定を取得する (light -> dark -> auto -> light)
+ * @param current - 現在のテーマ
+ * @returns 次のテーマ
+ */
 export function getNextTheme(current: themeType | null) {
 	const cur = current ?? "auto";
 	switch (cur) {
@@ -86,6 +117,12 @@ export function getNextTheme(current: themeType | null) {
 	}
 }
 
+/**
+ * テーマの変更をロックまたは解除する
+ * @param flag - ロックするかどうか
+ * @param mode - ロック時に強制するテーマ
+ * @param doc - 対象のドキュメント
+ */
 export function themeChangeLock(flag: boolean, mode: themeType | null = null, doc?: Document) {
 	const transition = !doc; // 現在のドキュメントの場合のみトランジションを適用（手動/エフェクトによる変更）
 	if (flag) {
@@ -100,5 +137,5 @@ export function themeChangeLock(flag: boolean, mode: themeType | null = null, do
 }
 
 document.addEventListener("astro:before-swap", (event) => {
-	themeChangeLock(isThemeLock, null, event.newDocument);
+	themeChangeLock(isThemeLock, null, (event as any).newDocument);
 });

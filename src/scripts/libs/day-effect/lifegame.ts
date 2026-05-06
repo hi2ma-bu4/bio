@@ -6,24 +6,47 @@ const TARGET_FPS = 30;
 const DEFAULT_SPAWN_RATE = 0.3;
 const POINTER_RADIUS = 2;
 
+/**
+ * ライフゲームエフェクトを制御するクラス
+ */
 class LifeGameEffect {
+	/** 表示用キャンバス */
 	private readonly canvas: HTMLCanvasElement;
+	/** 表示用コンテキスト */
 	private readonly context: CanvasRenderingContext2D;
+	/** オフスクリーンキャンバス */
 	private readonly offscreenCanvas: HTMLCanvasElement;
+	/** オフスクリーンコンテキスト */
 	private readonly offscreenContext: CanvasRenderingContext2D;
+	/** フレーム更新間隔 */
 	private readonly frameInterval: number;
+	/** グリッドの列数 */
 	private cols = 0;
+	/** グリッドの行数 */
 	private rows = 0;
+	/** 現在のグリッドデータ */
 	private grid = new Uint8Array(0);
+	/** 次世代のグリッドデータ */
 	private nextGrid = new Uint8Array(0);
+	/** 描画用イメージデータ */
 	private imageData: ImageData = new ImageData(1, 1);
+	/** イメージデータのピクセル配列 */
 	private pixels = this.imageData.data;
+	/** requestAnimationFrameのID */
 	private frameId: number | null = null;
+	/** 最後にステップ実行した時間 */
 	private lastStepTime = 0;
+	/** 最後に状態が変化した時間 */
 	private lastChangeTime = 0;
+	/** 生存セル数 */
 	private aliveCount = 0;
+	/** ポインターが指しているセル座標 */
 	private pointerCell: { x: number; y: number } | null = null;
 
+	/**
+	 * コンストラクタ
+	 * @param container - キャンバスを配置するコンテナ要素
+	 */
 	constructor(private readonly container: HTMLElement) {
 		const context = document.createElement("canvas").getContext("2d", { alpha: true });
 		const offscreenContext = document.createElement("canvas").getContext("2d", { alpha: true });
@@ -41,6 +64,9 @@ class LifeGameEffect {
 		this.canvas.id = "back-canvas-lifegame";
 	}
 
+	/**
+	 * エフェクトを開始する
+	 */
 	start(): void {
 		addStyle(lifegameStyles, "lifegame-style");
 		this.container.appendChild(this.canvas);
@@ -53,6 +79,9 @@ class LifeGameEffect {
 		this.frameId = requestAnimationFrame(this.loop);
 	}
 
+	/**
+	 * エフェクトを停止する
+	 */
 	stop(): void {
 		if (this.frameId != null) {
 			cancelAnimationFrame(this.frameId);
@@ -68,10 +97,12 @@ class LifeGameEffect {
 		removeStyle("lifegame-style");
 	}
 
+	/** リサイズイベントハンドラ */
 	private readonly handleResize = (): void => {
 		this.resize(true);
 	};
 
+	/** ポインター移動イベントハンドラ */
 	private readonly handlePointerMove = (event: PointerEvent): void => {
 		if (this.cols <= 0 || this.rows <= 0) return;
 
@@ -81,10 +112,12 @@ class LifeGameEffect {
 		};
 	};
 
+	/** ポインター離脱イベントハンドラ */
 	private readonly handlePointerLeave = (): void => {
 		this.pointerCell = null;
 	};
 
+	/** アニメーションループ */
 	private readonly loop = (time: number): void => {
 		if (time - this.lastStepTime >= this.frameInterval) {
 			this.step();
@@ -95,6 +128,10 @@ class LifeGameEffect {
 		this.frameId = requestAnimationFrame(this.loop);
 	};
 
+	/**
+	 * 画面サイズに合わせてリサイズする
+	 * @param preserve - 現在の状態を維持するかどうか
+	 */
 	private resize(preserve: boolean): void {
 		const width = Math.max(window.innerWidth, 1);
 		const height = Math.max(window.innerHeight, 1);
@@ -105,6 +142,12 @@ class LifeGameEffect {
 		this.initGrid(width, height, preserve);
 	}
 
+	/**
+	 * グリッドを初期化する
+	 * @param width - 横幅
+	 * @param height - 縦幅
+	 * @param preserve - 現在の状態を維持するかどうか
+	 */
 	private initGrid(width: number, height: number, preserve: boolean): void {
 		const newCols = Math.max(1, Math.floor(width / DEFAULT_CELL_SIZE));
 		const newRows = Math.max(1, Math.floor(height / DEFAULT_CELL_SIZE));
@@ -127,6 +170,12 @@ class LifeGameEffect {
 		this.pixels = this.imageData.data;
 	}
 
+	/**
+	 * 現在のグリッドを新しいグリッドの中央にコピーする
+	 * @param target - コピー先のグリッド
+	 * @param targetCols - コピー先の列数
+	 * @param targetRows - コピー先の行数
+	 */
 	private copyCenteredGrid(target: Uint8Array, targetCols: number, targetRows: number): void {
 		const copyCols = Math.min(this.cols, targetCols);
 		const copyRows = Math.min(this.rows, targetRows);
@@ -145,12 +194,19 @@ class LifeGameEffect {
 		}
 	}
 
+	/**
+	 * グリッドにランダムな初期値を設定する
+	 * @param target - 対象のグリッド
+	 */
 	private seedRandom(target: Uint8Array): void {
 		for (let i = 0; i < target.length; i += 1) {
 			target[i] = Math.random() > 1 - DEFAULT_SPAWN_RATE ? 1 : 0;
 		}
 	}
 
+	/**
+	 * 次世代のグリッドを計算する
+	 */
 	private step(): void {
 		let aliveCounter = 0;
 
@@ -191,6 +247,10 @@ class LifeGameEffect {
 		}
 	}
 
+	/**
+	 * ポインター周辺のセルを強制的に生存させる
+	 * @param target - 対象のグリッド
+	 */
 	private applyPointerInfluence(target: Uint8Array): void {
 		if (!this.pointerCell) return;
 
@@ -209,6 +269,10 @@ class LifeGameEffect {
 		}
 	}
 
+	/**
+	 * グリッドをキャンバスに描画する
+	 * @param time - 現在時刻
+	 */
 	private draw(time: number): void {
 		this.context.fillStyle = "rgba(10, 3, 18, 0.18)";
 		this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
@@ -234,10 +298,17 @@ class LifeGameEffect {
 
 let activeEffect: LifeGameEffect | null = null;
 
+/**
+ * キャンバスを配置するコンテナ要素を取得する
+ * @returns コンテナ要素
+ */
 function resolveContainer(): HTMLElement | null {
 	return document.getElementById("bg-canvas") ?? document.body;
 }
 
+/**
+ * ライフゲームエフェクトを開始する
+ */
 export function startLifeGameEffect(): void {
 	stopLifeGameEffect();
 
@@ -248,6 +319,9 @@ export function startLifeGameEffect(): void {
 	activeEffect.start();
 }
 
+/**
+ * ライフゲームエフェクトを停止する
+ */
 export function stopLifeGameEffect(): void {
 	activeEffect?.stop();
 	activeEffect = null;

@@ -76,21 +76,39 @@ const RANDOM_LOGS: BasementLog[] = [
 	{ message: "PERMISSION DENIED: <span style='background-color:#ff0000;color:#ffffff;padding:0 4px'>ACCESS_RESTRICTED</span>", color: "#ff0000", bold: true },
 ];
 
+/**
+ * 「Infinite Basement」を制御するクラス
+ */
 export class InfiniteBasement {
+	/** ログを表示するコンテナ要素 */
 	private container: HTMLDivElement | null = null;
+	/** 無限スクロール用の監視オブジェクト */
 	private observer: IntersectionObserver | null = null;
+	/** ベースモードが有効かどうか */
 	private basementActive: boolean = false;
+	/** 現在のログ行数 */
 	private lineCount = 0;
+	/** セッション固有のUUID */
 	private uuid = typeof crypto !== "undefined" && crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).substring(2, 15);
+	/** システム情報文字列のキャッシュ */
 	private systemInfoStr: string | null = null;
 
+	/** オーバースクロールの蓄積量 */
 	private overscrollAmount = 0;
+	/** オーバースクロール開始時のタイムスタンプ */
 	private overscrollStartTimestamp: number | null = null;
+	/** 最後のホイールイベントのタイムスタンプ */
 	private lastWheelTimestamp = 0;
+	/** 最後のタッチ位置（Y座標） */
 	private lastTouchY = 0;
+	/** タッチ中かどうか */
 	private isTouching = false;
+	/** requestAnimationFrameのID */
 	private tickId: number | null = null;
 
+	/**
+	 * 初期化処理を行う
+	 */
 	public init() {
 		if (this.container) return;
 
@@ -105,10 +123,16 @@ export class InfiniteBasement {
 		this.tick();
 	}
 
+	/**
+	 * 必要なスタイルを適用する
+	 */
 	private ensureStyles() {
 		addStyle(basementStyles, "basement-styles");
 	}
 
+	/**
+	 * スクロールイベントハンドラ
+	 */
 	private handleScroll = () => {
 		if (this.basementActive) return;
 		const scrollHeight = document.documentElement.scrollHeight;
@@ -122,17 +146,26 @@ export class InfiniteBasement {
 		}
 	};
 
+	/**
+	 * ホイールイベントハンドラ
+	 */
 	private handleWheel = (e: WheelEvent) => {
 		if (this.basementActive) return;
 		this.lastWheelTimestamp = Date.now();
 		this.checkOverscroll(e.deltaY);
 	};
 
+	/**
+	 * タッチ開始イベントハンドラ
+	 */
 	private handleTouchStart = (e: TouchEvent) => {
 		this.isTouching = true;
 		this.lastTouchY = e.touches[0].screenY;
 	};
 
+	/**
+	 * タッチ移動イベントハンドラ
+	 */
 	private handleTouchMove = (e: TouchEvent) => {
 		if (this.basementActive) return;
 		const currentY = e.touches[0].screenY;
@@ -141,10 +174,17 @@ export class InfiniteBasement {
 		this.checkOverscroll(delta);
 	};
 
+	/**
+	 * タッチ終了イベントハンドラ
+	 */
 	private handleTouchEnd = () => {
 		this.isTouching = false;
 	};
 
+	/**
+	 * オーバースクロール量をチェック・更新する
+	 * @param delta - スクロールの変化量
+	 */
 	private checkOverscroll(delta: number) {
 		const scrollHeight = document.documentElement.scrollHeight;
 		const scrollTop = window.scrollY || window.pageYOffset;
@@ -158,6 +198,9 @@ export class InfiniteBasement {
 		}
 	}
 
+	/**
+	 * 毎フレームの更新処理
+	 */
 	private tick = () => {
 		if (this.basementActive) return;
 
@@ -186,6 +229,9 @@ export class InfiniteBasement {
 		this.tickId = requestAnimationFrame(this.tick);
 	};
 
+	/**
+	 * ベースメントモードを有効化する
+	 */
 	private async activateBasement() {
 		if (this.basementActive) return;
 		this.basementActive = true;
@@ -206,6 +252,9 @@ export class InfiniteBasement {
 		this.setupInfiniteScroll();
 	}
 
+	/**
+	 * 無限スクロールの設定を行う
+	 */
 	private setupInfiniteScroll() {
 		const sentinel = document.createElement("div");
 		sentinel.id = "basement-sentinel";
@@ -227,6 +276,9 @@ export class InfiniteBasement {
 		this.addMoreLogs();
 	}
 
+	/**
+	 * ログをさらに追加する
+	 */
 	private async addMoreLogs() {
 		if (!this.container) return;
 
@@ -236,6 +288,10 @@ export class InfiniteBasement {
 		}
 	}
 
+	/**
+	 * ログ要素を1つ追加する
+	 * @param logEntry - ログ情報
+	 */
 	private async addLogElement(logEntry: BasementLog) {
 		const messageTemplate = await this.formatGlobalPlaceholders(logEntry.message);
 		const lines = messageTemplate.split("\n");
@@ -274,6 +330,11 @@ export class InfiniteBasement {
 		}
 	}
 
+	/**
+	 * 文字列内のプレースホルダーを置換する
+	 * @param template - テンプレート文字列
+	 * @returns 置換後の文字列
+	 */
 	private async formatGlobalPlaceholders(template: string): Promise<string> {
 		let msg = template;
 		if (msg.includes("{ua}")) {
@@ -286,6 +347,10 @@ export class InfiniteBasement {
 		return msg;
 	}
 
+	/**
+	 * システム情報を取得する
+	 * @returns システム情報文字列
+	 */
 	private async getSystemInfoString(): Promise<string> {
 		if (this.systemInfoStr) return this.systemInfoStr;
 
@@ -326,6 +391,9 @@ export class InfiniteBasement {
 		return this.systemInfoStr;
 	}
 
+	/**
+	 * 破棄処理を行う
+	 */
 	public destroy() {
 		this.container?.remove();
 		this.container = null;
@@ -344,4 +412,5 @@ export class InfiniteBasement {
 	}
 }
 
+/** InfiniteBasementインスタンス */
 export const infiniteBasement = new InfiniteBasement();

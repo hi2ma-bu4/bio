@@ -1,6 +1,10 @@
 import { getFocusable } from "./libs/ui-utils";
 
 let lastScrollFunction: () => void;
+
+/**
+ * ヘッダーのスクロール制御を初期化する
+ */
 function initHeaderScroll() {
 	const mainHeader = document.getElementById("main-header");
 	const floatingHeader = document.getElementById("floating-header");
@@ -94,6 +98,9 @@ function initHeaderScroll() {
 	window.addEventListener("scroll", lastScrollFunction, { passive: true });
 }
 
+/**
+ * 初期化処理を実行する
+ */
 function init() {
 	initHeaderScroll();
 	if (Math.random() < 0.01) {

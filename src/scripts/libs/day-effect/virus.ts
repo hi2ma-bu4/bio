@@ -22,16 +22,29 @@ const TRAIL_SELECTOR = "[data-virus-trail]";
 
 const SKIPPED_TAGS = new Set(["HTML", "BODY", "HEAD", "SCRIPT", "STYLE", "NOSCRIPT", "LINK", "META", "TITLE", "MAIN"]);
 
+/**
+ * 指定した要素とその子孫からID属性を削除する
+ * @param root - 対象のルート要素
+ */
 function removeElementIds(root: HTMLElement): void {
 	root.removeAttribute("id");
 	root.querySelectorAll<HTMLElement>("[id]").forEach((node) => node.removeAttribute("id"));
 }
 
+/**
+ * ランダムに動かすエフェクトを制御するクラス
+ */
 class VirusEffectController {
+	/** 要素ごとのアニメーション状態 */
 	private readonly state = new Map<HTMLElement, VirusElementState>();
+	/** 更新タイマーID */
 	private timerId: number | null = null;
+	/** 開始フラグ */
 	private started = false;
 
+	/**
+	 * エフェクトを開始する
+	 */
 	start(): void {
 		if (this.started) {
 			this.stop();
@@ -48,6 +61,9 @@ class VirusEffectController {
 		this.scheduleNextTick();
 	}
 
+	/**
+	 * エフェクトを停止し、全要素を元の状態に復元する
+	 */
 	stop(): void {
 		if (this.timerId != null) {
 			window.clearTimeout(this.timerId);
@@ -70,10 +86,14 @@ class VirusEffectController {
 		removeStyle("virus-style");
 	}
 
+	/** リサイズイベントハンドラ */
 	private readonly handleResize = (): void => {
 		this.collectElements();
 	};
 
+	/**
+	 * アニメーション対象となる要素を収集する
+	 */
 	private collectElements(): void {
 		for (const [element, state] of this.state) {
 			if (!element.isConnected) continue;
@@ -102,6 +122,11 @@ class VirusEffectController {
 		});
 	}
 
+	/**
+	 * 要素がアニメーション対象として適切かどうかを判定する
+	 * @param element - 対象の要素
+	 * @returns 適切であれば true
+	 */
 	private isEligible(element: HTMLElement): boolean {
 		if (SKIPPED_TAGS.has(element.tagName)) return false;
 		if (element.matches(TRAIL_SELECTOR) || element.closest(TRAIL_SELECTOR)) return false;
@@ -119,10 +144,14 @@ class VirusEffectController {
 		return true;
 	}
 
+	/**
+	 * 次の更新タイミングをスケジュールする
+	 */
 	private scheduleNextTick(): void {
 		this.timerId = window.setTimeout(this.tick, 1000 / FPS);
 	}
 
+	/** 毎フレームの更新処理 */
 	private readonly tick = (): void => {
 		if (!this.started) return;
 
@@ -163,6 +192,12 @@ class VirusEffectController {
 		this.scheduleNextTick();
 	};
 
+	/**
+	 * 残像（トレイル）エフェクトを作成する
+	 * @param element - 対象の要素
+	 * @param state - 現在の状態
+	 * @param trailOpacity - 残像の透明度
+	 */
 	private createTrail(element: HTMLElement, state: VirusElementState, trailOpacity: number): void {
 		const rect = element.getBoundingClientRect();
 		if (rect.width < MIN_ELEMENT_SIZE || rect.height < MIN_ELEMENT_SIZE) return;
@@ -201,10 +236,20 @@ class VirusEffectController {
 		);
 	}
 
+	/**
+	 * 全ての残像要素を削除する
+	 */
 	private removeTrails(): void {
 		document.querySelectorAll<HTMLElement>(TRAIL_SELECTOR).forEach((element) => element.remove());
 	}
 
+	/**
+	 * 値を指定範囲内に収める
+	 * @param value - 元の値
+	 * @param min - 最小値
+	 * @param max - 最大値
+	 * @returns 収められた値
+	 */
 	private clamp(value: number, min: number, max: number): number {
 		return Math.min(max, Math.max(min, value));
 	}
@@ -212,12 +257,18 @@ class VirusEffectController {
 
 let activeController: VirusEffectController | null = null;
 
+/**
+ * ウイルスエフェクトを開始する
+ */
 export function startVirusEffect(): void {
 	activeController?.stop();
 	activeController = new VirusEffectController();
 	activeController.start();
 }
 
+/**
+ * ウイルスエフェクトを停止する
+ */
 export function stopVirusEffect(): void {
 	activeController?.stop();
 	activeController = null;

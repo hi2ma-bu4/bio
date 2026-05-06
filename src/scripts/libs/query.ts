@@ -1,3 +1,8 @@
+/**
+ * URLクエリパラメータを取得する
+ * @param keys - 取得したいキーの配列（省略時は全て）
+ * @returns パラメータのキーと値のマップ
+ */
 export function getQueryParams<T extends string = string>(keys?: T[]): Record<T, string | string[]> {
 	const params = new URLSearchParams(window.location.search);
 	const result = {} as Record<T, string | string[]>;
@@ -19,6 +24,11 @@ export function getQueryParams<T extends string = string>(keys?: T[]): Record<T,
 	return result;
 }
 
+/**
+ * クエリパラメータの値を真偽値に変換する
+ * @param param - 変換対象の値
+ * @returns 真偽値
+ */
 export function paramToBoolean(param: string | string[]): boolean {
 	if (!param) return false;
 	if (!Array.isArray(param)) {

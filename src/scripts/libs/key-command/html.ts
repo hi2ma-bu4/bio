@@ -1,6 +1,11 @@
 import { addStyle, removeStyle } from "../ui-utils";
 import htmlStyles from "./html.css?inline";
 
+/**
+ * 文字列内の特殊文字をHTMLエンティティにエスケープする
+ * @param value - エスケープする文字列
+ * @returns エスケープ後の文字列
+ */
 function escapeHtml(value: string): string {
 	return value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 }
@@ -33,12 +38,26 @@ let renderState: HtmlRenderState | null = null;
 let isHtmlModeActive = false;
 let isRenderLifecycleBound = false;
 
+/**
+ * CSSプロパティと値を結合してスタイル文字列に追加する
+ * @param css - 現在のCSS文字列
+ * @param property - プロパティ名
+ * @param value - プロパティ値
+ * @param ignore - 無視する値のリスト
+ * @returns 更新されたCSS文字列
+ */
 function concatStyle(css: string, property: string, value: string, ignore: string[] = ["normal", "none", "auto"]): string {
 	if (!value) return css;
 	if (ignore.includes(value)) return css;
 	return css + `${property}:${value};`;
 }
 
+/**
+ * 特定のCSSプロパティ値を正規化する
+ * @param property - プロパティ名
+ * @param value - プロパティ値
+ * @returns 正規化された値
+ */
 function normalizeStyleValue(property: string, value: string): string {
 	if (property === "font-family") {
 		return value.replace(/,\s*$/, "").replace(/"/g, "'");
@@ -46,6 +65,15 @@ function normalizeStyleValue(property: string, value: string): string {
 	return value;
 }
 
+/**
+ * 親要素からの継承を考慮してスタイルを追加する
+ * @param css - 現在のCSS文字列
+ * @param property - プロパティ名
+ * @param value - 現在のプロパティ値
+ * @param parentValue - 親要素のプロパティ値
+ * @param ignore - 無視する値のリスト
+ * @returns 更新されたCSS文字列
+ */
 function addInheritedStyle(css: string, property: string, value: string, parentValue?: string, ignore: string[] = ["normal", "none", "auto"]): string {
 	const normalizedValue = normalizeStyleValue(property, value);
 	if (!normalizedValue) return css;
@@ -57,10 +85,25 @@ function addInheritedStyle(css: string, property: string, value: string, parentV
 	return css + `${property}:${normalizedValue};`;
 }
 
+/**
+ * CSSStyleDeclarationからプロパティを取得し、継承を考慮して追加する
+ * @param css - 現在のCSS文字列
+ * @param style - 要素のスタイル宣言
+ * @param property - プロパティ名
+ * @param ignore - 無視する値のリスト
+ * @param parentStyle - 親要素のスタイル宣言
+ * @returns 更新されたCSS文字列
+ */
 function addStyleProperty(css: string, style: CSSStyleDeclaration, property: string, ignore: string[] = ["normal", "none", "auto"], parentStyle?: CSSStyleDeclaration | null): string {
 	return addInheritedStyle(css, property, style.getPropertyValue(property), parentStyle?.getPropertyValue(property), ignore);
 }
 
+/**
+ * 要素のスタイル情報からインラインCSS文字列を構築する
+ * @param style - 要素のスタイル宣言
+ * @param parentStyle - 親要素のスタイル宣言
+ * @returns 構築されたCSS文字列
+ */
 function buildStyle(style: CSSStyleDeclaration, parentStyle: CSSStyleDeclaration | null = null): string {
 	let css = "";
 	css = addInheritedStyle(css, "color", style.color, parentStyle?.color);
@@ -148,6 +191,11 @@ function buildStyle(style: CSSStyleDeclaration, parentStyle: CSSStyleDeclaration
 	return css;
 }
 
+/**
+ * SVG要素から危険なスクリプトなどを除去する
+ * @param svg - 対象のSVG要素
+ * @returns クリーンアップされたSVGのHTML文字列
+ */
 function sanitizeSvg(svg: SVGElement): string {
 	const clone = svg.cloneNode(true) as SVGElement;
 	clone.querySelectorAll("script").forEach((element) => element.remove());
@@ -162,6 +210,11 @@ function sanitizeSvg(svg: SVGElement): string {
 	return clone.outerHTML;
 }
 
+/**
+ * アンカー要素から特定の属性のみを抽出する
+ * @param node - 対象の要素
+ * @returns 属性の文字列
+ */
 function pickAnchorAttrs(node: Element): string {
 	const allow = new Set(["href", "target", "rel", "download", "hreflang", "type", "referrerpolicy"]);
 	let attrs = "";
@@ -172,6 +225,11 @@ function pickAnchorAttrs(node: Element): string {
 	return attrs;
 }
 
+/**
+ * 要素の全属性（イベントハンドラを除く）を取得する
+ * @param node - 対象の要素
+ * @returns 属性の文字列
+ */
 function pickAllAttrs(node: Element): string {
 	let attrs = "";
 	for (const attribute of Array.from(node.attributes)) {
@@ -181,6 +239,12 @@ function pickAllAttrs(node: Element): string {
 	return attrs;
 }
 
+/**
+ * プレビュー用のスタイル属性を構築する
+ * @param baseCss - 基本スタイル
+ * @param hoverCss - ホバースタイル
+ * @returns 属性の文字列
+ */
 function buildPreviewAttrs(baseCss: string, hoverCss = ""): string {
 	let attrs = "";
 	if (baseCss) attrs += ` ${RENDER_BASE_STYLE_ATTR}="${escapeHtml(baseCss)}"`;
@@ -188,10 +252,23 @@ function buildPreviewAttrs(baseCss: string, hoverCss = ""): string {
 	return attrs;
 }
 
+/**
+ * スタイル属性文字列を構築する
+ * @param baseCss - 基本スタイル
+ * @returns スタイル属性の文字列
+ */
 function buildStyleAttr(baseCss: string): string {
 	return baseCss ? ` style="${escapeHtml(baseCss)}"` : "";
 }
 
+/**
+ * ノードをHTML文字列にシリアライズする
+ * @param node - 対象のノード
+ * @param hoverStyles - ホバースタイルのマップ
+ * @param elementIds - 要素IDのマップ
+ * @param parentStyle - 親要素のスタイル
+ * @returns シリアライズされたHTML文字列
+ */
 function serializeNode(node: ChildNode, hoverStyles: WeakMap<Element, string>, elementIds: WeakMap<Element, string>, parentStyle: CSSStyleDeclaration | null = null): string {
 	switch (node.nodeType) {
 		case Node.TEXT_NODE:
@@ -240,6 +317,9 @@ function serializeNode(node: ChildNode, hoverStyles: WeakMap<Element, string>, e
 	}
 }
 
+/**
+ * ページの読み込み完了を待機する
+ */
 async function waitForPageLoad(): Promise<void> {
 	if (document.readyState === "complete") return;
 
@@ -248,6 +328,10 @@ async function waitForPageLoad(): Promise<void> {
 	});
 }
 
+/**
+ * アクセス可能な全てのCSSルールを取得する
+ * @returns CSSルールの文字列
+ */
 function getAccessibleCssText(): string {
 	let cssText = "";
 
@@ -263,6 +347,11 @@ function getAccessibleCssText(): string {
 	return cssText;
 }
 
+/**
+ * :hover擬似クラスを含むルールをクラスベースに書き換える
+ * @param rule - CSSルール
+ * @returns 書き換え後のCSS文字列
+ */
 function rewriteHoverRule(rule: CSSRule): string {
 	if (rule instanceof CSSStyleRule) {
 		if (!rule.selectorText.includes(":hover")) return "";
@@ -278,6 +367,10 @@ function rewriteHoverRule(rule: CSSRule): string {
 	return `${prefix} { ${nested} }`;
 }
 
+/**
+ * ホバー状態のCSSテキストを取得する
+ * @returns ホバー用のCSS文字列
+ */
 function getHoverCssText(): string {
 	let cssText = "";
 
@@ -293,16 +386,30 @@ function getHoverCssText(): string {
 	return cssText;
 }
 
+/**
+ * 要素の属性を別の要素にコピーする
+ * @param source - コピー元
+ * @param target - コピー先
+ */
 function copyAttributes(source: Element, target: Element): void {
 	for (const attribute of Array.from(source.attributes)) {
 		target.setAttribute(attribute.name, attribute.value);
 	}
 }
 
+/**
+ * CSSルールが子ルールを持っているかどうかを判定する
+ * @param rule - CSSルール
+ * @returns 子ルールを持っていれば true
+ */
 function hasCssRules(rule: CSSRule): rule is CSSRule & { cssRules: CSSRuleList } {
 	return "cssRules" in rule;
 }
 
+/**
+ * ビューポートのサイズを取得する
+ * @returns 幅と高さのオブジェクト
+ */
 function getViewportSize(): { width: number; height: number } {
 	return {
 		width: Math.max(window.innerWidth, document.documentElement.clientWidth, 1),
@@ -310,23 +417,45 @@ function getViewportSize(): { width: number; height: number } {
 	};
 }
 
+/**
+ * レンダリング用のオーバーレイ要素を取得する
+ * @returns オーバーレイ要素、またはnull
+ */
 function getSourceOverlay(): HTMLDivElement | null {
 	return document.getElementById(RENDER_OVERLAY_ID) as HTMLDivElement | null;
 }
 
+/**
+ * 指定したノードが元のDOMツリーの一部（オーバーレイ以外）かどうかを判定する
+ * @param node - 対象のノード
+ * @returns 元のDOMの一部であれば true
+ */
 function isSourceNode(node: Node): boolean {
 	const overlay = getSourceOverlay();
 	return !overlay || (node !== overlay && !overlay.contains(node));
 }
 
+/**
+ * 元のDOMツリーから全要素を取得する
+ * @returns 要素の配列
+ */
 function getSourceElements(): Element[] {
 	return Array.from(document.body.querySelectorAll("*")).filter(isSourceNode);
 }
 
+/**
+ * bodyの直下にある元のDOMノードを取得する
+ * @returns ノードの配列
+ */
 function getSourceBodyChildNodes(): ChildNode[] {
 	return Array.from(document.body.childNodes).filter(isSourceNode);
 }
 
+/**
+ * DOMの変更がレンダリングの更新を必要とするかどうかを判定する
+ * @param mutation - 変更記録
+ * @returns 更新が必要であれば true
+ */
 function shouldScheduleRenderForMutation(mutation: MutationRecord): boolean {
 	if (mutation.type === "characterData") {
 		return isSourceNode(mutation.target);
@@ -350,6 +479,11 @@ function shouldScheduleRenderForMutation(mutation: MutationRecord): boolean {
 	return CONTENT_RENDER_ATTRIBUTES.includes(mutation.attributeName);
 }
 
+/**
+ * 要素とIDの相互マップを構築する
+ * @param elements - 対象の要素配列
+ * @returns マップのオブジェクト
+ */
 function buildElementIdMaps(elements: Element[]): {
 	elementById: Map<string, Element>;
 	elementIds: WeakMap<Element, string>;
@@ -367,12 +501,21 @@ function buildElementIdMaps(elements: Element[]): {
 	return { elementById, elementIds };
 }
 
+/**
+ * 要素からレンダリング用ID属性を除去する
+ * @param elements - 対象の要素配列
+ */
 function clearElementRenderIds(elements: Element[]): void {
 	for (const element of elements) {
 		element.removeAttribute(RENDER_ID_ATTR);
 	}
 }
 
+/**
+ * 全要素のホバースタイルを収集する
+ * @param elements - 対象の要素配列
+ * @returns 要素とスタイルのマップ
+ */
 async function collectHoverStyles(elements: Element[]): Promise<WeakMap<Element, string>> {
 	if (!elements.length) return new WeakMap();
 
@@ -456,6 +599,10 @@ async function collectHoverStyles(elements: Element[]): Promise<WeakMap<Element,
 	}
 }
 
+/**
+ * ホバー時のプレビュー機能を要素に付与する
+ * @param root - 対象の親要素
+ */
 function attachHoverPreview(root: ParentNode): void {
 	const elements = root.querySelectorAll<HTMLElement>(`[${RENDER_HOVER_STYLE_ATTR}]`);
 
@@ -478,6 +625,11 @@ function attachHoverPreview(root: ParentNode): void {
 	}
 }
 
+/**
+ * オーバーレイのスタイルを更新する
+ * @param overlay - オーバーレイ要素
+ * @param pre - 描画用要素
+ */
 function updateOverlayStyle(overlay: HTMLDivElement, pre: HTMLPreElement): void {
 	addStyle(htmlStyles, "html-render-style");
 	const bodyStyle = getComputedStyle(document.body);
@@ -489,16 +641,31 @@ function updateOverlayStyle(overlay: HTMLDivElement, pre: HTMLPreElement): void 
 	pre.style.color = bodyStyle.color;
 }
 
+/**
+ * 指定した色が透明かどうかを判定する
+ * @param value - 色文字列
+ * @returns 透明であれば true
+ */
 function isTransparentColor(value: string): boolean {
 	return !value || value === "transparent" || value === "rgba(0, 0, 0, 0)";
 }
 
+/**
+ * オーバーレイの背景色を決定する
+ * @param bodyStyle - bodyのスタイル
+ * @param rootStyle - htmlのスタイル
+ * @returns 背景色
+ */
 function resolveOverlayBackgroundColor(bodyStyle: CSSStyleDeclaration, rootStyle: CSSStyleDeclaration): string {
 	if (!isTransparentColor(bodyStyle.backgroundColor)) return bodyStyle.backgroundColor;
 	if (!isTransparentColor(rootStyle.backgroundColor)) return rootStyle.backgroundColor;
 	return rootStyle.colorScheme.includes("dark") ? "#000000" : "#ffffff";
 }
 
+/**
+ * ミラーリングされたクリックイベントを発火させる
+ * @param target - 対象の要素
+ */
 function dispatchMirroredClick(target: Element): void {
 	if (target instanceof HTMLElement) {
 		target.click();
@@ -515,6 +682,10 @@ function dispatchMirroredClick(target: Element): void {
 	);
 }
 
+/**
+ * オーバーレイ内のインタラクション（クリック等）をバインドする
+ * @param state - レンダリング状態
+ */
 function bindOverlayInteractions(state: HtmlRenderState): void {
 	state.overlay.addEventListener("click", (event) => {
 		const target = event.target;
@@ -534,6 +705,10 @@ function bindOverlayInteractions(state: HtmlRenderState): void {
 	});
 }
 
+/**
+ * レンダリング状態を破棄する
+ * @param state - レンダリング状態
+ */
 function disposeRenderState(state: HtmlRenderState): void {
 	state.disposed = true;
 	state.observer.disconnect();
@@ -545,6 +720,10 @@ function disposeRenderState(state: HtmlRenderState): void {
 	removeStyle("html-render-style");
 }
 
+/**
+ * レンダリング状態が有効であることを保証し、必要であれば作成する
+ * @returns レンダリング状態
+ */
 function ensureRenderState(): HtmlRenderState {
 	if (renderState && !renderState.disposed && document.body.contains(renderState.overlay)) {
 		return renderState;
@@ -558,12 +737,18 @@ function ensureRenderState(): HtmlRenderState {
 	return renderState;
 }
 
+/**
+ * HTMLレンダリングをスケジュールする（有効時のみ）
+ */
 function scheduleActiveHtmlRender(): void {
 	if (!isHtmlModeActive) return;
 	const state = ensureRenderState();
 	scheduleHtmlRender(state);
 }
 
+/**
+ * レンダリングのライフサイクルイベントをバインドする
+ */
 function bindRenderLifecycle(): void {
 	if (isRenderLifecycleBound) return;
 	isRenderLifecycleBound = true;
@@ -592,6 +777,10 @@ function bindRenderLifecycle(): void {
 	});
 }
 
+/**
+ * レンダリング状態オブジェクトを作成する
+ * @returns レンダリング状態
+ */
 function createRenderState(): HtmlRenderState {
 	const overlay = document.createElement("div");
 	overlay.id = RENDER_OVERLAY_ID;
@@ -623,6 +812,10 @@ function createRenderState(): HtmlRenderState {
 	return state;
 }
 
+/**
+ * 元のDOMツリーの変更監視を開始する
+ * @param state - レンダリング状態
+ */
 function observeSourceDom(state: HtmlRenderState): void {
 	state.observer.observe(document.documentElement, {
 		attributes: true,
@@ -637,6 +830,10 @@ function observeSourceDom(state: HtmlRenderState): void {
 	});
 }
 
+/**
+ * ページ内容をHTMLソースとしてオーバーレイにレンダリングする
+ * @param state - レンダリング状態
+ */
 async function renderHtmlOverlay(state: HtmlRenderState): Promise<void> {
 	if (state.disposed) return;
 	if (state.rendering) {
@@ -674,6 +871,10 @@ async function renderHtmlOverlay(state: HtmlRenderState): Promise<void> {
 	}
 }
 
+/**
+ * 指定時間後にレンダリングを実行するようにスケジュールする
+ * @param state - レンダリング状態
+ */
 function scheduleHtmlRender(state: HtmlRenderState): void {
 	if (state.disposed) return;
 	state.renderQueued = true;
@@ -690,6 +891,9 @@ function scheduleHtmlRender(state: HtmlRenderState): void {
 	}, 48);
 }
 
+/**
+ * ページ全体をHTMLソース表示モードに切り替える
+ */
 export async function renderPageAsHtml(): Promise<void> {
 	await waitForPageLoad();
 	bindRenderLifecycle();

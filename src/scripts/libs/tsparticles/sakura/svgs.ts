@@ -1,3 +1,4 @@
+/** 桜の花びらのSVGデータ配列 */
 export const SVGs: string[] = [
 	`<svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
 			<path fill="#E579A5" stroke="null" d="M461.38,349.439c-18.413-1.532-29.271,2.129-27.615,19.949c1.653,17.822,17.944,34.58,23.494,46.737
