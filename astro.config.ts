@@ -19,6 +19,7 @@ import { type MinifyOptions } from "terser";
 
 import generateDarkIcons from "./dev/integrations/generateDarkIcons";
 import inline404Integration from "./dev/integrations/inline404";
+import jsdocCheckIntegration from "./dev/integrations/jsdocCheck";
 import staticTsCompile from "./dev/integrations/staticTsCompile";
 import typecheckIntegration from "./dev/integrations/typecheck";
 
@@ -207,6 +208,9 @@ export default defineConfig({
 			sortClassNames: true,
 		}),
 		inline404Integration(),
+		jsdocCheckIntegration({
+			exclude: ["**/node_modules/**", "**/dist/**", "**/src/scripts/libs/flowkeys/**", "**/src/scripts/libs/pseudo-debugkit/**"],
+		}),
 		astroLlmsTxt({
 			title: SITE_TITLE,
 			description: process.env.SITE_DESCRIPTION,
