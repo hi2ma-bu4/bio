@@ -83,7 +83,7 @@ function initWorkModal() {
 
 				const tagsEl = content.querySelector<HTMLDivElement>('[data-template-id="tags"]');
 				if (tagsEl) {
-					tagsEl.innerHTML = ""; // Clear existing tags
+					tagsEl.innerHTML = ""; // 既存のタグをクリア
 					workData.tags.forEach((tag: string) => {
 						const tagSpan = document.createElement("span");
 						tagSpan.className = "text-xs font-medium px-2 py-0.5 rounded-full bg-primary-100 text-primary-800 dark:bg-primary-900 dark:text-primary-200";

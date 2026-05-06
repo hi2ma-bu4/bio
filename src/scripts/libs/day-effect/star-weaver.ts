@@ -3,7 +3,7 @@ import starWeaverStyles from "./star-weaver.css?inline";
 
 interface ConstellationTemplate {
 	name: string;
-	stars: { x: number; y: number }[]; // 0 to 1 range
+	stars: { x: number; y: number }[]; // 0 から 1 の範囲
 }
 
 const CONSTELLATIONS: ConstellationTemplate[] = [
@@ -109,7 +109,7 @@ class StarWeaver {
 		let finalY = y;
 		let templateIdx = -1;
 
-		// Snapping logic
+		// スナップ処理のロジック
 		const snapDist = 40;
 		for (let i = 0; i < this.currentTemplate.stars.length; i++) {
 			const tx = this.currentTemplate.stars[i].x * window.innerWidth;
@@ -117,7 +117,7 @@ class StarWeaver {
 			const d = Math.hypot(x - tx, y - ty);
 
 			if (d < snapDist) {
-				// Check if already filled
+				// すでに埋まっているかチェック
 				if (!this.stars.some((s) => s.templateIdx === i)) {
 					finalX = tx;
 					finalY = ty;
@@ -137,7 +137,7 @@ class StarWeaver {
 
 		if (this.stars.length > 100) this.stars.shift();
 
-		// Check completion
+		// 完了チェック
 		if (this.currentTemplate) {
 			const filledCount = this.stars.filter((s) => s.templateIdx !== undefined).length;
 			if (filledCount === this.currentTemplate.stars.length) {
@@ -147,8 +147,8 @@ class StarWeaver {
 					y: finalY - 40,
 					life: 1,
 				});
-				this.currentTemplate = null; // Pick new one on next click
-				// Fade out non-template stars
+				this.currentTemplate = null; // 次回クリック時に新しいものを選択
+				// テンプレート以外の星をフェードアウト
 				this.stars = this.stars.filter((s) => s.templateIdx !== undefined);
 			}
 		}
@@ -159,7 +159,7 @@ class StarWeaver {
 
 		this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-		// Draw hints for current template
+		// 現在のテンプレートのヒントを描画
 		if (this.currentTemplate) {
 			this.ctx.fillStyle = "rgba(255, 255, 255, 0.1)";
 			this.currentTemplate.stars.forEach((s) => {
@@ -171,7 +171,7 @@ class StarWeaver {
 			});
 		}
 
-		// Draw connections
+		// つながりを描画
 		this.ctx.beginPath();
 		this.ctx.strokeStyle = "rgba(100, 150, 255, 0.3)";
 		this.ctx.lineWidth = 1;
@@ -181,7 +181,7 @@ class StarWeaver {
 				const starB = this.stars[j];
 				const d = Math.hypot(starA.x - starB.x, starA.y - starB.y);
 
-				// Connect if both are template stars or if they are close
+				// 両方がテンプレートの星であるか、距離が近い場合につなげる
 				const bothTemplate = starA.templateIdx !== undefined && starB.templateIdx !== undefined;
 				const connectDist = bothTemplate ? 300 : 150;
 
@@ -193,7 +193,7 @@ class StarWeaver {
 		}
 		this.ctx.stroke();
 
-		// Draw stars
+		// 星を描画
 		this.stars.forEach((star) => {
 			this.ctx!.beginPath();
 			const baseOpacity = star.templateIdx !== undefined ? 0.8 : 0.4;
@@ -210,7 +210,7 @@ class StarWeaver {
 			}
 		});
 
-		// Draw completed names
+		// 完了した名前を描画
 		this.ctx.font = "bold 20px sans-serif";
 		this.ctx.textAlign = "center";
 		this.completedNames = this.completedNames.filter((n) => {

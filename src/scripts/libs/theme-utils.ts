@@ -87,7 +87,7 @@ export function getNextTheme(current: themeType | null) {
 }
 
 export function themeChangeLock(flag: boolean, mode: themeType | null = null, doc?: Document) {
-	const transition = !doc; // Transition only if we are on the current document (manual/effect change)
+	const transition = !doc; // 現在のドキュメントの場合のみトランジションを適用（手動/エフェクトによる変更）
 	if (flag) {
 		if (mode) {
 			lockTheme = mode;

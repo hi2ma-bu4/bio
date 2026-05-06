@@ -256,7 +256,7 @@ function getAccessibleCssText(): string {
 			cssText += Array.from(styleSheet.cssRules, (rule) => rule.cssText).join("\n");
 			cssText += "\n";
 		} catch {
-			// Ignore cross-origin or otherwise inaccessible stylesheets.
+			// クロスオリジンやアクセス不可能なスタイルシートを無視
 		}
 	}
 
@@ -286,7 +286,7 @@ function getHoverCssText(): string {
 			cssText += Array.from(styleSheet.cssRules, rewriteHoverRule).filter(Boolean).join("\n");
 			cssText += "\n";
 		} catch {
-			// Ignore cross-origin or otherwise inaccessible stylesheets.
+			// クロスオリジンやアクセス不可能なスタイルシートを無視
 		}
 	}
 

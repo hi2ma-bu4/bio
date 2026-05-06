@@ -53,7 +53,7 @@ function getExecutableName(base: string): string {
 		case "windows":
 			return `${base}.exe`;
 		case "mac":
-			// macは実際は.appだけどネタ的にはこれが自然
+			// mac は実際には .app だが、ネタとしてはこれが自然
 			return `${base}.app`;
 		case "linux":
 			// Linuxは拡張子つけないのがそれっぽい

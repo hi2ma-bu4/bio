@@ -34,7 +34,7 @@ export function getFocusable(el: Element) {
 	});
 }
 
-// Keyboard helpers
+// キーボードヘルパー
 export function isTabKey(e: KeyboardEvent) {
 	return e.key === "Tab" || (e as any).keyCode === 9;
 }
@@ -50,7 +50,7 @@ export function isEscapeKey(e: KeyboardEvent) {
 	return e.key === "Escape" || e.key === "Esc" || (e as any).keyCode === 27;
 }
 
-// Activation keys for controls: Enter or Space
+// コントロールの有効化キー: Enter または Space
 export function isActivationKey(e: KeyboardEvent) {
 	return isEnterKey(e) || isSpaceKey(e);
 }
@@ -115,10 +115,10 @@ export function addEscapeListener(onClose: () => void) {
 }
 
 /**
- * Add a <style> element to the <head>
- * @param css CSS string
- * @param id Optional ID for the style element. If not provided, a random ID will be generated.
- * @returns The ID of the created style element.
+ * <head> に <style> 要素を追加します
+ * @param css CSS 文字列
+ * @param id スタイル要素のオプション ID。指定しない場合はランダムな ID が生成されます。
+ * @returns 作成されたスタイル要素の ID。
  */
 export function addStyle(css: string, id?: string): string {
 	const styleId = id || `style-${Math.random().toString(36).slice(2, 11)}`;
@@ -133,8 +133,8 @@ export function addStyle(css: string, id?: string): string {
 }
 
 /**
- * Remove a <style> element by ID
- * @param id The ID of the style element to remove.
+ * 指定された ID の <style> 要素を削除します
+ * @param id 削除するスタイル要素の ID。
  */
 export function removeStyle(id: string): void {
 	const style = document.getElementById(id);

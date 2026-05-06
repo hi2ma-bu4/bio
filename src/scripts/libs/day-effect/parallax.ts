@@ -10,7 +10,7 @@ const defaultOptions: ParallaxOptions = {
 	layers: [
 		"main",
 		"#logo",
-		".work-card", // Note: need to make sure this class exists or target by tag/id
+		".work-card", // 注意: このクラスが存在することを確認するか、タグ/ID でターゲットにする必要がある
 		"footer",
 		"#bg-canvas",
 	],
@@ -30,7 +30,7 @@ class GyroParallax {
 		if (this.enabled) return;
 		if (isbot(navigator.userAgent)) return;
 
-		// Request permission for iOS 13+
+		// iOS 13+ のために許可をリクエスト
 		if (typeof DeviceOrientationEvent !== "undefined" && typeof (DeviceOrientationEvent as any).requestPermission === "function") {
 			try {
 				const permission = await (DeviceOrientationEvent as any).requestPermission();
@@ -59,13 +59,13 @@ class GyroParallax {
 	private handleOrientation(event: DeviceOrientationEvent) {
 		if (!this.enabled) return;
 
-		const beta = event.beta; // -180 to 180 (front/back tilt)
-		const gamma = event.gamma; // -90 to 90 (left/right tilt)
+		const beta = event.beta; // -180 から 180 (前後方向の傾き)
+		const gamma = event.gamma; // -90 から 90 (左右方向の傾き)
 
 		if (beta === null || gamma === null) return;
 
-		// Normalize values (assuming device is mostly upright)
-		// Standard upright beta is around 45-90.
+		// 値を正規化 (デバイスがほぼ直立していると想定)
+		// 標準的な直立状態の beta は 45-90 程度
 		const x = Math.max(-1, Math.min(1, gamma / 45));
 		const y = Math.max(-1, Math.min(1, (beta - 45) / 45));
 
@@ -75,12 +75,12 @@ class GyroParallax {
 	private applyParallax(x: number, y: number) {
 		const { intensity } = this.options;
 
-		// We use CSS custom properties for efficiency
+		// 効率化のために CSS カスタムプロパティを使用
 		document.documentElement.style.setProperty("--gyro-x", x.toString());
 		document.documentElement.style.setProperty("--gyro-y", y.toString());
 
-		// Apply to specific elements if they don't use the global vars
-		// But it's better to just use global vars in a dynamic style tag
+		// グローバル変数を使用しない特定の要素に適用
+		// ただし、動的な style タグでグローバル変数を使用する方が望ましい
 		this.updateDynamicStyles(x * intensity, y * intensity);
 	}
 

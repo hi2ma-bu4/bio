@@ -11,23 +11,23 @@ const altPopupClassName = "alt-popup";
 let imgIndex = 0;
 
 /**
- * Wraps an image with a button to show its alt text.
- * @param img The image element to wrap.
+ * 画像をラップし、alt テキストを表示するためのボタンを追加します。
+ * @param img ラップする画像要素。
  */
 function wrapWithAltButton(img: HTMLImageElement): void {
 	const id = `uid-img-${imgIndex}`;
 	imgIndex++;
 
-	// Create a wrapper element
+	// ラッパー要素を作成
 	const wrapper = document.createElement("div");
 	wrapper.className = imgWrapperClassName;
 
-	// Replace the image with the wrapper and append the image to the wrapper
+	// 画像をラッパーで置き換え、画像をラッパー内に追加
 	img.parentNode?.insertBefore(wrapper, img);
 	wrapper.appendChild(img);
 	img.setAttribute("aria-labelledby", id);
 
-	// Add the alt button
+	// alt ボタンを追加
 	const button = document.createElement("input");
 	button.type = "button";
 	button.className = altButtonClassName;
@@ -51,8 +51,8 @@ function wrapWithAltButton(img: HTMLImageElement): void {
 }
 
 /**
- * Handles successful image loads.
- * @param target The image element that loaded.
+ * 画像の読み込み成功時の処理を行います。
+ * @param target 読み込まれた画像要素。
  */
 function handleLoad(target: HTMLImageElement): void {
 	if (target.classList.contains(isLoadClassName) || target.classList.contains(isErrClassName)) return;
@@ -60,17 +60,17 @@ function handleLoad(target: HTMLImageElement): void {
 }
 
 /**
- * Handles image loading errors.
- * @param target The image element that failed to load.
+ * 画像の読み込みエラー時の処理を行います。
+ * @param target 読み込みに失敗した画像要素。
  */
 function handleError(target: HTMLImageElement): void {
-	// Prevent infinite loops
+	// 無限ループを防止
 	if (target.classList.contains(isErrClassName)) return;
 
 	target.classList.add(isErrClassName);
 	console.warn(`image load error: `, target.src);
 
-	// Update alt text to include original source for context
+	// 文脈のために元のソースを含むように alt テキストを更新
 	target.alt = `${target.alt ?? "説明なし"}(${target.src})`;
 	target.src = ErrorImageUrl;
 
@@ -79,7 +79,7 @@ function handleError(target: HTMLImageElement): void {
 	}
 }
 
-// Use event delegation on the document to catch all load/error events
+// すべての読み込み/エラーイベントを捕捉するために、ドキュメントでイベントデリゲーションを使用します
 document.addEventListener(
 	"load",
 	(e) => {
@@ -87,8 +87,8 @@ document.addEventListener(
 			handleLoad(e.target);
 		}
 	},
-	true
-); // Use capture phase
+	true,
+); // キャプチャフェーズを使用
 
 document.addEventListener(
 	"error",
@@ -97,13 +97,13 @@ document.addEventListener(
 			handleError(e.target);
 		}
 	},
-	true
-); // Use capture phase
+	true,
+); // キャプチャフェーズを使用
 
 /**
- * Applies the 'checking' class to an image if it hasn't been processed yet.
- * Also handles cached images.
- * @param img The image element to process.
+ * まだ処理されていない場合、画像に「チェック中」クラスを適用します。
+ * キャッシュされた画像も処理します。
+ * @param img 処理する画像要素。
  */
 function processImage(img: HTMLImageElement): void {
 	if (img.classList.contains(isCheckClassName) || img.classList.contains(isLoadClassName) || img.classList.contains(isErrClassName)) {
@@ -111,32 +111,32 @@ function processImage(img: HTMLImageElement): void {
 	}
 	img.classList.add(isCheckClassName);
 
-	// For cached images, the 'load' or 'error' event might have already fired.
-	// We need to check the `complete` property.
+	// キャッシュされた画像の場合、'load' または 'error' イベントがすでに発生している可能性があります。
+	// `complete` プロパティを確認する必要があります。
 	if (img.complete) {
 		if (img.naturalWidth === 0) {
-			// This is likely an error
+			// これはエラーの可能性が高い
 			handleError(img);
 		} else {
-			// This is likely a successful load
+			// これは読み込み成功の可能性が高い
 			handleLoad(img);
 		}
 	}
 }
 
 /**
- * Finds and processes all images within a given NodeList.
- * @param nodes A list of nodes to search for images.
+ * 指定された NodeList 内のすべての画像を検索して処理します。
+ * @param nodes 画像を検索するノードのリスト。
  */
 function checkNodesForImages(nodes: NodeList): void {
 	for (const node of nodes) {
 		if (node.nodeType === Node.ELEMENT_NODE) {
 			const el = node as Element;
-			// If the node itself is an image
+			// ノード自体が画像の場合
 			if (el.tagName === "IMG") {
 				processImage(el as HTMLImageElement);
 			}
-			// Check for images within the node
+			// ノード内の画像をチェック
 			const imgs = el.querySelectorAll<HTMLImageElement>("img");
 			imgs.forEach(processImage);
 		}
@@ -144,13 +144,13 @@ function checkNodesForImages(nodes: NodeList): void {
 }
 
 /**
- * Initializes the image processing and sets up the MutationObserver.
+ * 画像処理を初期化し、MutationObserver を設定します。
  */
 function initImageHandler(): void {
-	// Initial check for all images on the page
+	// ページ上のすべての画像に対する初期チェック
 	document.querySelectorAll<HTMLImageElement>("img").forEach(processImage);
 
-	// Use MutationObserver to detect dynamically added images
+	// 動的に追加された画像を検出するために MutationObserver を使用
 	const observer = new MutationObserver((mutationsList) => {
 		for (const mutation of mutationsList) {
 			if (mutation.type === "childList" && mutation.addedNodes.length > 0) {
@@ -159,14 +159,14 @@ function initImageHandler(): void {
 		}
 	});
 
-	// Start observing the document body for changes
+	// ドキュメントボディの変更の監視を開始
 	observer.observe(document.body, { childList: true, subtree: true });
 }
 
-// Run the initialization
+// 初期化を実行
 initImageHandler();
 
-// Re-run checks after Astro's view transitions
+// Astro のビュー遷移後にチェックを再実行
 document.addEventListener("astro:after-swap", () => {
 	initImageHandler();
 });

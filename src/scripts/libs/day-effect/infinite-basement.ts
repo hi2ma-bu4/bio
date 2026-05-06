@@ -115,7 +115,7 @@ export class InfiniteBasement {
 		const scrollTop = window.scrollY || window.pageYOffset;
 		const clientHeight = window.innerHeight;
 
-		// Reset overscroll if we move away from the bottom
+		// 最下部から離れたらオーバースクロールをリセット
 		if (scrollTop + clientHeight < scrollHeight - 10) {
 			this.overscrollAmount = 0;
 			this.overscrollStartTimestamp = null;
@@ -167,7 +167,7 @@ export class InfiniteBasement {
 		const clientHeight = window.innerHeight;
 		const isAtBottom = scrollTop + clientHeight >= scrollHeight - 10;
 
-		// Decay overscroll if not actively scrolling
+		// アクティブにスクロールしていない場合はオーバースクロールを減衰させる
 		if (!this.isTouching && now - this.lastWheelTimestamp > 200) {
 			this.overscrollAmount = Math.max(0, this.overscrollAmount * 0.9 - 1);
 		}
@@ -177,7 +177,7 @@ export class InfiniteBasement {
 				this.overscrollStartTimestamp = now;
 			} else if (now - this.overscrollStartTimestamp >= 5000) {
 				this.activateBasement();
-				return; // Stop ticking
+				return; // tick を停止
 			}
 		} else {
 			this.overscrollStartTimestamp = null;
@@ -198,7 +198,7 @@ export class InfiniteBasement {
 
 		document.body.appendChild(this.container);
 
-		// Initial logs (Fixed ones)
+		// 初回ログ（固定分）
 		for (const log of FIXED_LOGS) {
 			await this.addLogElement(log);
 		}
@@ -223,7 +223,7 @@ export class InfiniteBasement {
 
 		this.observer.observe(sentinel);
 
-		// Initial more logs
+		// 初回の追加ログ
 		this.addMoreLogs();
 	}
 
@@ -242,14 +242,14 @@ export class InfiniteBasement {
 		const sentinel = document.getElementById("basement-sentinel");
 
 		for (const line of lines) {
-			// Skip first empty line if it's AA or multi-line starting with \n
+			// AA や \n で始まる複数行の場合、最初の空行をスキップ
 			if (line === "" && lines.length > 1 && line === lines[0]) continue;
 
 			this.lineCount++;
 			const logDiv = document.createElement("div");
 			const timestamp = new Date().toISOString().split("T")[1].split("Z")[0];
 
-			// Replace {line} placeholder per line
+			// 行ごとに {line} プレースホルダーを置換
 			const finalLine = line.replaceAll("{line}", this.lineCount.toString());
 
 			const ts = `[${new Date().toISOString().split("T")[1].split("Z")[0]}] `;

@@ -30,7 +30,7 @@ class BugHunt {
 		const elements = document.querySelectorAll("p, h1, h2, h3, h4, h5, h6, span, a, button, img");
 		elements.forEach((el) => {
 			if (el instanceof HTMLElement) {
-				// Only target elements with text or images
+				// テキストまたは画像を持つ要素のみを対象とする
 				const hasText = (el.textContent || "").trim().length > 0;
 				const isImg = el.tagName === "IMG";
 
@@ -88,7 +88,7 @@ class BugHunt {
 		const healthyOnes = this.buggyElements.filter((b) => !b.isBuggy);
 		if (healthyOnes.length === 0) return;
 
-		// Spawn 1-3 bugs at once to increase intensity
+		// 激しさを増すために、一度に 1〜3 個のバグを発生させる
 		const count = Math.min(healthyOnes.length, Math.floor(Math.random() * 3) + 1);
 		for (let i = 0; i < count; i++) {
 			const index = Math.floor(Math.random() * healthyOnes.length);
@@ -98,7 +98,7 @@ class BugHunt {
 			target.isBuggy = true;
 			const el = target.element;
 
-			// Visual bug types
+			// ビジュアルバグの種類
 			const bugType = Math.random();
 			if (el.tagName === "IMG") {
 				el.style.filter = `hue-rotate(${Math.random() * 360}deg) invert(1) blur(2px)`;
@@ -106,7 +106,7 @@ class BugHunt {
 				if (bugType > 0.5) {
 					el.classList.add("buggy-chromatic");
 				}
-				// Scramble text
+				// テキストをスクランブル
 				target.originalTextMap.forEach((original, node) => {
 					node.textContent = this.scramble(original);
 				});
@@ -159,7 +159,7 @@ class BugHunt {
 		const finalBugCount = this.buggyElements.filter((b) => b.isBuggy).length;
 		this.stop();
 
-		// Create a "System Cleaned" terminal overlay
+		// "System Cleaned" ターミナルオーバーレイを作成
 		const overlay = document.createElement("div");
 		overlay.className = "bug-victory-overlay";
 

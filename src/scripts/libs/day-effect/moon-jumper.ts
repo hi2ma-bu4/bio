@@ -31,12 +31,12 @@ class MoonJumper {
 	public async start() {
 		if (this.container) return;
 
-		// 1. Scroll to bottom
+		// 1. 最下部までスクロール
 		window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
-		// Wait for scroll
+		// スクロール完了を待機
 		await new Promise((resolve) => setTimeout(resolve, 1000));
 
-		// 2. Lock scroll
+		// 2. スクロールをロック
 		this.lockScroll();
 
 		addStyle(moonJumperStyles, "moon-jumper-style");
@@ -92,7 +92,7 @@ class MoonJumper {
 			friction: 0.5,
 		});
 
-		// Walls will be moved to follow viewport in the loop for space mode
+		// スペースモードでは、ループ内で壁を移動させてビューポートに追従させる
 		this.leftWall = Bodies.rectangle(-50, docHeight / 2, 100, docHeight * 10, { isStatic: true });
 		this.rightWall = Bodies.rectangle(width + 50, docHeight / 2, 100, docHeight * 10, { isStatic: true });
 
@@ -104,7 +104,7 @@ class MoonJumper {
 				if (labels.includes("rabbit") && (labels.includes("cloud") || labels.includes("platform") || labels.includes("ground"))) {
 					const rabbitBody = pair.bodyA.label === "rabbit" ? pair.bodyA : pair.bodyB;
 					if (rabbitBody.velocity.y > 0) {
-						// Random horizontal nudge on jump
+						// ジャンプ時にランダムな水平方向の微調整を加える
 						const jumpForce = -18;
 						const nudge = (Math.random() - 0.5) * 6;
 						Body.setVelocity(rabbitBody, { x: rabbitBody.velocity.x + nudge, y: jumpForce });
@@ -137,7 +137,7 @@ class MoonJumper {
 	}
 
 	private initPlatforms() {
-		// Mobile Check: If window width is narrow, don't generate DOM-based platforms
+		// モバイルチェック: ウィンドウ幅が狭い場合、DOMベースのプラットフォームを生成しない
 		if (window.innerWidth < 768) return;
 
 		const elements = Array.from(document.querySelectorAll(`a, button, h1, h2, h3, .card, p, li, img, span, div[id^="work-card-"]`));
@@ -148,7 +148,7 @@ class MoonJumper {
 			const style = window.getComputedStyle(el);
 			if (style.display === "none" || style.visibility === "hidden" || style.opacity === "0") return;
 
-			// Check if el or any ancestor is fixed/sticky
+			// el またはその祖先が fixed/sticky かどうかをチェック
 			let parent: Element | null = el;
 			let isFixed = false;
 			while (parent && parent !== document.body) {
@@ -163,8 +163,8 @@ class MoonJumper {
 
 			const isImage = el.tagName === "IMG";
 
-			// For elements containing text, we use Ranges to get hitboxes for the actual text lines
-			// instead of the full block element width.
+			// テキストを含む要素については、ブロック要素全体の幅ではなく、
+			// 実際のテキスト行のヒットボックスを取得するために Range を使用する。
 			const textNodes: Text[] = [];
 			const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
 			let node;
@@ -191,7 +191,7 @@ class MoonJumper {
 	private addPlatformFromRect(rect: DOMRect | DOMRectReadOnly, currentScroll: number, processedRects: { left: number; right: number; top: number; bottom: number }[]) {
 		if (rect.width < 10 || rect.height < 10) return;
 
-		// Avoid overlapping with already processed platforms
+		// すでに処理されたプラットフォームとの重複を避ける
 		const isOverlapping = processedRects.some((r) => rect.left >= r.left - 1 && rect.right <= r.right + 1 && rect.top >= r.top - 1 && rect.bottom <= r.bottom + 1);
 		if (isOverlapping) return;
 
@@ -218,11 +218,11 @@ class MoonJumper {
 	private handleClick(e: MouseEvent) {
 		if (!this.engine || !this.rabbit) return;
 
-		// Only check for links/buttons if we are not in space mode (on ground)
+		// スペースモードでない（地上にいる）場合のみ、リンク/ボタンをチェックする
 		if (!this.inSpace && (e.target as HTMLElement).closest("a, button")) return;
 
 		const now = Date.now();
-		// Anti-spam: 300ms cooldown
+		// アンチスパム: 300ms のクールダウン
 		if (now - this.lastClickTime < 300) return;
 		this.lastClickTime = now;
 
@@ -234,17 +234,17 @@ class MoonJumper {
 			}
 		}
 
-		// Convert viewport click to document coordinates
+		// ビューポートのクリックをドキュメント座標に変換
 		const x = e.clientX;
 		let y = e.clientY + window.scrollY;
 
-		// If in Space Mode (climbing past document top), adjust y relative to altitude
+		// スペースモード（ドキュメントの最上部を超えて上昇中）の場合、高度に合わせて y を調整
 		const viewportH = window.innerHeight;
 		if (this.inSpace) {
 			const altitude = viewportH * 0.1 - this.rabbit.position.y;
 			y -= altitude;
 
-			// Stop interaction with the underlying page in Space Mode
+			// スペースモードでは背後のページとのインタラクションを停止
 			e.preventDefault();
 			e.stopPropagation();
 		}
@@ -263,7 +263,7 @@ class MoonJumper {
 		const cloud = { body: cloudBody, el: cloudEl };
 		this.clouds.push(cloud);
 
-		// Tiny horizontal nudge with some randomness
+		// ランダム性を持たせたわずかな水平方向の微調整
 		const dx = (x - this.rabbit.position.x) * 0.0001 + (Math.random() - 0.5) * 0.005;
 		Body.applyForce(this.rabbit, this.rabbit.position, { x: dx, y: 0 });
 
@@ -302,7 +302,7 @@ class MoonJumper {
 
 			let renderY = pos.y - currentScrollY;
 
-			// Apply viewport constraints
+			// ビューポートの制約を適用
 			const minRenderY = viewportH * 0.1;
 			const maxRenderY = viewportH * 0.9;
 
@@ -312,7 +312,7 @@ class MoonJumper {
 				renderY = maxRenderY;
 			}
 
-			// Space Mode: When rabbit tries to go above the scrollable area
+			// スペースモード: ウサギがスクロール可能なエリアより上に行こうとしたとき
 			if (pos.y < viewportH * 0.1) {
 				const altitude = viewportH * 0.1 - pos.y;
 				const bgOpacity = Math.min(0.9, altitude / 4000);
@@ -346,7 +346,7 @@ class MoonJumper {
 				this.hideStars();
 			}
 
-			// Rendering
+			// レンダリング
 			this.rabbitEl.style.left = `${pos.x}px`;
 			this.rabbitEl.style.top = `${renderY}px`;
 			this.rabbitEl.style.transform = `translate(-50%, -50%) rotate(${this.rabbit.angle}rad)`;
@@ -360,7 +360,7 @@ class MoonJumper {
 
 			this.clouds.forEach((c) => {
 				const cRenderY = c.body.position.y - currentScrollY;
-				// In space mode, we might need to adjust cloud render Y if we are pinning rabbit
+				// スペースモードでは、ウサギを固定している場合に雲のレンダリング Y 座標を調整する必要がある場合がある
 				let finalCRenderY = cRenderY;
 				if (pos.y < viewportH * 0.1) {
 					finalCRenderY = cRenderY + (viewportH * 0.1 - pos.y);
@@ -369,17 +369,17 @@ class MoonJumper {
 				c.el.style.top = `${finalCRenderY}px`;
 			});
 
-			// Update walls to follow rabbit in space mode
+			// スペースモードでウサギに追従するように壁を更新
 			if (this.leftWall && this.rightWall) {
 				Body.setPosition(this.leftWall, { x: -50, y: pos.y });
 				Body.setPosition(this.rightWall, { x: window.innerWidth + 50, y: pos.y });
 			}
 
-			// Bound rabbit to screen width
+			// ウサギを画面幅内に制限
 			if (pos.x < 20) Body.setPosition(this.rabbit, { x: 20, y: pos.y });
 			if (pos.x > window.innerWidth - 20) Body.setPosition(this.rabbit, { x: window.innerWidth - 20, y: pos.y });
 
-			// Respawn if glitch
+			// 不具合などで落下した場合のリスポーン
 			if (pos.y > document.body.scrollHeight + 500) {
 				Body.setPosition(this.rabbit, { x: window.innerWidth / 2, y: document.body.scrollHeight - 100 });
 				Body.setVelocity(this.rabbit, { x: 0, y: 0 });
@@ -440,7 +440,7 @@ class MoonJumper {
 		}
 
 		themeChangeLock(false);
-		updateTheme(); // This will use the original theme from storage/auto
+		updateTheme(); // ストレージまたは自動設定から元のテーマを使用
 		updateAllToggleButtonsUI();
 
 		if (this.container) {

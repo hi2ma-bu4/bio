@@ -6,7 +6,7 @@ class MobileCommandCenter {
 	private inputBuffer: string = "";
 
 	public init() {
-		// Use document listener for more reliable mobile tap detection
+		// より確実なモバイルタップ検出のためにドキュメントリスナーを使用
 		let tapCount = 0;
 		let lastTap = 0;
 

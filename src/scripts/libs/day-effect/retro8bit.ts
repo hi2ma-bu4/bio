@@ -154,7 +154,7 @@ export function startRetro8bit(): void {
 			tmpCtx.drawImage(canvas, 0, 0, tmpCanvas.width, tmpCanvas.height);
 			ctx.drawImage(tmpCanvas, 0, 0, canvas.width, canvas.height);
 
-			loadedImages.delete(img); // 処理完了したのでイベント参照削除
+			loadedImages.delete(img); // 処理が完了したため、イベントの参照を削除
 		};
 
 		if (img.complete) {

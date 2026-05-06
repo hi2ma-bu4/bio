@@ -134,7 +134,7 @@ if (document.readyState === "loading") {
 }
 
 window.addEventListener("mousedown", (e) => {
-	// e.detail >=2 でダブルクリック以上
+	// e.detail >= 2 はダブルクリック以上
 	if (e.detail >= 2) {
 		e.preventDefault();
 	}
