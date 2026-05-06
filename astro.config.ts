@@ -58,7 +58,7 @@ const terserOpt: MinifyOptions = {
 	},
 } as const;
 
-const browserTargets = browserslistToTargets(browserslist("> 3% in JP"));
+const browserTargets = browserslistToTargets(browserslist("> 1% in JP, last 2 versions"));
 
 const PREFIX_RULES = [
 	// node_modules
