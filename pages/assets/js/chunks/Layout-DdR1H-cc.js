@@ -101,4 +101,4 @@ const $$Layout = createComponent(($$result, $$props, $$slots) => {
 }, "C:/Users/snows/Documents/Program/js/bio/src/layouts/Layout.astro", "self");
 
 export { $$Layout as $, __vite_glob_0_2 as _, $$GitHub as a };
-//# sourceMappingURL=Layout-xYCgQmf6.js.map
+//# sourceMappingURL=Layout-DdR1H-cc.js.map
