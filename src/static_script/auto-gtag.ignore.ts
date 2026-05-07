@@ -55,7 +55,7 @@ export {};
 		document.head.appendChild(script);
 	}
 
-	loadGTM(import.meta.env.GTM_ID);
+	loadGTM(import.meta.env.GTAG_ID);
 
 	/* =========================
 	 * ページ情報
