@@ -2,16 +2,14 @@
  * グローバル型拡張
  * ========================================= */
 
-type GtagCommand = ["js", Date] | ["config", string, Record<string, unknown>?] | ["event", string, Record<string, unknown>?];
-
-interface Gtag {
-	(...args: GtagCommand): void;
+interface DataLayerEvent {
+	event: string;
+	[key: string]: unknown;
 }
 
 declare global {
 	interface Window {
-		dataLayer: GtagCommand[];
-		gtag: Gtag;
+		dataLayer: DataLayerEvent[];
 	}
 }
 
@@ -29,45 +27,46 @@ export {};
 	const DOWNLOAD_EXT = /\.(zip|pdf|ttf|otf|woff2?|png|jpe?g|gif|svg|web[pm])$/i;
 
 	/* =========================
-	 * gtag 初期化
+	 * dataLayer 初期化
 	 * ========================= */
 	window.dataLayer = window.dataLayer || [];
 
-	const gtag: Gtag = (...args) => {
-		window.dataLayer.push(args);
-	};
+	function pushEvent(event: string, data: Record<string, unknown> = {}): void {
+		window.dataLayer.push({
+			event,
+			...data,
+		});
+	}
 
-	window.gtag = gtag;
-	gtag("js", new Date());
+	/* =========================
+	 * GTM 初期化
+	 * ========================= */
+	function loadGTM(id: string): void {
+		window.dataLayer.push({
+			"gtm.start": Date.now(),
+			event: "gtm.js",
+		});
 
-	function loadGtag(id: string): void {
 		const script = document.createElement("script");
+
 		script.async = true;
-		script.src = `https://www.googletagmanager.com/gtag/js?id=${id}`;
+		script.src = `https://www.googletagmanager.com/gtm.js?id=${id}`;
+
 		document.head.appendChild(script);
 	}
+
+	loadGTM(import.meta.env.GTM_ID);
 
 	/* =========================
 	 * ページ情報
 	 * ========================= */
 	const path = location.pathname;
 
-	gtag("config", import.meta.env.GTAG_ID);
-
-	loadGtag(import.meta.env.GTAG_ID);
-
 	/* =========================
 	 * Utility
 	 * ========================= */
 	function getElementLabel(el: HTMLElement): string {
-		return (
-			el.getAttribute("aria-label") || //
-			el.getAttribute("data-label") ||
-			el.id ||
-			el.getAttribute("name") ||
-			el.textContent?.trim().slice(0, 50) ||
-			el.tagName
-		);
+		return el.getAttribute("aria-label") || el.getAttribute("data-label") || el.id || el.getAttribute("name") || el.textContent?.trim().slice(0, 50) || el.tagName;
 	}
 
 	function isOutbound(url: string): boolean {
@@ -83,6 +82,7 @@ export {};
 	 * ========================= */
 	document.addEventListener("click", (event: MouseEvent): void => {
 		const target = event.target as HTMLElement | null;
+
 		if (!target) return;
 
 		const el = target.closest("a,button") as HTMLAnchorElement | HTMLButtonElement | null;
@@ -92,7 +92,7 @@ export {};
 		const label = getElementLabel(el);
 		const href = el instanceof HTMLAnchorElement ? el.href : null;
 
-		gtag("event", "select_content", {
+		pushEvent("select_content", {
 			event_label: label,
 		});
 
@@ -102,14 +102,14 @@ export {};
 		const ext = url.pathname.split(".").pop();
 
 		if (isOutbound(href)) {
-			gtag("event", "outbound_click", {
+			pushEvent("outbound_click", {
 				event_label: href,
 				transport_type: "beacon",
 			});
 		}
 
 		if (ext && DOWNLOAD_EXT.test(`.${ext}`)) {
-			gtag("event", "file_download", {
+			pushEvent("file_download", {
 				file_url: href,
 				file_ext: ext,
 			});
@@ -121,9 +121,10 @@ export {};
 	 * ========================= */
 	document.addEventListener("submit", (event: Event): void => {
 		const form = event.target;
+
 		if (!(form instanceof HTMLFormElement)) return;
 
-		gtag("event", "form_submit", {
+		pushEvent("form_submit", {
 			form_action: form.action || path,
 			form_id: form.id || null,
 			form_name: form.name || null,
