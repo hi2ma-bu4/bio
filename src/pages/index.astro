@@ -18,6 +18,7 @@ const skillData: Skill[] = [
 		children: [
 			{ name: "Astro", icon: "Astro" },
 			{ name: "EJS", icon: "EJS" },
+			{ name: "Solid.js", icon: "SolidJS" },
 		],
 	},
 	{
@@ -25,6 +26,7 @@ const skillData: Skill[] = [
 		icon: "CSS",
 		children: [
 			{ name: "Tailwind CSS", icon: "TailwindCSS" },
+			{ name: "Sass", icon: "Sass" },
 			{ name: "Bootstrap", icon: "Bootstrap" },
 		],
 	},
@@ -33,7 +35,15 @@ const skillData: Skill[] = [
 		icon: "JavaScript",
 		children: [
 			{ name: "TypeScript", icon: "TypeScript" },
-			{ name: "Node.js", icon: "NodeJS" },
+			{
+				name: "Node.js",
+				icon: "NodeJS",
+				children: [
+					{ name: "Express.js", icon: "ExpressJS" },
+					{ name: "discord.js", icon: "discordJs" },
+					{ name: "Matter.js", icon: "MatterJs" },
+				],
+			},
 			{ name: "jQuery", icon: "jQuery" },
 			{ name: "Google Apps Script", icon: "GoogleAppsScript" },
 		],
