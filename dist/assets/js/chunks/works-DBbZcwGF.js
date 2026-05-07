@@ -1,6 +1,6 @@
 import { c as createAstro, a as createComponent, m as maybeRenderHead, f as addAttribute, d as renderComponent, ew as $$Picture, r as renderTemplate, es as $$ArrowTopRightOnSquare, ex as $$XMark, b as renderScript, ey as defineScriptVars } from './vendor-DBbW3hh3.js';
 import 'piccolore';
-import { a as $$GitHub, $ as $$Layout } from './Layout-xYCgQmf6.js';
+import { a as $$GitHub, $ as $$Layout } from './Layout-DdR1H-cc.js';
 import { C as CLASS_AUTO_IMG_ALT, B as BASE_DIR } from './Header-Dyu98n10.js';
 
 function isImageMetadata(v) {
@@ -209,4 +209,4 @@ const _page = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
 }, Symbol.toStringTag, { value: 'Module' }));
 
 export { _page as _, worksData as w };
-//# sourceMappingURL=works-CtKMUYM9.js.map
+//# sourceMappingURL=works-DBbZcwGF.js.map
