@@ -27,7 +27,7 @@ export default function SkillsAccordion(props: SkillsAccordionProps): JSX.Elemen
 			<SkillLevel
 				skills={props.skills}
 				level={0}
-				openPath={openPath}
+				openPath={openPath()}
 				onToggle={toggleSkill}
 				containerRef={containerRef()}
 			/>
@@ -38,7 +38,7 @@ export default function SkillsAccordion(props: SkillsAccordionProps): JSX.Elemen
 interface SkillLevelProps {
 	skills: Skill[];
 	level: number;
-	openPath: Accessor<string[]>;
+	openPath: string[];
 	onToggle: (skill: Skill, level: number) => void;
 	containerRef?: HTMLDivElement;
 }
@@ -95,50 +95,47 @@ function SkillLevel(props: SkillLevelProps): JSX.Element {
 		<For each={rows()}>
 			{(rowSkills: Skill[]) => {
 				const activeSkillInRow = createMemo<Skill | undefined>(() =>
-					rowSkills.find((s: Skill) => s.name === props.openPath()[props.level])
+					rowSkills.find((s: Skill) => s.name === props.openPath[props.level])
 				);
 
 				return (
 					<>
 						<div class="flex flex-wrap justify-center gap-10 md:gap-14 text-slate-700 dark:text-slate-300">
 							<For each={rowSkills}>
-								{(skill: Skill) => {
-									const isActive = props.openPath()[props.level] === skill.name;
-									return (
-										<button
-											class="group relative focus:outline-none cursor-pointer"
-											title={skill.name}
-											data-level={props.level}
-											onClick={() => props.onToggle(skill, props.level)}
+								{(skill: Skill) => (
+									<button
+										class="group relative focus:outline-none cursor-pointer"
+										title={skill.name}
+										data-level={props.level}
+										onClick={() => props.onToggle(skill, props.level)}
+									>
+										<div
+											class="w-14 h-14 md:w-16 md:h-16 transition-all duration-300 ease-out"
+											classList={{
+												"fill-primary-500 scale-110": props.openPath[props.level] === skill.name,
+												"fill-slate-400 group-hover:fill-primary-500 group-hover:scale-110": props.openPath[props.level] !== skill.name
+											}}
 										>
-											<div
-												class="w-14 h-14 md:w-16 md:h-16 transition-all duration-300 ease-out"
-												classList={{
-													"fill-primary-500 scale-110": isActive,
-													"fill-slate-400 group-hover:fill-primary-500 group-hover:scale-110": !isActive
-												}}
-											>
-												<DynamicIcon iconName={skill.icon} />
-											</div>
-											<span class="absolute -bottom-10 left-1/2 -translate-x-1/2 text-sm font-bold opacity-0 group-hover:opacity-100 transition-all duration-300 whitespace-nowrap bg-slate-900 text-white px-3 py-1.5 rounded-lg shadow-xl translate-y-2 group-hover:translate-y-0 z-50 pointer-events-none">
-												{skill.name}
-											</span>
-										</button>
-									)
-								}}
+											<DynamicIcon iconName={skill.icon} />
+										</div>
+										<span class="absolute -bottom-10 left-1/2 -translate-x-1/2 text-sm font-bold opacity-0 group-hover:opacity-100 transition-all duration-300 whitespace-nowrap bg-slate-900 text-white px-3 py-1.5 rounded-lg shadow-xl translate-y-2 group-hover:translate-y-0 z-50 pointer-events-none">
+											{skill.name}
+										</span>
+									</button>
+								)}
 							</For>
 						</div>
 
-						<Show when={activeSkillInRow()}>
-							{(activeSkill: Accessor<Skill>) => (
+						<Show when={activeSkillInRow()} keyed>
+							{(activeSkill: Skill) => (
 								<div
 									class="w-full overflow-hidden transition-all duration-500 ease-in-out"
 									style={{
-										"max-height": activeSkill().children ? "1000px" : "0px",
-										opacity: activeSkill().children ? "1" : "0",
+										"max-height": activeSkill.children ? "1000px" : "0px",
+										opacity: activeSkill.children ? "1" : "0",
 									}}
 								>
-									<Show when={activeSkill().children}>
+									<Show when={activeSkill.children}>
 										{(children: Accessor<Skill[]>) => (
 											<div class="py-8 my-4 rounded-2xl bg-slate-900/5 dark:bg-white/5 backdrop-blur-sm">
 												<SkillLevel
