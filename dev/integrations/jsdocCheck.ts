@@ -28,6 +28,7 @@ export default function jsdocCheckIntegration(options: JSDocCheckOptions = {}): 
 						plugins: [
 							{
 								name: "vite-plugin-jsdoc-check",
+								enforce: "pre",
 								transform(code, id) {
 									if (!id.endsWith(".ts") || isExcluded(id)) {
 										return null;
@@ -125,9 +126,9 @@ function getCommentText(comment: string | ts.NodeArray<ts.JSDocComment> | undefi
 	return ts.displayPartsToString(comment as any);
 }
 
-function validateFunction(node: ts.FunctionDeclaration | ts.MethodDeclaration, addWarning: (node: ts.Node, message: string) => void, sourceFile: ts.SourceFile) {
+function validateFunction(node: ts.FunctionDeclaration | ts.MethodDeclaration | ts.ConstructorDeclaration, addWarning: (node: ts.Node, message: string) => void, sourceFile: ts.SourceFile) {
 	const jsDocs = getJSDocs(node, sourceFile);
-	const name = node.name?.getText() || "anonymous";
+	const name = ts.isConstructorDeclaration(node) ? "constructor" : node.name?.getText() || "anonymous";
 
 	if (jsDocs.length === 0) {
 		addWarning(node, `Missing JSDoc for function/method "${name}"`);
@@ -145,8 +146,8 @@ function validateFunction(node: ts.FunctionDeclaration | ts.MethodDeclaration, a
 		if (!jsDocParam) {
 			addWarning(node, `Missing JSDoc @param for "${paramName}" in function "${name}"`);
 		} else {
-			const commentText = getCommentText(jsDocParam.comment);
-			if (!commentText || !/^ - \S+/.test(commentText)) {
+			const commentText = getCommentText(jsDocParam.comment).trim();
+			if (!commentText || !/^- \S+/.test(commentText)) {
 				addWarning(jsDocParam, `JSDoc @param "${paramName}" must follow the format "@param ${paramName} - description" (with space before and after hyphen)`);
 			}
 		}
@@ -160,11 +161,18 @@ function validateFunction(node: ts.FunctionDeclaration | ts.MethodDeclaration, a
 	});
 
 	const isVoid = node.type?.kind === ts.SyntaxKind.VoidKeyword;
-	if (!isVoid) {
-		const returnTag = doc.tags?.find((tag) => tag.tagName.getText() === "returns" || tag.tagName.getText() === "return");
+	const isPromiseVoid = node.type && ts.isTypeReferenceNode(node.type) && node.type.typeName.getText() === "Promise" && node.type.typeArguments?.[0]?.kind === ts.SyntaxKind.VoidKeyword;
+	const isConstructor = ts.isConstructorDeclaration(node);
+
+	if (!isVoid && !isPromiseVoid && !isConstructor) {
+		const returnTag = doc.tags?.find((tag) => tag.tagName.getText() === "returns");
 		if (!returnTag) {
 			if (node.type) {
-				addWarning(node, `Missing @returns tag for function/method "${name}"`);
+				if (doc.tags?.some((tag) => tag.tagName.getText() === "return")) {
+					addWarning(node, `@return tag should be @returns for function/method "${name}"`);
+				} else {
+					addWarning(node, `Missing @returns tag for function/method "${name}"`);
+				}
 			}
 		} else {
 			const commentText = getCommentText(returnTag.comment);
@@ -188,6 +196,8 @@ function validateClass(node: ts.ClassDeclaration, addWarning: (node: ts.Node, me
 			validateFunction(member, addWarning, sourceFile);
 		} else if (ts.isPropertyDeclaration(member)) {
 			validateProperty(member, addWarning, sourceFile);
+		} else if (ts.isConstructorDeclaration(member)) {
+			validateFunction(member, addWarning, sourceFile);
 		}
 	});
 }

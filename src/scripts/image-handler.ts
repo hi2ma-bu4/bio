@@ -12,7 +12,7 @@ let imgIndex = 0;
 
 /**
  * 画像をラップし、alt テキストを表示するためのボタンを追加します。
- * @param img ラップする画像要素。
+ * @param img - ラップする画像要素。
  */
 function wrapWithAltButton(img: HTMLImageElement): void {
 	const id = `uid-img-${imgIndex}`;
@@ -52,7 +52,7 @@ function wrapWithAltButton(img: HTMLImageElement): void {
 
 /**
  * 画像の読み込み成功時の処理を行います。
- * @param target 読み込まれた画像要素。
+ * @param target - 読み込まれた画像要素。
  */
 function handleLoad(target: HTMLImageElement): void {
 	if (target.classList.contains(isLoadClassName) || target.classList.contains(isErrClassName)) return;
@@ -61,7 +61,7 @@ function handleLoad(target: HTMLImageElement): void {
 
 /**
  * 画像の読み込みエラー時の処理を行います。
- * @param target 読み込みに失敗した画像要素。
+ * @param target - 読み込みに失敗した画像要素。
  */
 function handleError(target: HTMLImageElement): void {
 	// 無限ループを防止
@@ -103,7 +103,7 @@ document.addEventListener(
 /**
  * まだ処理されていない場合、画像に「チェック中」クラスを適用します。
  * キャッシュされた画像も処理します。
- * @param img 処理する画像要素。
+ * @param img - 処理する画像要素。
  */
 function processImage(img: HTMLImageElement): void {
 	if (img.classList.contains(isCheckClassName) || img.classList.contains(isLoadClassName) || img.classList.contains(isErrClassName)) {
@@ -126,7 +126,7 @@ function processImage(img: HTMLImageElement): void {
 
 /**
  * 指定された NodeList 内のすべての画像を検索して処理します。
- * @param nodes 画像を検索するノードのリスト。
+ * @param nodes - 画像を検索するノードのリスト。
  */
 function checkNodesForImages(nodes: NodeList): void {
 	for (const node of nodes) {
