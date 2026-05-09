@@ -37,6 +37,8 @@ const { title, description = SITE_DESCRIPTION } = Astro.props;
 			titleDefault="Page"
 			titleTemplate={`%s | ${SITE_TITLE}`}
 			description={description}
+			noindex={true}
+			nofollow={true}
 			extend={{
 				link: linkArr,
 				meta: metaArr,

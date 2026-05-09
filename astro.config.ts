@@ -244,6 +244,7 @@ export default defineConfig({
 	],
 	vite: {
 		publicDir: "public",
+		cacheDir: "./.cache/vite/",
 		plugins: [
 			tailwindVite({
 				optimize: {
