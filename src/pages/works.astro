@@ -34,7 +34,7 @@ const itemListSchema = {
 				url: `${worksPageUrl}#work-card-${work.id}`,
 
 				item: {
-					"@type": ["CreativeWork", "SoftwareApplication"],
+					"@type": work.ldJsonType ?? "CreativeWork",
 
 					"@id": `${worksPageUrl}#work-${work.id}`,
 
@@ -42,9 +42,9 @@ const itemListSchema = {
 
 					description: work.description,
 
-					url: `${worksPageUrl}#work-card-${work.id}`,
+					url: work.directLink ?? work.githubLink,
 
-					image: isImageMetadata(work.imageUrl) ? createUrl(work.imageUrl?.src) : work.imageUrl == null ? undefined : createUrl(work.imageUrl),
+					image: isImageMetadata(work.imageUrl) ? createUrl(work.imageUrl.src) : work.imageUrl == null || work.imageUrl === "" ? undefined : createUrl(work.imageUrl),
 
 					author: {
 						"@id": personId,
