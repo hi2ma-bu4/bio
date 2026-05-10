@@ -10,13 +10,15 @@ export interface Work {
 	githubLink?: string; // GitHubリポジトリ
 }
 
-type ldJsonWorkType = "SoftwareSourceCode" | "WebApplication" | "VideoGame" | "CollectionPage";
+type ldJsonType = "WebApplication" | "VideoGame" | "CollectionPage";
+type applicationCategoryType = "UtilitiesApplication" | "MultimediaApplication" | "EducationalApplication" | "GameApplication";
 
 export interface WorkItemData extends Work {
 	longDescription: string;
 	otherUrls?: string[];
 	license?: string;
-	ldJsonType?: ldJsonWorkType | ldJsonWorkType[];
+	ldJsonType?: ldJsonType;
+	applicationCategory?: applicationCategoryType;
 }
 
 /**

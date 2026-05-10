@@ -25,7 +25,6 @@ const itemListSchema = {
 			numberOfItems: worksData.length,
 
 			itemListOrder: "https://schema.org/ItemListOrderAscending",
-
 			itemListElement: worksData.map((work, index) => ({
 				"@type": "ListItem",
 
@@ -35,21 +34,24 @@ const itemListSchema = {
 
 				item: {
 					"@type": work.ldJsonType ?? "CreativeWork",
-
 					"@id": `${worksPageUrl}#work-${work.id}`,
 
 					name: work.title,
-
 					description: work.description,
 
-					url: work.directLink ?? work.githubLink,
+					url: work.directLink == null ? work.githubLink : createUrl(work.directLink),
 
 					image: isImageMetadata(work.imageUrl) ? createUrl(work.imageUrl.src) : work.imageUrl == null || work.imageUrl === "" ? undefined : createUrl(work.imageUrl),
+
+					operatingSystem: work.ldJsonType === "WebApplication" || work.ldJsonType === "VideoGame" ? "Web" : undefined,
+					applicationCategory: work.applicationCategory,
+					gamePlatform: work.ldJsonType === "VideoGame" ? "Web Browser" : undefined,
+
+					isAccessibleForFree: true,
 
 					author: {
 						"@id": personId,
 					},
-
 					creator: {
 						"@id": personId,
 					},

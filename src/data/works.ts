@@ -18,7 +18,7 @@ export const worksData: WorkItemData[] = [
 		githubLink: "https://github.com/hi2ma-bu4/RepoShowcase",
 		longDescription: `作成したライブラリ(ほとんど個人利用用途)の一覧とそのデモページを設置しています。`,
 		license: "LGPL-2.1",
-		ldJsonType: ["CollectionPage", "SoftwareSourceCode"],
+		ldJsonType: "CollectionPage",
 	},
 	{
 		id: "KanjiSearch",
@@ -34,6 +34,7 @@ export const worksData: WorkItemData[] = [
 精度がかなり悪いため、あまり実用的ではありませんが、onnxの勉強で作成しました。`,
 		license: "AGPL-3.0",
 		ldJsonType: "WebApplication",
+		applicationCategory: "UtilitiesApplication",
 	},
 	{
 		id: "MIDI-FallingBar",
@@ -48,6 +49,7 @@ export const worksData: WorkItemData[] = [
 WebGLレンダリングにはThree.jsを、MIDIファイルのパースには@tonejs/midiを使用しています。`,
 		license: "LGPL-2.1",
 		ldJsonType: "WebApplication",
+		applicationCategory: "MultimediaApplication",
 	},
 	{
 		id: "tool-2048",
@@ -62,6 +64,7 @@ WebGLレンダリングにはThree.jsを、MIDIファイルのパースには@to
 最小手数での到達や高スコア戦略の検証に活用できます。`,
 		license: "AGPL-3.0",
 		ldJsonType: "WebApplication",
+		applicationCategory: "UtilitiesApplication",
 	},
 	{
 		id: "ReTrans",
@@ -77,6 +80,7 @@ WebGLレンダリングにはThree.jsを、MIDIファイルのパースには@to
 		otherUrls: [`${BASE_DIR}ReTrans/?ja&en&gd&az&lo&ur&yo&ko&ar&is&gd&lb&ur&yi&vi&be&de&rw&sl&ny&zh-CN&ja`],
 		license: "GPL-3.0",
 		ldJsonType: "WebApplication",
+		applicationCategory: "UtilitiesApplication",
 	},
 	{
 		id: "mandelbrot",
@@ -93,6 +97,7 @@ WebGLレンダリングにはThree.jsを、MIDIファイルのパースには@to
 OpenGL Shading Language의数値上限によりズーム限界が決まっています。`,
 		license: "LGPL-2.1",
 		ldJsonType: "WebApplication",
+		applicationCategory: "EducationalApplication",
 	},
 	{
 		id: "js-ryoisyou",
@@ -106,6 +111,7 @@ OpenGL Shading Language의数値上限によりズーム限界が決まってい
 つまりパクリということです。`,
 		license: "AGPL-3.0",
 		ldJsonType: "VideoGame",
+		applicationCategory: "GameApplication",
 	},
 	{
 		id: "js-minecraft",
@@ -119,6 +125,7 @@ OpenGL Shading Language의数値上限によりズーム限界が決まってい
 そのページを9割真似て作成したものです。`,
 		license: "MIT",
 		ldJsonType: "VideoGame",
+		applicationCategory: "GameApplication",
 	},
 ];
 
