@@ -1,4 +1,4 @@
-import { B as BASE_DIR } from './Header-Bnk7kFAb.js';
+import { B as BASE_DIR } from './Header-DVpR_U51.js';
 
 const imageKanjiSearch = new Proxy({"src":"/bio/assets/imgs/kanjiSearch-MvCyfFl0.png","width":1541,"height":792,"format":"png"}, {
 						get(target, name, receiver) {
@@ -159,4 +159,4 @@ const workItemsMap = worksData.reduce(
 );
 
 export { workItemsMap as a, worksData as w };
-//# sourceMappingURL=works-B3H3rTV4.js.map
+//# sourceMappingURL=works-A7vDE7fv.js.map

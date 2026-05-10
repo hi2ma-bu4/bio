@@ -1,6 +1,6 @@
-import { a as createComponent, m as maybeRenderHead, f as addAttribute, ez as createTransitionScope, d as renderComponent, eA as $$Bars3, eu as $$XMark, b as renderScript, r as renderTemplate, c as createAstro, e as renderSlot, g as renderHead, $ as $$GoogleFontsOptimizer, eB as $$ClientRouter, h as $$SEO } from './vendor-zsY7UJHi.js';
+import { a as createComponent, m as maybeRenderHead, f as addAttribute, eA as createTransitionScope, d as renderComponent, eB as $$Bars3, eu as $$XMark, b as renderScript, r as renderTemplate, c as createAstro, e as renderSlot, g as renderHead, $ as $$GoogleFontsOptimizer, eC as $$ClientRouter, ew as unescapeHTML, h as $$SEO } from './vendor-Crd9GD-p.js';
 import 'piccolore';
-import { c as $$ThemeToggle, d as $$NavLinks, e as $$Logo, B as BASE_DIR, A as AUTHOR, S as SITE_TITLE, a as SITE_DESCRIPTION, $ as $$Footer, b as $$Header, G as GTAG_ID } from './Header-Bnk7kFAb.js';
+import { d as $$ThemeToggle, e as $$NavLinks, f as $$Logo, B as BASE_DIR, A as AUTHOR, S as SITE_TITLE, a as SITE_DESCRIPTION, c as SITE_URL, $ as $$Footer, b as $$Header, G as GTAG_ID } from './Header-DVpR_U51.js';
 /* empty css               */
 
 const pwaAssetsHead = {"links":[{"href":"/bio/favicon.ico","rel":"icon","sizes":"48x48"},{"href":"/bio/favicon.svg","rel":"icon","sizes":"any","type":"image/svg+xml"},{"href":"/bio/apple-touch-icon-180x180.png","rel":"apple-touch-icon"}],"themeColor":{"content":"#1D396F"}};
@@ -62,11 +62,50 @@ const $$Layout = createComponent(($$result, $$props, $$slots) => {
     metaArr.push({ name: "theme-color", content: pwaAssetsHead.themeColor.content });
   }
   const { title, description = SITE_DESCRIPTION } = Astro2.props;
-  return renderTemplate(_a || (_a = __template(['<html lang="ja" prefix="og: https://ogp.me/ns#" data-overlayscrollbars-initialize> <head prefix="website: https://ogp.me/ns/website#">', "", "", "", "", "<script async", "><\/script>", '<link rel="preconnect" href="https://fonts.googleapis.com">', "", '</head> <body class="min-h-screen flex flex-col w-full" data-overlayscrollbars-initialize> <!-- Google Tag Manager (noscript) --> <noscript><iframe', ' height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript> <!-- End Google Tag Manager (noscript) --> ', " ", ' <div id="bg-canvas"', '></div> <main class="grow w-full max-w-5xl mx-auto px-4 py-8 md:px-8" role="main"> ', " </main> ", " ", " ", " ", " ", " ", " </body> </html>"])), renderComponent($$result, "SEO", $$SEO, { "charset": "UTF-8", "title": title, "titleDefault": "Page", "titleTemplate": `%s | ${SITE_TITLE}`, "description": description, "openGraph": {
+  const personSchema = {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    name: AUTHOR,
+    alternateName: "snows",
+    url: SITE_URL,
+    sameAs: ["https://github.com/hi2ma-bu4", "https://twitter.com/hi2ma_bu4"]
+  };
+  const websiteSchema = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: SITE_TITLE,
+    url: SITE_URL,
+    author: {
+      "@type": "Person",
+      name: AUTHOR
+    }
+  };
+  const breadcrumbs = [
+    {
+      "@type": "ListItem",
+      position: 1,
+      name: "Top",
+      item: SITE_URL
+    }
+  ];
+  if (Astro2.url.pathname !== BASE_DIR) {
+    breadcrumbs.push({
+      "@type": "ListItem",
+      position: 2,
+      name: title,
+      item: new URL(Astro2.url.pathname, SITE_URL).toString()
+    });
+  }
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: breadcrumbs
+  };
+  return renderTemplate(_a || (_a = __template(['<html lang="ja" prefix="og: https://ogp.me/ns#" data-overlayscrollbars-initialize> <head prefix="website: https://ogp.me/ns/website#">', '<script type="application/ld+json">', '<\/script><script type="application/ld+json">', '<\/script><script type="application/ld+json">', "<\/script>", "", "", "", "<script async", "><\/script>", '<link rel="preconnect" href="https://fonts.googleapis.com">', "", '</head> <body class="min-h-screen flex flex-col w-full" data-overlayscrollbars-initialize> <!-- Google Tag Manager (noscript) --> <noscript><iframe', ' height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript> <!-- End Google Tag Manager (noscript) --> ', " ", ' <div id="bg-canvas"', '></div> <main class="grow w-full max-w-5xl mx-auto px-4 py-8 md:px-8" role="main"> ', " </main> ", " ", " ", " ", " ", " ", " </body> </html>"])), renderComponent($$result, "SEO", $$SEO, { "charset": "UTF-8", "title": title, "titleDefault": "Page", "titleTemplate": `%s | ${SITE_TITLE}`, "description": description, "openGraph": {
     basic: {
       title,
       type: "website",
-      image: BASE_DIR + "maskable-icon-512x512.png"
+      image: new URL(BASE_DIR + "maskable-icon-512x512.png", SITE_URL).toString()
     },
     optional: {
       description,
@@ -76,8 +115,8 @@ const $$Layout = createComponent(($$result, $$props, $$slots) => {
   }, "twitter": { creator: "@hi2ma_bu4", card: "summary" }, "extend": {
     link: linkArr,
     meta: metaArr
-  } }), renderScript($$result, "C:/Users/snows/Documents/Program/js/bio/src/layouts/Layout.astro?astro&type=script&index=0&lang.ts"), renderScript($$result, "C:/Users/snows/Documents/Program/js/bio/src/layouts/Layout.astro?astro&type=script&index=1&lang.ts"), renderScript($$result, "C:/Users/snows/Documents/Program/js/bio/src/layouts/Layout.astro?astro&type=script&index=2&lang.ts"), renderScript($$result, "C:/Users/snows/Documents/Program/js/bio/src/layouts/Layout.astro?astro&type=script&index=3&lang.ts"), addAttribute(`${BASE_DIR}assets/js/static/auto-gtag.js`, "src"), renderComponent($$result, "ClientRouter", $$ClientRouter, {}), renderComponent($$result, "GoogleFontsOptimizer", $$GoogleFontsOptimizer, { "url": "https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Noto+Sans+JP:wght@400;700&display=swap" }), renderHead(), addAttribute(`https://www.googletagmanager.com/ns.html?id=${GTAG_ID}`, "src"), renderComponent($$result, "Header", $$Header, {}), renderComponent($$result, "FloatingHeader", $$FloatingHeader, {}), addAttribute(createTransitionScope($$result, "hvl3seze"), "data-astro-transition-persist"), renderSlot($$result, $$slots["default"]), renderComponent($$result, "Footer", $$Footer, {}), renderScript($$result, "C:/Users/snows/Documents/Program/js/bio/src/layouts/Layout.astro?astro&type=script&index=4&lang.ts"), renderScript($$result, "C:/Users/snows/Documents/Program/js/bio/src/layouts/Layout.astro?astro&type=script&index=5&lang.ts"), renderScript($$result, "C:/Users/snows/Documents/Program/js/bio/src/layouts/Layout.astro?astro&type=script&index=6&lang.ts"), renderScript($$result, "C:/Users/snows/Documents/Program/js/bio/src/layouts/Layout.astro?astro&type=script&index=7&lang.ts"), renderScript($$result, "C:/Users/snows/Documents/Program/js/bio/src/layouts/Layout.astro?astro&type=script&index=8&lang.ts"));
+  } }), unescapeHTML(JSON.stringify(personSchema)), unescapeHTML(JSON.stringify(websiteSchema)), unescapeHTML(JSON.stringify(breadcrumbSchema)), renderScript($$result, "C:/Users/snows/Documents/Program/js/bio/src/layouts/Layout.astro?astro&type=script&index=0&lang.ts"), renderScript($$result, "C:/Users/snows/Documents/Program/js/bio/src/layouts/Layout.astro?astro&type=script&index=1&lang.ts"), renderScript($$result, "C:/Users/snows/Documents/Program/js/bio/src/layouts/Layout.astro?astro&type=script&index=2&lang.ts"), renderScript($$result, "C:/Users/snows/Documents/Program/js/bio/src/layouts/Layout.astro?astro&type=script&index=3&lang.ts"), addAttribute(`${BASE_DIR}assets/js/static/auto-gtag.js`, "src"), renderComponent($$result, "ClientRouter", $$ClientRouter, {}), renderComponent($$result, "GoogleFontsOptimizer", $$GoogleFontsOptimizer, { "url": "https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Noto+Sans+JP:wght@400;700&display=swap" }), renderHead(), addAttribute(`https://www.googletagmanager.com/ns.html?id=${GTAG_ID}`, "src"), renderComponent($$result, "Header", $$Header, {}), renderComponent($$result, "FloatingHeader", $$FloatingHeader, {}), addAttribute(createTransitionScope($$result, "jxbwvgj3"), "data-astro-transition-persist"), renderSlot($$result, $$slots["default"]), renderComponent($$result, "Footer", $$Footer, {}), renderScript($$result, "C:/Users/snows/Documents/Program/js/bio/src/layouts/Layout.astro?astro&type=script&index=4&lang.ts"), renderScript($$result, "C:/Users/snows/Documents/Program/js/bio/src/layouts/Layout.astro?astro&type=script&index=5&lang.ts"), renderScript($$result, "C:/Users/snows/Documents/Program/js/bio/src/layouts/Layout.astro?astro&type=script&index=6&lang.ts"), renderScript($$result, "C:/Users/snows/Documents/Program/js/bio/src/layouts/Layout.astro?astro&type=script&index=7&lang.ts"), renderScript($$result, "C:/Users/snows/Documents/Program/js/bio/src/layouts/Layout.astro?astro&type=script&index=8&lang.ts"));
 }, "C:/Users/snows/Documents/Program/js/bio/src/layouts/Layout.astro", "self");
 
 export { $$Layout as $ };
-//# sourceMappingURL=Layout-DcCVXUd6.js.map
+//# sourceMappingURL=Layout-Dt55ji8D.js.map

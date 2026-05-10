@@ -1,6 +1,6 @@
 <SYSTEM>Index of key pages</SYSTEM>
 
-> JavaScript を中心に、個人開発したページ・スクリプトを掲載しています。トップページ。
+> JavaScript/TypeScript を中心に用いた、個人開発の制作物やライブラリを公開している snowsSite のトップページです。
 
 URL: https://hi2ma-bu4.github.io/bio/
 
@@ -22,7 +22,7 @@ URL: https://hi2ma-bu4.github.io/bio/
 
 # Link
 
-> JavaScript を中心に、個人開発したページ・スクリプトを掲載しています。関連リンク集。
+> GitHub や Greasyfork など、hi2ma-bu4 (snows) の外部活動プロファイルや関連リポジトリへのリンク集です。
 
 URL: https://hi2ma-bu4.github.io/bio/link/
 
@@ -38,7 +38,7 @@ URL: https://hi2ma-bu4.github.io/bio/link/
 
 # Works
 
-> JavaScript を中心に、個人開発したページ・スクリプトを掲載しています。制作物一覧。
+> JavaScript/TypeScript を中心に用いた、個人開発の制作物一覧ページです。
 
 URL: https://hi2ma-bu4.github.io/bio/works/
 

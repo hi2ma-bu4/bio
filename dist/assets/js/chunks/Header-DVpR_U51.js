@@ -1,8 +1,8 @@
-import { a as createComponent, m as maybeRenderHead, r as renderTemplate, c as createAstro, f as addAttribute, s as spreadAttributes, ez as createTransitionScope, d as renderComponent, eC as $$Sun, eD as $$Moon } from './vendor-zsY7UJHi.js';
+import { a as createComponent, m as maybeRenderHead, r as renderTemplate, c as createAstro, f as addAttribute, s as spreadAttributes, eA as createTransitionScope, d as renderComponent, eD as $$Sun, eE as $$Moon } from './vendor-Crd9GD-p.js';
 import 'piccolore';
 import 'clsx';
 
-const BASE_DIR = "/bio/";const AUTHOR = "hi2ma-bu4";const SITE_TITLE = "snowsSite";const SITE_DESCRIPTION = "snows(hi2ma-bu4)の個人サイトです。";const GTAG_ID = "GTM-N2NZ68ZJ";
+const BASE_DIR = "/bio/";const AUTHOR = "hi2ma-bu4";const SITE_URL = "https://hi2ma-bu4.github.io/";const SITE_TITLE = "snowsSite";const SITE_DESCRIPTION = "snows(hi2ma-bu4)の個人サイトです。";const GTAG_ID = "GTM-N2NZ68ZJ";
 
 const NAV_LINKS = [
   { href: BASE_DIR, text: "Top" },
@@ -59,5 +59,5 @@ const $$Header = createComponent(($$result, $$props, $$slots) => {
   return renderTemplate`${maybeRenderHead()}<header id="main-header" class="w-full py-4 px-4 md:px-8 transition-transform duration-300" role="banner"${addAttribute(createTransitionScope($$result, "l7r54iwe"), "data-astro-transition-persist")}> <nav class="max-w-5xl mx-auto flex justify-between items-center"> ${renderComponent($$result, "Logo", $$Logo, { "id": "logo", "class": "text-2xl" })} <div class="hidden md:flex items-center space-x-6"> ${renderComponent($$result, "NavLinks", $$NavLinks, { "class": "flex space-x-6 list-none", "itemClass": "text-lg font-medium text-slate-700 dark:text-slate-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors" })} ${renderComponent($$result, "ThemeToggle", $$ThemeToggle, {})} </div> </nav> </header>`;
 }, "C:/Users/snows/Documents/Program/js/bio/src/components/Header.astro", "self");
 
-export { $$Footer as $, AUTHOR as A, BASE_DIR as B, CLASS_AUTO_IMG_ALT as C, GTAG_ID as G, SITE_TITLE as S, __vite_glob_0_1 as _, SITE_DESCRIPTION as a, $$Header as b, $$ThemeToggle as c, $$NavLinks as d, $$Logo as e };
-//# sourceMappingURL=Header-Bnk7kFAb.js.map
+export { $$Footer as $, AUTHOR as A, BASE_DIR as B, CLASS_AUTO_IMG_ALT as C, GTAG_ID as G, SITE_TITLE as S, __vite_glob_0_1 as _, SITE_DESCRIPTION as a, $$Header as b, SITE_URL as c, $$ThemeToggle as d, $$NavLinks as e, $$Logo as f };
+//# sourceMappingURL=Header-DVpR_U51.js.map
