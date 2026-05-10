@@ -34,109 +34,128 @@ function initWorkModal() {
 	let focusTrap: ReturnType<typeof createFocusTrap> | null = null;
 	let removeEscape: (() => void) | null = null;
 
+	/**
+	 * モーダルを開く
+	 * @param workId - 作品ID
+	 * @param trigger - トリガー要素
+	 */
+	const openModal = async (workId: string, trigger: HTMLElement) => {
+		const workData: WorkItemData = workItems[workId];
+		if (workData && modal) {
+			// コンテンツの動的挿入
+			const content = template.content.cloneNode(true) as DocumentFragment;
+
+			const titleEl = content.querySelector<HTMLHeadingElement>('[data-template-id="title"]');
+			if (titleEl) titleEl.textContent = workData.title;
+
+			const imageEl = content.querySelector<HTMLImageElement>('[data-template-id="image"]') as HTMLImageElement | null;
+			if (imageEl) {
+				let src: string = "";
+				if (isImageMetadata(workData.imageUrl)) {
+					src = workData.imageUrl.src;
+				} else {
+					src = workData.imageUrl ?? "";
+				}
+				const absoluteImageUrl = new URL(src, window.location.origin).href;
+				imageEl.src = absoluteImageUrl;
+				imageEl.alt = workData.title;
+			}
+
+			const longDescriptionEl = content.querySelector<HTMLParagraphElement>('[data-template-id="long-description"]');
+			if (longDescriptionEl) longDescriptionEl.innerText = workData.longDescription;
+
+			const otherUrlsEl = content.querySelector<HTMLParagraphElement>('[data-template-id="other-urls"]');
+			if (otherUrlsEl) {
+				otherUrlsEl.innerHTML = "";
+				if (workData.otherUrls) {
+					workData.otherUrls.forEach((link: string) => {
+						const urlLi = document.createElement("li");
+						urlLi.className = "mb-2 list-none";
+						const urlAnchor = document.createElement("a");
+						urlAnchor.className = "text-primary-600 hover:text-primary-800 dark:text-primary-400 dark:hover:text-primary-200 underline break-all";
+						urlAnchor.target = "_blank";
+						urlAnchor.rel = "noopener noreferrer";
+						urlAnchor.href = link;
+						urlAnchor.textContent = urlAnchor.href;
+						urlLi.appendChild(urlAnchor);
+						otherUrlsEl.appendChild(urlLi);
+					});
+				}
+			}
+
+			const tagsEl = content.querySelector<HTMLDivElement>('[data-template-id="tags"]');
+			if (tagsEl) {
+				tagsEl.innerHTML = ""; // 既存のタグをクリア
+				workData.tags.forEach((tag: string) => {
+					const tagSpan = document.createElement("span");
+					tagSpan.className = "text-xs font-medium px-2 py-0.5 rounded-full bg-primary-100 text-primary-800 dark:bg-primary-900 dark:text-primary-200";
+					tagSpan.textContent = tag;
+					tagsEl.appendChild(tagSpan);
+				});
+			}
+
+			const directLinkEl = content.querySelector<HTMLAnchorElement>('[data-template-id="direct-link"]');
+			if (directLinkEl) {
+				if (workData.directLink) {
+					directLinkEl.href = workData.directLink;
+					directLinkEl.classList.remove("hidden");
+					directLinkEl.classList.add("inline-flex");
+				} else {
+					directLinkEl.classList.add("hidden");
+					directLinkEl.classList.remove("inline-flex");
+				}
+			}
+
+			const githubLinkEl = content.querySelector<HTMLAnchorElement>('[data-template-id="github-link"]');
+			if (githubLinkEl) {
+				if (workData.githubLink) {
+					githubLinkEl.href = workData.githubLink;
+					githubLinkEl.classList.remove("hidden");
+					githubLinkEl.classList.add("inline-flex");
+				} else {
+					githubLinkEl.classList.add("hidden");
+					githubLinkEl.classList.remove("inline-flex");
+				}
+			}
+
+			// 既存のコンテンツをクリアして新しいコンテンツを挿入
+			modalContent.innerHTML = "";
+			modalContent.appendChild(content);
+
+			lastFocusedElement = trigger;
+			modal.showModal();
+
+			// スクロールロックとフォーカストラップを有効化
+			lockBodyScroll();
+			focusTrap = createFocusTrap(modal);
+			focusTrap.activate();
+			focusTrap.focusFirst();
+			if (!removeEscape) removeEscape = addEscapeListener(() => modal.close());
+
+			modal.scroll({
+				top: 0,
+				behavior: "instant",
+			});
+		}
+	};
+
 	// モーダルを開く
 	triggers.forEach((trigger) => {
 		trigger.addEventListener("click", async (e) => {
 			e.preventDefault();
 			const workId = (trigger as HTMLElement).dataset.workId;
-			if (!workId) return;
+			if (workId) {
+				openModal(workId, trigger);
+			}
+		});
 
-			const workData: WorkItemData = workItems[workId];
-			if (workData && modal) {
-				// コンテンツの動的挿入
-				const content = template.content.cloneNode(true) as DocumentFragment;
-
-				const titleEl = content.querySelector<HTMLHeadingElement>('[data-template-id="title"]');
-				if (titleEl) titleEl.textContent = workData.title;
-
-				const imageEl = content.querySelector<HTMLImageElement>('[data-template-id="image"]') as HTMLImageElement | null;
-				if (imageEl) {
-					let src: string = "";
-					if (isImageMetadata(workData.imageUrl)) {
-						src = workData.imageUrl.src;
-					} else {
-						src = workData.imageUrl ?? "";
-					}
-					const absoluteImageUrl = new URL(src, window.location.origin).href;
-					imageEl.src = absoluteImageUrl;
-					imageEl.alt = workData.title;
+		trigger.addEventListener("keydown", (e) => {
+			if (e.key === "Enter" || e.key === " ") {
+				e.preventDefault();
+				const workId = (trigger as HTMLElement).dataset.workId;
+				if (workId) {
+					openModal(workId, trigger);
 				}
-
-				const longDescriptionEl = content.querySelector<HTMLParagraphElement>('[data-template-id="long-description"]');
-				if (longDescriptionEl) longDescriptionEl.innerText = workData.longDescription;
-
-				const otherUrlsEl = content.querySelector<HTMLParagraphElement>('[data-template-id="other-urls"]');
-				if (otherUrlsEl) {
-					otherUrlsEl.innerHTML = "";
-					if (workData.otherUrls) {
-						workData.otherUrls.forEach((link: string) => {
-							const urlLi = document.createElement("li");
-							urlLi.className = "mb-2 list-none";
-							const urlAnchor = document.createElement("a");
-							urlAnchor.className = "text-primary-600 hover:text-primary-800 dark:text-primary-400 dark:hover:text-primary-200 underline break-all";
-							urlAnchor.target = "_blank";
-							urlAnchor.rel = "noopener noreferrer";
-							urlAnchor.href = link;
-							urlAnchor.textContent = urlAnchor.href;
-							urlLi.appendChild(urlAnchor);
-							otherUrlsEl.appendChild(urlLi);
-						});
-					}
-				}
-
-				const tagsEl = content.querySelector<HTMLDivElement>('[data-template-id="tags"]');
-				if (tagsEl) {
-					tagsEl.innerHTML = ""; // 既存のタグをクリア
-					workData.tags.forEach((tag: string) => {
-						const tagSpan = document.createElement("span");
-						tagSpan.className = "text-xs font-medium px-2 py-0.5 rounded-full bg-primary-100 text-primary-800 dark:bg-primary-900 dark:text-primary-200";
-						tagSpan.textContent = tag;
-						tagsEl.appendChild(tagSpan);
-					});
-				}
-
-				const directLinkEl = content.querySelector<HTMLAnchorElement>('[data-template-id="direct-link"]');
-				if (directLinkEl) {
-					if (workData.directLink) {
-						directLinkEl.href = workData.directLink;
-						directLinkEl.classList.remove("hidden");
-						directLinkEl.classList.add("inline-flex");
-					} else {
-						directLinkEl.classList.add("hidden");
-						directLinkEl.classList.remove("inline-flex");
-					}
-				}
-
-				const githubLinkEl = content.querySelector<HTMLAnchorElement>('[data-template-id="github-link"]');
-				if (githubLinkEl) {
-					if (workData.githubLink) {
-						githubLinkEl.href = workData.githubLink;
-						githubLinkEl.classList.remove("hidden");
-						githubLinkEl.classList.add("inline-flex");
-					} else {
-						githubLinkEl.classList.add("hidden");
-						githubLinkEl.classList.remove("inline-flex");
-					}
-				}
-
-				// 既存のコンテンツをクリアして新しいコンテンツを挿入
-				modalContent.innerHTML = "";
-				modalContent.appendChild(content);
-
-				lastFocusedElement = document.activeElement as HTMLElement;
-				modal.showModal();
-
-				// スクロールロックとフォーカストラップを有効化
-				lockBodyScroll();
-				focusTrap = createFocusTrap(modal);
-				focusTrap.activate();
-				focusTrap.focusFirst();
-				if (!removeEscape) removeEscape = addEscapeListener(() => modal.close());
-
-				modal.scroll({
-					top: 0,
-					behavior: "instant",
-				});
 			}
 		});
 	});

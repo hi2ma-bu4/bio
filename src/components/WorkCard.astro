@@ -5,16 +5,18 @@ import ArrowTopRightOnSquareIcon from "astro-heroicons/solid/ArrowTopRightOnSqua
 import GitHub from "./icon/GitHub.astro";
 import { getImageWidths, isImageMetadata, type Work } from "../types/work-item";
 
-export type Props = Work;
+import type { WorkItemData } from "../types/work-item";
 
-const { id, title, description, imageUrl, tags, directLink, githubLink } = Astro.props;
+export type Props = WorkItemData;
+
+const { id, title, description, longDescription, imageUrl, tags, directLink, githubLink } = Astro.props;
 
 const isCardFooter = directLink || githubLink;
 ---
 
-<div id={`work-card-${id}`} class="flex flex-col justify-between flex-nowrap group rounded-lg overflow-hidden shadow-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
-	<button class="work-modal-trigger w-full h-full flex flex-col text-left" data-work-id={id} aria-haspopup="dialog">
-		<div class="aspect-video overflow-hidden">
+<article id={`work-card-${id}`} class="flex flex-col justify-between flex-nowrap group rounded-lg overflow-hidden shadow-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+	<div class="work-modal-trigger w-full h-full flex flex-col text-left cursor-pointer" data-work-id={id} aria-haspopup="dialog" role="button" tabindex="0">
+		<div class="aspect-video overflow-hidden w-full">
 			{
 				isImageMetadata(imageUrl) ? (
 					<Picture src={imageUrl} widths={getImageWidths(imageUrl)} formats={["avif", "webp"]} alt={`${title}のスクリーンショット`} fetchpriority="low" pictureAttributes={{ class: "w-full h-full" }} class="object-cover transition-transform duration-300 group-hover:scale-105" />
@@ -24,19 +26,22 @@ const isCardFooter = directLink || githubLink;
 			}
 		</div>
 
-		<div class="p-4 md:p-6 pb-2 md:pb-2">
+		<div class="p-4 md:p-6 pb-2 md:pb-2 grow">
 			<h3 class="text-xl font-bold mb-2 text-slate-900 dark:text-white">{title}</h3>
 			<p class="text-slate-600 dark:text-slate-400 text-sm mb-4 line-clamp-2">{description}</p>
+			<p class="sr-only" aria-hidden="false">
+				{longDescription}
+			</p>
 
 			<div class="flex flex-wrap gap-2">
 				{tags.map((tag) => <span class="text-xs font-medium px-2 py-0.5 rounded-full bg-primary-100 text-primary-800 dark:bg-primary-900 dark:text-primary-200">{tag}</span>)}
 			</div>
 		</div>
-	</button>
+	</div>
 
 	{
 		isCardFooter && (
-			<div class="p-4 md:p-6 pt-0 md:pt-0 flex flex-row gap-2">
+			<footer class="p-4 md:p-6 pt-0 md:pt-0 flex flex-row gap-2">
 				{directLink && (
 					<a href={directLink} target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium bg-primary-600 text-white hover:bg-primary-700 focus-visible:ring-primary-500 transition-colors" onclick="event.stopPropagation()" aria-label={`${title}のサイトへ移動`}>
 						サイトへ移動
@@ -48,7 +53,7 @@ const isCardFooter = directLink || githubLink;
 						<GitHub class="w-5 h-5" />
 					</a>
 				)}
-			</div>
+			</footer>
 		)
 	}
-</div>
+</article>

@@ -13,6 +13,7 @@ export interface Work {
 export interface WorkItemData extends Work {
 	longDescription: string;
 	otherUrls?: string[];
+	license?: string;
 }
 
 /**

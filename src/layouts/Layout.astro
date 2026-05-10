@@ -7,8 +7,9 @@ import { pwaInfo } from "virtual:pwa-info";
 import FloatingHeader from "../components/FloatingHeader.astro";
 import Footer from "../components/Footer.astro";
 import Header from "../components/Header.astro";
-import { AUTHOR, BASE_DIR, GTAG_ID, SITE_DESCRIPTION, SITE_TITLE, SITE_URL } from "../config";
+import { AUTHOR, BASE_DIR, GTAG_ID, SITE_DESCRIPTION, SITE_TITLE } from "../config";
 
+import { createUrl } from "../scripts/libs/url-utils";
 import "../styles/global.css";
 
 interface Props {
@@ -69,32 +70,19 @@ if (pwaAssetsHead.themeColor) {
 
 const { title, description = SITE_DESCRIPTION } = Astro.props;
 
-const personSchema = {
-	"@context": "https://schema.org",
-	"@type": "Person",
-	name: AUTHOR,
-	alternateName: "snows",
-	url: SITE_URL,
-	sameAs: ["https://github.com/hi2ma-bu4", "https://twitter.com/hi2ma_bu4"],
-};
+const topUrl = createUrl(BASE_DIR);
+const currentUrl = createUrl(Astro.url.pathname);
 
-const websiteSchema = {
-	"@context": "https://schema.org",
-	"@type": "WebSite",
-	name: SITE_TITLE,
-	url: SITE_URL,
-	author: {
-		"@type": "Person",
-		name: AUTHOR,
-	},
-};
+const personId = `${topUrl}#person`;
+const websiteId = `${topUrl}#website`;
+const webpageId = `${currentUrl}#webpage`;
 
 const breadcrumbs = [
 	{
 		"@type": "ListItem",
 		position: 1,
 		name: "Top",
-		item: SITE_URL,
+		item: topUrl,
 	},
 ];
 
@@ -103,14 +91,71 @@ if (Astro.url.pathname !== BASE_DIR) {
 		"@type": "ListItem",
 		position: 2,
 		name: title,
-		item: new URL(Astro.url.pathname, SITE_URL).toString(),
+		item: currentUrl,
 	});
 }
 
-const breadcrumbSchema = {
+const structuredData = {
 	"@context": "https://schema.org",
-	"@type": "BreadcrumbList",
-	itemListElement: breadcrumbs,
+	"@graph": [
+		{
+			"@type": "Person",
+			"@id": personId,
+
+			name: AUTHOR,
+			alternateName: "snows",
+
+			url: topUrl,
+			image: createUrl(`${BASE_DIR}pwa-512x512.png`),
+			sameAs: ["https://github.com/hi2ma-bu4", "https://twitter.com/hi2ma_bu4"],
+		},
+
+		{
+			"@type": "WebSite",
+			"@id": websiteId,
+
+			name: SITE_TITLE,
+			url: topUrl,
+
+			description: SITE_DESCRIPTION,
+			inLanguage: "ja",
+
+			publisher: {
+				"@id": personId,
+			},
+			author: {
+				"@id": personId,
+			},
+		},
+
+		{
+			"@type": "WebPage",
+			"@id": webpageId,
+
+			name: title,
+			url: currentUrl,
+
+			description: description,
+			inLanguage: "ja",
+
+			isPartOf: {
+				"@id": websiteId,
+			},
+			about: {
+				"@id": personId,
+			},
+			breadcrumb: {
+				"@id": `${currentUrl}#breadcrumb`,
+			},
+		},
+
+		{
+			"@type": "BreadcrumbList",
+			"@id": `${currentUrl}#breadcrumb`,
+
+			itemListElement: breadcrumbs,
+		},
+	],
 };
 ---
 
@@ -127,7 +172,7 @@ const breadcrumbSchema = {
 				basic: {
 					title: title,
 					type: "website",
-					image: new URL(BASE_DIR + "maskable-icon-512x512.png", SITE_URL).toString(),
+					image: createUrl(`${BASE_DIR}maskable-icon-512x512.png`),
 				},
 				optional: {
 					description: description,
@@ -142,9 +187,7 @@ const breadcrumbSchema = {
 			}}
 		/>
 
-		<script type="application/ld+json" set:html={JSON.stringify(personSchema)} is:inline />
-		<script type="application/ld+json" set:html={JSON.stringify(websiteSchema)} is:inline />
-		<script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} is:inline />
+		<script type="application/ld+json" set:html={JSON.stringify(structuredData)} is:inline />
 
 		<script src="../scripts/theme-toggle.ts"></script>
 		<script src="../scripts/pwa.ts"></script>

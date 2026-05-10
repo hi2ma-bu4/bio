@@ -106,15 +106,18 @@ const skillData: Skill[] = [
 			<div class="space-y-16">
 				{
 					worksData.slice(0, 4).map((work) => (
-						<div class="group relative pl-10 before:absolute before:left-0 before:top-0 before:bottom-0 before:w-1.5 before:bg-primary-500 before:rounded-full before:opacity-10 hover:before:opacity-100 before:transition-all duration-300">
+						<article class="group relative pl-10 before:absolute before:left-0 before:top-0 before:bottom-0 before:w-1.5 before:bg-primary-500 before:rounded-full before:opacity-10 hover:before:opacity-100 before:transition-all duration-300">
 							<h3 class="text-2xl font-bold mb-3">
-								<a href={`${workUrl}#work-card-${work.id}`} class="hover:text-primary-600 dark:hover:text-primary-400 transition-colors inline-flex items-center gap-2">
+								<a href={`${workUrl}#work-card-${work.id}`} class="hover:text-primary-600 dark:hover:text-primary-400 transition-colors inline-flex items-center gap-2" aria-label={`${work.title}の詳細を見る`}>
 									{work.title}
 									<ArrowRightIcon class="w-5 h-5 opacity-0 -translate-x-3 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" />
 								</a>
 							</h3>
 							<p class="text-slate-600 dark:text-slate-400 text-lg leading-relaxed">{work.description}</p>
-						</div>
+							<p class="sr-only" aria-hidden="false">
+								{work.longDescription}
+							</p>
+						</article>
 					))
 				}
 			</div>

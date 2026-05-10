@@ -2,29 +2,63 @@
 import Layout from "../layouts/Layout.astro";
 import WorkCard from "../components/WorkCard.astro";
 import WorkModal from "../components/WorkModal.astro";
-import { AUTHOR, SITE_URL } from "../config";
+import { BASE_DIR } from "../config";
 
 import { workItemsMap, worksData } from "../data/works";
+import { createUrl } from "../scripts/libs/url-utils";
+import { isImageMetadata } from "../types/work-item";
+
+const personId = `${createUrl(BASE_DIR)}#person`;
+const worksPageUrl = `${createUrl(BASE_DIR)}works/`;
 
 const itemListSchema = {
 	"@context": "https://schema.org",
-	"@type": "ItemList",
-	name: "Works",
-	description: "制作物の一覧",
-	itemListElement: worksData.map((work, index) => ({
-		"@type": "ListItem",
-		position: index + 1,
-		item: {
-			"@type": "CreativeWork",
-			name: work.title,
-			description: work.description,
-			url: `${SITE_URL}works/#work-card-${work.id}`,
-			author: {
-				"@type": "Person",
-				name: AUTHOR,
-			},
+
+	"@graph": [
+		{
+			"@type": "ItemList",
+			"@id": `${worksPageUrl}#itemlist`,
+
+			name: "Works",
+			description: "制作物の一覧",
+
+			numberOfItems: worksData.length,
+
+			itemListOrder: "https://schema.org/ItemListOrderAscending",
+
+			itemListElement: worksData.map((work, index) => ({
+				"@type": "ListItem",
+
+				position: index + 1,
+
+				url: `${worksPageUrl}#work-card-${work.id}`,
+
+				item: {
+					"@type": ["CreativeWork", "SoftwareApplication"],
+
+					"@id": `${worksPageUrl}#work-${work.id}`,
+
+					name: work.title,
+
+					description: work.description,
+
+					url: `${worksPageUrl}#work-card-${work.id}`,
+
+					image: isImageMetadata(work.imageUrl) ? createUrl(work.imageUrl?.src) : work.imageUrl == null ? undefined : createUrl(work.imageUrl),
+
+					author: {
+						"@id": personId,
+					},
+
+					creator: {
+						"@id": personId,
+					},
+
+					inLanguage: "ja",
+				},
+			})),
 		},
-	})),
+	],
 };
 ---
 
