@@ -2,18 +2,8 @@
 import Layout from "../layouts/Layout.astro";
 import WorkCard from "../components/WorkCard.astro";
 import WorkModal from "../components/WorkModal.astro";
-import type { WorkItemData } from "../types/work-item";
 
-import { worksData } from "../data/works";
-
-// データをJSで扱いやすい形式（オブジェクト）に変換
-const workItemsMap = worksData.reduce(
-	(acc, work) => {
-		acc[work.id] = work;
-		return acc;
-	},
-	{} as Record<string, WorkItemData>,
-);
+import { workItemsMap, worksData } from "../data/works";
 ---
 
 <Layout title="Works" description="JavaScript を中心に、個人開発したページ・スクリプトを掲載しています。制作物一覧。">

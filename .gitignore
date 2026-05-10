@@ -5,3 +5,5 @@
 
 .DS_Store
 *.log
+
+# distを除外するとGitHub Pagesで公開できなくなるため、distは除外しない

@@ -35,6 +35,9 @@ export default function inline404Integration(): AstroIntegration {
 
 				let html = await fs.readFile(errorPagePath, "utf-8");
 
+				// Remove canonical link
+				html = html.replace(/<link[^>]*rel=["']canonical["'][^>]*>/gi, "");
+
 				const resolveLocalPath = (href: string) => {
 					const base = config.base.endsWith("/") ? config.base : config.base + "/";
 					let relPath = href;

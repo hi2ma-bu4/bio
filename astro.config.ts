@@ -325,6 +325,7 @@ export default defineConfig({
 		schema: {
 			BASE_DIR: envField.string(envFieldSetting),
 			AUTHOR: envField.string(envFieldSetting),
+			SITE_URL: envField.string(envFieldSetting),
 			SITE_TITLE: envField.string(envFieldSetting),
 			SITE_DESCRIPTION: envField.string(envFieldSetting),
 
