@@ -1,4 +1,4 @@
-import { B as BASE_DIR } from './Header-DVpR_U51.js';
+import { B as BASE_DIR } from './Header-D0Quf1wS.js';
 
 const imageKanjiSearch = new Proxy({"src":"/bio/assets/imgs/kanjiSearch-MvCyfFl0.png","width":1541,"height":792,"format":"png"}, {
 						get(target, name, receiver) {
@@ -61,7 +61,8 @@ const worksData = [
     tags: ["Hub Page"],
     directLink: `https://hi2ma-bu4.github.io/RepoShowcase/`,
     githubLink: "https://github.com/hi2ma-bu4/RepoShowcase",
-    longDescription: `作成したライブラリ(ほとんど個人利用用途)の一覧とそのデモページを設置しています。`
+    longDescription: `作成したライブラリ(ほとんど個人利用用途)の一覧とそのデモページを設置しています。`,
+    license: "LGPL-2.1"
   },
   {
     id: "KanjiSearch",
@@ -74,7 +75,8 @@ const worksData = [
     longDescription: `このツールは、オフラインで漢字を手書き検索できる機能を提供します。
 (初回起動時にモデルのダウンロードが必要です)
 手書きの漢字を認識するために、ONNX形式の機械学習モデルを使用しています。
-精度がかなり悪いため、あまり実用的ではありませんが、onnxの勉強で作成しました。`
+精度がかなり悪いため、あまり実用的ではありませんが、onnxの勉強で作成しました。`,
+    license: "AGPL-3.0"
   },
   {
     id: "MIDI-FallingBar",
@@ -86,7 +88,8 @@ const worksData = [
     githubLink: "https://github.com/hi2ma-bu4/MIDI-FallingBar",
     longDescription: `「Midiをグラフィカルに再生したい」という突然の発想により、生み出された産物です。
 これは、現代の自動演奏ピアノやSynthesiaスタイルの動画にインスパイアされた、MIDIノートを3Dピアノロール形式の「落下するバー」として表示するウェブベースのMIDIビジュアライザーです。
-WebGLレンダリングにはThree.jsを、MIDIファイルのパースには@tonejs/midiを使用しています。`
+WebGLレンダリングにはThree.jsを、MIDIファイルのパースには@tonejs/midiを使用しています。`,
+    license: "LGPL-2.1"
   },
   {
     id: "tool-2048",
@@ -98,7 +101,8 @@ WebGLレンダリングにはThree.jsを、MIDIファイルのパースには@to
     tags: ["JavaScript", "TypeScript", "WebAssembly"],
     longDescription: `このツールは、パズルゲーム「2048」における最適解を計算するために設計されています。
 盤面の状態を分析し、効率的な手順を探索することで、
-最小手数での到達や高スコア戦略の検証に活用できます。`
+最小手数での到達や高スコア戦略の検証に活用できます。`,
+    license: "AGPL-3.0"
   },
   {
     id: "ReTrans",
@@ -111,7 +115,8 @@ WebGLレンダリングにはThree.jsを、MIDIファイルのパースには@to
     longDescription: `巷で噂の「再翻訳」で遊べるページです。
 
 以下のURLで、カスタム再翻訳が試す事ができます。`,
-    otherUrls: [`${BASE_DIR}ReTrans/?ja&en&gd&az&lo&ur&yo&ko&ar&is&gd&lb&ur&yi&vi&be&de&rw&sl&ny&zh-CN&ja`]
+    otherUrls: [`${BASE_DIR}ReTrans/?ja&en&gd&az&lo&ur&yo&ko&ar&is&gd&lb&ur&yi&vi&be&de&rw&sl&ny&zh-CN&ja`],
+    license: "GPL-3.0"
   },
   {
     id: "mandelbrot",
@@ -125,7 +130,8 @@ WebGLレンダリングにはThree.jsを、MIDIファイルのパースには@to
 複雑な数値計算に基づき、美しいフラクタル模様を描画し、
 ズームを通して、数学的構造の無限の奥行きを体験できます。
 
-OpenGL Shading Language의数値上限によりズーム限界が決まっています。`
+OpenGL Shading Language의数値上限によりズーム限界が決まっています。`,
+    license: "LGPL-2.1"
   },
   {
     id: "js-ryoisyou",
@@ -136,7 +142,8 @@ OpenGL Shading Language의数値上限によりズーム限界が決まってい
     githubLink: "https://github.com/hi2ma-bu4/ryoisyou",
     tags: ["JavaScript", "PC Only"],
     longDescription: `本ページの内容は「Baba Is You」に着想を得て構成されています。
-つまりパクリということです。`
+つまりパクリということです。`,
+    license: "AGPL-3.0"
   },
   {
     id: "js-minecraft",
@@ -147,7 +154,8 @@ OpenGL Shading Language의数値上限によりズーム限界が決まってい
     githubLink: "https://github.com/hi2ma-bu4/js-minecraft",
     tags: ["JavaScript", "PC Only"],
     longDescription: `DOMだけでMinecraftを再現しているページがあり、
-そのページを9割真似て作成したものです。`
+そのページを9割真似て作成したものです。`,
+    license: "MIT"
   }
 ];
 const workItemsMap = worksData.reduce(
@@ -159,4 +167,4 @@ const workItemsMap = worksData.reduce(
 );
 
 export { workItemsMap as a, worksData as w };
-//# sourceMappingURL=works-A7vDE7fv.js.map
+//# sourceMappingURL=works-DlLppxyx.js.map
