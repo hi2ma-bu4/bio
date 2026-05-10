@@ -1,4 +1,4 @@
-import { c as createAstro, a as createComponent, m as maybeRenderHead, s as spreadAttributes, r as renderTemplate } from './vendor-zsY7UJHi.js';
+import { c as createAstro, a as createComponent, m as maybeRenderHead, s as spreadAttributes, r as renderTemplate } from './vendor-Crd9GD-p.js';
 import 'clsx';
 
 const $$Astro = createAstro("https://hi2ma-bu4.github.io/");
@@ -19,4 +19,4 @@ const __vite_glob_0_2 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePro
 }, Symbol.toStringTag, { value: 'Module' }));
 
 export { $$GitHub as $, __vite_glob_0_2 as _ };
-//# sourceMappingURL=GitHub-BQR3vPV6.js.map
+//# sourceMappingURL=GitHub-CKtd1932.js.map
