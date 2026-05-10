@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://hi2ma-bu4.github.io/bio/sitemap-index.xml

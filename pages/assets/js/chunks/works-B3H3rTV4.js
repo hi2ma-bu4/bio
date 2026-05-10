@@ -150,7 +150,7 @@ OpenGL Shading Language의数値上限によりズーム限界が決まってい
 そのページを9割真似て作成したものです。`
   }
 ];
-worksData.reduce(
+const workItemsMap = worksData.reduce(
   (acc, work) => {
     acc[work.id] = work;
     return acc;
@@ -158,5 +158,5 @@ worksData.reduce(
   {}
 );
 
-export { worksData as w };
-//# sourceMappingURL=works-FfykUvIm.js.map
+export { workItemsMap as a, worksData as w };
+//# sourceMappingURL=works-B3H3rTV4.js.map
