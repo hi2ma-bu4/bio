@@ -1,7 +1,8 @@
 ---
 import Bars3Icon from "astro-heroicons/solid/Bars3.astro";
 import XMarkIcon from "astro-heroicons/solid/XMark.astro";
-import { BASE_DIR, NAV_LINKS, SITE_TITLE } from "../config.ts";
+import Logo from "./Logo.astro";
+import NavLinks from "./NavLinks.astro";
 import ThemeToggle from "./ThemeToggle.astro";
 ---
 
@@ -22,31 +23,15 @@ import ThemeToggle from "./ThemeToggle.astro";
 				</button>
 			</div>
 		</div>
-		<ul class="space-y-4">
-			{
-				NAV_LINKS.map((link) => (
-					<li>
-						<a href={link.href} class:list={["block text-xl font-medium text-slate-700 dark:text-slate-300 hover:text-primary-600 dark:hover:text-primary-400", { "font-bold text-primary-600 dark:text-primary-400": Astro.url.pathname === link.href }]} aria-current={Astro.url.pathname === link.href ? "page" : false}>
-							{link.text}
-						</a>
-					</li>
-				))
-			}
-		</ul>
+		<NavLinks class="space-y-4 list-none" itemClass="block text-xl font-medium text-slate-700 dark:text-slate-300 hover:text-primary-600 dark:hover:text-primary-400" />
 	</nav>
 </div>
 
 <header id="floating-header" class="hidden md:block fixed top-0 left-0 right-0 z-20 py-3 px-8 bg-white/70 dark:bg-slate-900/70 backdrop-blur-md shadow-sm transition-transform duration-300 -translate-y-full" role="banner">
 	<nav class="max-w-5xl mx-auto flex justify-between items-center">
-		<a href={BASE_DIR} id="floating-logo" class="text-xl font-bold text-primary-600 dark:text-primary-400">{SITE_TITLE}</a>
+		<Logo id="floating-logo" class="text-xl" />
 		<div class="flex items-center space-x-6">
-			{
-				NAV_LINKS.map((link) => (
-					<a href={link.href} class:list={["text-base font-medium text-slate-700 dark:text-slate-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors", { "font-bold text-primary-600 dark:text-primary-400": Astro.url.pathname === link.href }]} aria-current={Astro.url.pathname === link.href ? "page" : false}>
-						{link.text}
-					</a>
-				))
-			}
+			<NavLinks class="flex space-x-6 list-none" itemClass="text-base font-medium text-slate-700 dark:text-slate-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors" />
 			<ThemeToggle />
 		</div>
 	</nav>

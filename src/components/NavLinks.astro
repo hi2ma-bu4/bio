@@ -1,0 +1,22 @@
+---
+import { NAV_LINKS } from "../config";
+
+interface Props {
+	class?: string;
+	itemClass?: string;
+}
+
+const { class: className, itemClass } = Astro.props;
+---
+
+<ul class={className}>
+	{
+		NAV_LINKS.map((link) => (
+			<li>
+				<a href={link.href} class:list={[itemClass, { "font-bold text-primary-600 dark:text-primary-400": Astro.url.pathname === link.href }]} aria-current={Astro.url.pathname === link.href ? "page" : false}>
+					{link.text}
+				</a>
+			</li>
+		))
+	}
+</ul>

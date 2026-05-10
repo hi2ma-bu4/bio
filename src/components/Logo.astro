@@ -1,0 +1,14 @@
+---
+import { BASE_DIR, SITE_TITLE } from "../config";
+
+interface Props {
+	id?: string;
+	class?: string;
+}
+
+const { id, class: className } = Astro.props;
+---
+
+<a href={BASE_DIR} id={id} class:list={["font-bold text-primary-600 dark:text-primary-400", className]} data-astro-reload>
+	{SITE_TITLE}
+</a>
