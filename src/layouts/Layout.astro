@@ -1,5 +1,4 @@
 ---
-import { GoogleFontsOptimizer } from "astro-google-fonts-optimizer";
 import { SEO, type SEOProps } from "astro-seo";
 import { ClientRouter } from "astro:transitions";
 import { pwaAssetsHead, type PWAAssetHeadLink } from "virtual:pwa-assets/head";
@@ -59,6 +58,8 @@ const metaArr: MetaArr = [
 	{ name: "format-detection", content: "telephone=no, address=no, email=no" },
 	{ name: "author", content: AUTHOR },
 	{ name: "generator", content: Astro.generator },
+	{ name: "application-name", content: SITE_TITLE },
+	{ name: "apple-mobile-web-app-title", content: SITE_TITLE },
 	{ name: "mobile-web-app-capable", content: "yes" },
 	{ name: "apple-mobile-web-app-capable", content: "yes" },
 	{ name: "apple-mobile-web-app-status-bar-style", content: "black-translucent" },
@@ -194,11 +195,13 @@ const structuredData = {
 		<script src="../scripts/page-afterimage.ts"></script>
 		<script src="../scripts/hash-scroll.ts"></script>
 
+		<link rel="dns-prefetch" href="//www.googletagmanager.com" />
 		<script async src={`${BASE_DIR}assets/js/static/auto-gtag.js`} is:inline></script>
 		<ClientRouter />
 
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
-		<GoogleFontsOptimizer url="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Noto+Sans+JP:wght@400;700&display=swap" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Noto+Sans+JP:wght@400;700&display=swap" />
 	</head>
 	<body class="min-h-screen flex flex-col w-full" data-overlayscrollbars-initialize>
 		<!-- Google Tag Manager (noscript) -->

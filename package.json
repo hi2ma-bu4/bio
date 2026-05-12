@@ -18,7 +18,6 @@
         "@astrojs/solid-js": "^6.0.1",
         "@tsparticles/shape-heart": "^3.9.1",
         "astro": "~5.18.1",
-        "astro-google-fonts-optimizer": "^0.2.2",
         "astro-heroicons": "^2.1.5",
         "astro-seo": "^1.1.0",
         "detect-it": "^4.0.1",
