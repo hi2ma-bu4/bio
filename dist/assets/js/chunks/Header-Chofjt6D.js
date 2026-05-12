@@ -13,7 +13,7 @@ const CLASS_AUTO_IMG_ALT = "auto-img-alt";
 
 const $$Footer = createComponent(($$result, $$props, $$slots) => {
   const year = (/* @__PURE__ */ new Date()).getFullYear();
-  return renderTemplate`${maybeRenderHead()}<footer class="w-full mt-16 py-8 bg-slate-100 dark:bg-slate-800"> <div class="max-w-5xl mx-auto px-4 md:px-8 text-center" role="contentinfo"> <p class="text-slate-600 dark:text-slate-400">
+  return renderTemplate`${maybeRenderHead()}<footer class="w-full mt-16 py-8 bg-slate-100 dark:bg-slate-800"> <div class="max-w-5xl mx-auto px-4 md:px-8 text-center" role="contentinfo"> <p class="notranslate text-slate-600 dark:text-slate-400">
 &copy; ${year} <a href="https://github.com/hi2ma-bu4" target="_blank" rel="noopener noreferrer" class="hover:text-slate-400 dark:hover:text-slate-600 hover:underline transition-colors">${AUTHOR}</a>. All rights reserved.
 </p> </div> </footer>`;
 }, "C:/Users/snows/Documents/Program/js/bio/src/components/Footer.astro", void 0);
@@ -23,7 +23,7 @@ const $$Logo = createComponent(($$result, $$props, $$slots) => {
   const Astro2 = $$result.createAstro($$Astro$2, $$props, $$slots);
   Astro2.self = $$Logo;
   const { id, class: className } = Astro2.props;
-  return renderTemplate`${maybeRenderHead()}<a${addAttribute(BASE_DIR, "href")}${addAttribute(id, "id")}${addAttribute(["font-bold text-primary-600 dark:text-primary-400", className], "class:list")} data-astro-reload> ${SITE_TITLE} </a>`;
+  return renderTemplate`${maybeRenderHead()}<a${addAttribute(BASE_DIR, "href")}${addAttribute(id, "id")}${addAttribute(["notranslate font-bold text-primary-600 dark:text-primary-400", className], "class:list")} data-astro-reload> ${SITE_TITLE} </a>`;
 }, "C:/Users/snows/Documents/Program/js/bio/src/components/Logo.astro", void 0);
 
 const $$Astro$1 = createAstro("https://hi2ma-bu4.github.io/");
@@ -60,4 +60,4 @@ const $$Header = createComponent(($$result, $$props, $$slots) => {
 }, "C:/Users/snows/Documents/Program/js/bio/src/components/Header.astro", "self");
 
 export { $$Footer as $, AUTHOR as A, BASE_DIR as B, CLASS_AUTO_IMG_ALT as C, GTAG_ID as G, SITE_TITLE as S, __vite_glob_0_1 as _, SITE_DESCRIPTION as a, $$Header as b, $$ThemeToggle as c, $$NavLinks as d, $$Logo as e, SITE_URL as f };
-//# sourceMappingURL=Header-71fqZZ_w.js.map
+//# sourceMappingURL=Header-Chofjt6D.js.map
