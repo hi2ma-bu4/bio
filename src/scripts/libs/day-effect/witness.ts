@@ -69,7 +69,7 @@ class WitnessPuzzle {
 	/** 現在のドラッグポインタ位置 */
 	private currentDragPos: Point = { x: 0, y: 0 };
 
-	/** パス上のキラキラ粒子リスト */
+	/** トラックの縁のキラキラ粒子リスト */
 	private particles: Particle[] = [];
 	/** ゴール後の追従蛇パーティクルリスト */
 	private snakeParticles: Particle[] = [];
@@ -135,54 +135,54 @@ class WitnessPuzzle {
 
 	/**
 	 * 手前（Z-index高）と奥（Z-index低）の半円パーツを作成
+	 * 既存のレイアウトを壊さないよう、絶対配置/固定配置のオーバーレイとして注入する
 	 */
 	private createSemiCircles(): void {
-		// 手前要素: Floating Header または mobile menu や 画面上部に固定
+		// 手前要素: ヘッダー/ナビゲーション領域に重ねて固定配置
 		this.fgSemi = document.createElement("div");
 		this.fgSemi.className = "witness-fg-semicircle";
-		this.fgSemi.setAttribute("title", "Gimmick");
+		document.body.appendChild(this.fgSemi);
 
-		// 奥要素: メインコンテンツ領域内の特定の要素の縁に溶け込ませる
+		// 奥要素: ドキュメント本体の要素領域に重ねて配置
 		this.bgSemi = document.createElement("div");
 		this.bgSemi.className = "witness-bg-semicircle";
+		document.body.appendChild(this.bgSemi);
 
-		// 手前要素の配置先を探す（FloatingHeader または Top ナビゲーション）
-		const headerNav = document.querySelector("#floating-header nav") || document.querySelector("header nav");
-		if (headerNav) {
-			headerNav.appendChild(this.fgSemi);
-			// ヘッダー内の適度な右寄り位置にインライン風配置
-			this.fgSemi.style.position = "relative";
-			this.fgSemi.style.display = "inline-block";
-			this.fgSemi.style.top = "6px";
-			this.fgSemi.style.margin = "0 12px";
-		} else {
-			document.body.appendChild(this.fgSemi);
+		this.updateSemiCirclePositions();
+	}
+
+	/**
+	 * 半円要素のスクリーン位置を更新
+	 */
+	private updateSemiCirclePositions(): void {
+		if (!this.fgSemi || !this.bgSemi) return;
+
+		// 手前の半円はヘッダーバーまたはビューポート上部固定
+		const headerEl = document.querySelector("#floating-header, header");
+		if (headerEl) {
+			const hRect = headerEl.getBoundingClientRect();
 			this.fgSemi.style.position = "fixed";
-			this.fgSemi.style.top = "20px";
-			this.fgSemi.style.right = "80px";
+			this.fgSemi.style.top = `${Math.max(10, hRect.bottom - 16)}px`;
+			this.fgSemi.style.left = `${hRect.left + hRect.width * 0.75}px`;
+		} else {
+			this.fgSemi.style.position = "fixed";
+			this.fgSemi.style.top = "24px";
+			this.fgSemi.style.left = "75%";
 		}
 
-		// 奥要素の配置先を探す（メインコンテンツ内の最初のカードや見出しなど）
-		const mainTarget = document.querySelector("main h1, main section, main article") || document.querySelector("main");
-		if (mainTarget) {
-			const targetEl = mainTarget as HTMLElement;
-			if (getComputedStyle(targetEl).position === "static") {
-				targetEl.style.position = "relative";
-			}
-			targetEl.appendChild(this.bgSemi);
+		// 奥の半円はメインコンテンツの要素（スクロール連動）
+		const fgRect = this.fgSemi.getBoundingClientRect();
+		const mainEl = document.querySelector("main article, main section, main");
+		if (mainEl) {
+			const mRect = mainEl.getBoundingClientRect();
+			const absoluteTop = window.scrollY + mRect.top + 280; // スクロールで一致するターゲットY
 			this.bgSemi.style.position = "absolute";
-			this.bgSemi.style.top = "180px"; // スクロール時に合体するYオフセット
-
-			// 手前要素のX座標に合わせて奥要素のX位置を調整
-			const fgRect = this.fgSemi.getBoundingClientRect();
-			const targetRect = targetEl.getBoundingClientRect();
-			const relativeLeft = fgRect.left - targetRect.left;
-			this.bgSemi.style.left = `${relativeLeft}px`;
+			this.bgSemi.style.top = `${absoluteTop}px`;
+			this.bgSemi.style.left = `${fgRect.left}px`;
 		} else {
-			document.body.appendChild(this.bgSemi);
 			this.bgSemi.style.position = "absolute";
-			this.bgSemi.style.top = "250px";
-			this.bgSemi.style.left = `${this.fgSemi.getBoundingClientRect().left}px`;
+			this.bgSemi.style.top = "300px";
+			this.bgSemi.style.left = `${fgRect.left}px`;
 		}
 	}
 
@@ -196,47 +196,29 @@ class WitnessPuzzle {
 	}
 
 	/**
-	 * スクロール位置と合体判定
+	 * スクロール位置と合体判定 (ハイライト等のヒント演出は一切行わない)
 	 */
 	private checkAlignmentAndBuildPath(): void {
 		if (!this.fgSemi || !this.bgSemi) return;
 
-		if (!this.isDragging) {
-			const fgR = this.fgSemi.getBoundingClientRect();
-			const parent = this.bgSemi.offsetParent as HTMLElement;
-			if (parent) {
-				const parentR = parent.getBoundingClientRect();
-				this.bgSemi.style.left = `${fgR.left - parentR.left}px`;
-			}
-		}
+		this.updateSemiCirclePositions();
 
 		const fgRect = this.fgSemi.getBoundingClientRect();
 		const bgRect = this.bgSemi.getBoundingClientRect();
 
-		// 手前の半円の下端と、奥の半円の上端がぴったり接して正円になるか判定 (許容誤差 ±6px)
+		// 手前の半円の下端と奥の半円の上端がぴったり接するか判定 (許容誤差 ±6px)
 		const dx = Math.abs(fgRect.left - bgRect.left);
 		const dy = Math.abs(fgRect.bottom - bgRect.top);
 
-		const tolerance = 8;
-		const aligned = dx <= tolerance && dy <= tolerance;
+		const tolerance = 6;
+		this.isAligned = dx <= tolerance && dy <= tolerance;
 
-		if (aligned !== this.isAligned) {
-			this.isAligned = aligned;
-			if (this.container) {
-				if (this.isAligned) {
-					this.container.classList.add("witness-aligned");
-				} else {
-					this.container.classList.remove("witness-aligned");
-				}
-			}
-		}
-
-		// スクロール等に応じてパスノードの位置を更新（合体時のビューポート座標基準）
+		// ノーヒント・ハイライト演出なし
 		this.buildPuzzlePath(fgRect, bgRect);
 	}
 
 	/**
-	 * パズルのルート（複数レイヤー・要素の縁をなぞるランダム＋自然なパス）の構築
+	 * パズルのルート（ページのカードや見出しの縁に沿った環境溝・トラック）を構築
 	 * @param fgRect - 手前要素の矩形情報
 	 * @param bgRect - 奥要素の矩形情報
 	 */
@@ -249,46 +231,42 @@ class WitnessPuzzle {
 
 		const nodes: Point[] = [{ x: startX, y: startY }];
 
-		// ページの要素（カード、ボタン、ナビ等）の縁をなぞるようにノードを経由させる
-		const contentElements = Array.from(document.querySelectorAll("main article, main section, main .card, main h2, nav a"));
+		// ページコンテンツ（カード、見出し、ナビ等）の境界線に沿うようにトラックの節目を配置
+		const contentElements = Array.from(document.querySelectorAll("main article, main section, main .card, main h1, nav"));
 
 		if (contentElements.length >= 2) {
-			// 一部の要素の角や縁の座標を取得
-			const el1 = contentElements[Math.floor(contentElements.length * 0.3)] as HTMLElement;
-			const el2 = contentElements[Math.floor(contentElements.length * 0.7)] as HTMLElement;
+			const el1 = contentElements[0] as HTMLElement;
+			const el2 = contentElements[Math.min(1, contentElements.length - 1)] as HTMLElement;
 
 			const r1 = el1.getBoundingClientRect();
 			const r2 = el2.getBoundingClientRect();
 
-			// 縁に沿うノード1
-			nodes.push({ x: r1.left, y: startY });
-			nodes.push({ x: r1.left, y: r1.top + r1.height / 2 });
-
-			// 縁に沿うノード2
-			nodes.push({ x: r2.right, y: r1.top + r1.height / 2 });
-			nodes.push({ x: r2.right, y: r2.bottom });
+			// 要素の縁（境界）に沿ったチャネル座標を設定
+			nodes.push({ x: Math.min(window.innerWidth - 40, r1.right), y: startY });
+			nodes.push({ x: Math.min(window.innerWidth - 40, r1.right), y: r1.bottom });
+			nodes.push({ x: Math.max(40, r2.left), y: r1.bottom });
+			nodes.push({ x: Math.max(40, r2.left), y: r2.bottom });
 		} else {
-			// バックアップ用パスノード
-			nodes.push({ x: startX + 120, y: startY });
-			nodes.push({ x: startX + 120, y: startY + 180 });
-			nodes.push({ x: startX - 80, y: startY + 180 });
+			nodes.push({ x: startX + 160, y: startY });
+			nodes.push({ x: startX + 160, y: startY + 200 });
+			nodes.push({ x: startX - 80, y: startY + 200 });
 		}
 
-		// ゴール地点（ページの右側または下側の目立たない要素の端）
+		// ゴール地点（要素の角）
 		const lastNode = nodes[nodes.length - 1];
-		const goalPoint = { x: lastNode.x, y: lastNode.y + 100 };
+		const goalPoint = { x: lastNode.x, y: lastNode.y + 120 };
 		nodes.push(goalPoint);
 
 		this.targetPathNodes = nodes;
 
-		// ゴールノードUI要素の位置更新
+		// ゴールノードUI要素の位置更新（ドラッグ中のみ表示）
 		if (this.goalNodeEl) {
 			this.goalNodeEl.style.left = `${goalPoint.x}px`;
 			this.goalNodeEl.style.top = `${goalPoint.y}px`;
-			if (this.isAligned && !this.isCompleted) {
+			if (this.isDragging) {
 				this.goalNodeEl.classList.add("active");
 			} else {
-				this.goalNodeEl.classList.remove("active");
+				this.goalNodeEl.classList.remove("active", "flashing");
 			}
 		}
 	}
@@ -326,7 +304,7 @@ class WitnessPuzzle {
 		const startNode = this.targetPathNodes[0];
 		const dist = Math.hypot(e.clientX - startNode.x, e.clientY - startNode.y);
 
-		// スタート円の中心付近（半径25px以内）でのみドラッグを開始
+		// 合体した円の中心付近（半径25px以内）をクリック/タップした場合のみパズルドラッグ開始
 		if (dist <= 25) {
 			this.isDragging = true;
 			this.currentPathPoints = [startNode];
@@ -335,6 +313,9 @@ class WitnessPuzzle {
 
 			if (this.canvas) {
 				this.canvas.classList.add("interactive");
+			}
+			if (this.goalNodeEl) {
+				this.goalNodeEl.classList.add("active");
 			}
 
 			e.preventDefault();
@@ -346,34 +327,33 @@ class WitnessPuzzle {
 	 * @param e - ポインタイベント
 	 */
 	private handlePointerMove(e: PointerEvent): void {
-		if (!this.isDragging || this.isCompleted) return;
+		if (!this.isDragging || this.isCompleted || this.targetPathNodes.length < 2) return;
 
 		e.preventDefault();
 		const mouse = { x: e.clientX, y: e.clientY };
 		this.currentDragPos = mouse;
 
-		// パス進行チェック
-		const nextTarget = this.targetPathNodes[this.currentProgressIndex + 1];
-		if (nextTarget) {
-			const prevTarget = this.targetPathNodes[this.currentProgressIndex];
+		// ゴール到達直前（最後のノード）でも線描画が途切れずに更新され続けるようにインデックス範囲を制御
+		const segmentIdx = Math.min(this.currentProgressIndex, this.targetPathNodes.length - 2);
+		const prevTarget = this.targetPathNodes[segmentIdx];
+		const nextTarget = this.targetPathNodes[segmentIdx + 1];
 
-			// 線分 prevTarget -> nextTarget への投影位置を計算
-			const projected = this.getProjectedPoint(mouse, prevTarget, nextTarget);
-			const distToLine = Math.hypot(mouse.x - projected.x, mouse.y - projected.y);
+		// 線分 prevTarget -> nextTarget への投影位置を計算
+		const projected = this.getProjectedPoint(mouse, prevTarget, nextTarget);
+		const distToLine = Math.hypot(mouse.x - projected.x, mouse.y - projected.y);
 
-			// パスの許容線幅（35px以内）であれば進行を許可
-			if (distToLine < 35) {
-				this.currentPathPoints = [...this.targetPathNodes.slice(0, this.currentProgressIndex + 1), projected];
+		// 環境トラックの幅（許容範囲45px）
+		if (distToLine < 45) {
+			this.currentPathPoints = [...this.targetPathNodes.slice(0, segmentIdx + 1), projected];
 
-				// 次のノードに到達したか
-				const distToNext = Math.hypot(projected.x - nextTarget.x, projected.y - nextTarget.y);
-				if (distToNext < 15) {
-					this.currentProgressIndex++;
-					if (this.currentProgressIndex >= this.targetPathNodes.length - 1) {
-						// ゴール到達準備
-						if (this.goalNodeEl) {
-							this.goalNodeEl.classList.add("flashing");
-						}
+			// 次のノードに到達したか
+			const distToNext = Math.hypot(projected.x - nextTarget.x, projected.y - nextTarget.y);
+			if (distToNext < 22 && this.currentProgressIndex < this.targetPathNodes.length - 1) {
+				this.currentProgressIndex++;
+				if (this.currentProgressIndex >= this.targetPathNodes.length - 1) {
+					// ゴール到達可能時にゴールノードを点滅させる
+					if (this.goalNodeEl) {
+						this.goalNodeEl.classList.add("flashing");
 					}
 				}
 			}
@@ -396,7 +376,7 @@ class WitnessPuzzle {
 		const goalNode = this.targetPathNodes[this.targetPathNodes.length - 1];
 		if (goalNode && this.currentProgressIndex >= this.targetPathNodes.length - 1) {
 			const distToGoal = Math.hypot(this.currentDragPos.x - goalNode.x, this.currentDragPos.y - goalNode.y);
-			if (distToGoal <= 30) {
+			if (distToGoal <= 40) {
 				this.triggerGoalCompletion();
 				return;
 			}
@@ -406,7 +386,7 @@ class WitnessPuzzle {
 		this.currentPathPoints = [];
 		this.currentProgressIndex = 0;
 		if (this.goalNodeEl) {
-			this.goalNodeEl.classList.remove("flashing");
+			this.goalNodeEl.classList.remove("active", "flashing");
 		}
 	}
 
@@ -429,7 +409,7 @@ class WitnessPuzzle {
 	}
 
 	/**
-	 * ゴール達成演出（キラキラが魔法の蛇のようにロゴへ吸い込まれる）
+	 * ゴール達成演出（光の粒子が魔法の蛇のようにロゴへ吸い込まれる）
 	 */
 	private triggerGoalCompletion(): void {
 		this.isCompleted = true;
@@ -437,12 +417,11 @@ class WitnessPuzzle {
 			this.goalNodeEl.classList.remove("active", "flashing");
 		}
 
-		// 描いたパス上の各点から「魔法の蛇」パーティクル群を生成
-		const totalParticles = 60;
+		// 描いたパズルライン沿いに「魔法の蛇」パーティクル群を生成
+		const totalParticles = 70;
 		this.snakeParticles = [];
 
 		for (let i = 0; i < totalParticles; i++) {
-			// パスに沿った初期位置
 			const pathRatio = i / totalParticles;
 			const samplePos = this.getPointAlongPath(pathRatio);
 
@@ -451,13 +430,13 @@ class WitnessPuzzle {
 				y: samplePos.y,
 				vx: 0,
 				vy: 0,
-				size: Math.random() * 4 + 2,
-				color: `hsl(${40 + Math.random() * 30}, 100%, ${70 + Math.random() * 25}%)`,
+				size: Math.random() * 4 + 2.5,
+				color: `hsl(${45 + Math.random() * 25}, 100%, ${70 + Math.random() * 25}%)`,
 				alpha: 1,
 				life: 0,
-				maxLife: 180, // 約3秒間
-				phase: i * 0.2, // 波動の位相ずれ
-				speed: 2 + Math.random() * 2,
+				maxLife: 200,
+				phase: i * 0.25,
+				speed: 2.5 + Math.random() * 2,
 			});
 		}
 	}
@@ -494,9 +473,9 @@ class WitnessPuzzle {
 
 		this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-		// 1. ドラッグ中または完了時のパズルルート描画（キラキラ輝く縁アニメーション）
+		// 1. 環境パズルの溝（幅広トラック）と両側の縁の輝く平行線アニメーション描画
 		if (this.currentPathPoints.length >= 2) {
-			this.renderSparklePath();
+			this.renderEnvironmentalTrack();
 		}
 
 		// 2. ゴール後の「魔法の蛇」ロゴ追従アニメーション描画
@@ -508,60 +487,85 @@ class WitnessPuzzle {
 	}
 
 	/**
-	 * 通ったパズルのルートの縁がキラキラ輝く描画
+	 * 『The Witness』スタイルの幅広環境チャネル（溝）と、その両側の「縁（ボーダー）」を描画
 	 */
-	private renderSparklePath(): void {
+	private renderEnvironmentalTrack(): void {
 		if (!this.ctx) return;
 
 		this.ctx.save();
 
-		// 発光の外枠ライン
+		const points = this.currentPathPoints;
+		const trackWidth = 28; // チャネルの半幅は 14px
+		const halfWidth = trackWidth / 2;
+
+		// 1. チャネル（パズルの溝）の透明な背景帯
 		this.ctx.beginPath();
-		this.ctx.moveTo(this.currentPathPoints[0].x, this.currentPathPoints[0].y);
-		for (let i = 1; i < this.currentPathPoints.length; i++) {
-			this.ctx.lineTo(this.currentPathPoints[i].x, this.currentPathPoints[i].y);
+		this.ctx.moveTo(points[0].x, points[0].y);
+		for (let i = 1; i < points.length; i++) {
+			this.ctx.lineTo(points[i].x, points[i].y);
 		}
-
-		const time = Date.now() / 200;
-		const glowWidth = 12 + Math.sin(time) * 3;
-
-		this.ctx.strokeStyle = "rgba(255, 210, 100, 0.4)";
-		this.ctx.lineWidth = glowWidth;
+		this.ctx.strokeStyle = "rgba(255, 220, 140, 0.2)";
+		this.ctx.lineWidth = trackWidth;
 		this.ctx.lineCap = "round";
 		this.ctx.lineJoin = "round";
-		this.ctx.shadowColor = "rgba(255, 200, 80, 0.8)";
-		this.ctx.shadowBlur = 15;
 		this.ctx.stroke();
 
-		// 核心の明るい白金ライン
-		this.ctx.beginPath();
-		this.ctx.moveTo(this.currentPathPoints[0].x, this.currentPathPoints[0].y);
-		for (let i = 1; i < this.currentPathPoints.length; i++) {
-			this.ctx.lineTo(this.currentPathPoints[i].x, this.currentPathPoints[i].y);
+		// 2. トラックの両側の「外側縁（ボーダーライン）」の法線オフセット座標計算
+		const leftEdges: Point[] = [];
+		const rightEdges: Point[] = [];
+
+		for (let i = 0; i < points.length; i++) {
+			// 接線ベクトルの算出
+			let dx = 0;
+			let dy = 0;
+
+			if (i === 0) {
+				dx = points[1].x - points[0].x;
+				dy = points[1].y - points[0].y;
+			} else if (i === points.length - 1) {
+				dx = points[i].x - points[i - 1].x;
+				dy = points[i].y - points[i - 1].y;
+			} else {
+				dx = points[i + 1].x - points[i - 1].x;
+				dy = points[i + 1].y - points[i - 1].y;
+			}
+
+			const len = Math.hypot(dx, dy) || 1;
+			// 単位法線ベクトル
+			const nx = -dy / len;
+			const ny = dx / len;
+
+			leftEdges.push({ x: points[i].x + nx * halfWidth, y: points[i].y + ny * halfWidth });
+			rightEdges.push({ x: points[i].x - nx * halfWidth, y: points[i].y - ny * halfWidth });
 		}
-		this.ctx.strokeStyle = "rgba(255, 255, 240, 0.95)";
-		this.ctx.lineWidth = 5;
-		this.ctx.stroke();
 
-		// パス上のキラキラ粒子ランダム描画
-		if (Math.random() < 0.6) {
-			const randomPt = this.currentPathPoints[Math.floor(Math.random() * this.currentPathPoints.length)];
+		// 左側の縁（ボーダーライン）を描画
+		this.drawGlowingEdgeLine(leftEdges);
+		// 右側の縁（ボーダーライン）を描画
+		this.drawGlowingEdgeLine(rightEdges);
+
+		// 3. トラックの左右の「縁」に沿ってキラキラ粒子をランダム発生させる
+		if (Math.random() < 0.7) {
+			const edgeList = Math.random() < 0.5 ? leftEdges : rightEdges;
+			const idx = Math.floor(Math.random() * edgeList.length);
+			const pt = edgeList[idx];
+
 			this.particles.push({
-				x: randomPt.x + (Math.random() - 0.5) * 10,
-				y: randomPt.y + (Math.random() - 0.5) * 10,
-				vx: (Math.random() - 0.5) * 0.8,
-				vy: (Math.random() - 0.5) * 0.8,
-				size: Math.random() * 3 + 1,
-				color: "#fff3a0",
+				x: pt.x + (Math.random() - 0.5) * 4,
+				y: pt.y + (Math.random() - 0.5) * 4,
+				vx: (Math.random() - 0.5) * 0.6,
+				vy: (Math.random() - 0.5) * 0.6,
+				size: Math.random() * 2.5 + 1,
+				color: "#fff7c2",
 				alpha: 1,
 				life: 0,
-				maxLife: 30,
+				maxLife: 25,
 				phase: 0,
 				speed: 0,
 			});
 		}
 
-		// パス粒子の更新・描画
+		// 縁のキラキラ粒子の描画・更新
 		this.particles = this.particles.filter((p) => {
 			p.x += p.vx;
 			p.y += p.vy;
@@ -581,12 +585,33 @@ class WitnessPuzzle {
 	}
 
 	/**
-	 * RPGの仲間のように揺らぎながらロゴへ向かって追従する魔法の蛇アニメーション
+	 * チャネルの「縁（ボーダー）」に輝くラインを描画
+	 * @param edgePoints - 縁の座標リスト
+	 */
+	private drawGlowingEdgeLine(edgePoints: Point[]): void {
+		if (!this.ctx || edgePoints.length < 2) return;
+
+		this.ctx.beginPath();
+		this.ctx.moveTo(edgePoints[0].x, edgePoints[0].y);
+		for (let i = 1; i < edgePoints.length; i++) {
+			this.ctx.lineTo(edgePoints[i].x, edgePoints[i].y);
+		}
+		this.ctx.strokeStyle = "rgba(255, 240, 180, 0.85)";
+		this.ctx.lineWidth = 2.5;
+		this.ctx.lineCap = "round";
+		this.ctx.lineJoin = "round";
+		this.ctx.shadowColor = "rgba(255, 200, 80, 0.9)";
+		this.ctx.shadowBlur = 8;
+		this.ctx.stroke();
+	}
+
+	/**
+	 * RPGの仲間のように揺らぎながらロゴへ向かって追従・吸い込まれる魔法の蛇アニメーション
 	 */
 	private renderSnakeParticles(): void {
 		if (!this.ctx) return;
 
-		const logoEl = document.querySelector("#logo") || document.querySelector("#floating-logo") || document.querySelector("header");
+		const logoEl = document.querySelector("#logo, #floating-logo, header a, header");
 		const logoRect = logoEl ? logoEl.getBoundingClientRect() : { left: window.innerWidth / 2, top: 20, width: 100, height: 40 };
 		const logoTarget: Point = {
 			x: logoRect.left + logoRect.width / 2,
@@ -598,31 +623,28 @@ class WitnessPuzzle {
 		this.snakeParticles = this.snakeParticles.filter((p) => {
 			p.life++;
 
-			// ロゴ方向のベクトル
 			const dx = logoTarget.x - p.x;
 			const dy = logoTarget.y - p.y;
 			const dist = Math.hypot(dx, dy);
 
-			if (dist > 10) {
-				// 基本の追いかけ移動
+			if (dist > 12) {
 				const angle = Math.atan2(dy, dx);
 
-				// RPGの仲間の揺らぎ（サイン波のうねり・横揺れ）
-				p.phase += 0.08;
-				const waveOffset = Math.sin(p.phase) * 6;
+				// RPGの仲間のうねり（サイン波の揺らぎ）
+				p.phase += 0.09;
+				const waveOffset = Math.sin(p.phase) * 7;
 				const perpAngle = angle + Math.PI / 2;
 
 				p.x += Math.cos(angle) * p.speed + Math.cos(perpAngle) * waveOffset;
 				p.y += Math.sin(angle) * p.speed + Math.sin(perpAngle) * waveOffset;
 			} else {
-				// ロゴに到達
-				p.alpha -= 0.05;
+				// ロゴに吸い込まれた際消滅
+				p.alpha -= 0.08;
 			}
 
-			// 描画
 			this.ctx!.fillStyle = p.color;
 			this.ctx!.shadowColor = p.color;
-			this.ctx!.shadowBlur = 10;
+			this.ctx!.shadowBlur = 8;
 			this.ctx!.globalAlpha = Math.max(0, p.alpha);
 
 			this.ctx!.beginPath();
@@ -636,7 +658,7 @@ class WitnessPuzzle {
 	}
 
 	/**
-	 * エフェクトを停止し、全要素・イベントリスナーをクリーンアップする
+	 * エフェクトを停止しクリーンアップ
 	 */
 	public stop(): void {
 		if (this.animFrameId) cancelAnimationFrame(this.animFrameId);
