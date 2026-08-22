@@ -197,11 +197,6 @@ async function initParticles() {
 			attachManagedEffect(startBugHunt, stopBugHunt);
 			break;
 		}
-		case "witness": {
-			const { startWitnessEffect, stopWitnessEffect } = await import("./libs/day-effect/witness");
-			attachManagedEffect(startWitnessEffect, stopWitnessEffect);
-			break;
-		}
 		case "fireworks": {
 			const { loadFireworksPreset } = await import("./libs/tsparticles/fireworks");
 			loadPreset = loadFireworksPreset;
