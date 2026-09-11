@@ -205,7 +205,7 @@ async function initParticles() {
 		}
 		case "programmers-day": {
 			// 特殊動作
-			const { PseudoDebugKit } = await import("./libs/pseudo-debugkit/src/PseudoDebugKit");
+			const { PseudoDebugKit } = await import("pseudo-debugkit");
 			const pseudoDebugKit = new PseudoDebugKit({
 				panel: false,
 				shortcuts: true,

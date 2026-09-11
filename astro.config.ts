@@ -67,10 +67,11 @@ const PREFIX_RULES = [
 	{ keyword: "matter-js", name: "matter-js" },
 	{ keyword: "solid-js", name: "solid-js" },
 	{ keyword: "qrcode", name: "qrcode" },
+	// 自作node_modules
+	{ keyword: "pseudo-debugkit", name: "pseudo-debugkit" },
 	// その他vendor
 	{ keyword: "node_modules", name: "vendor" },
 	// libs
-	{ keyword: "pseudo-debugkit", name: "pseudo-debugkit" },
 	{ keyword: "theme-utils", name: "theme-utils" },
 	{ keyword: "ui-utils", name: "ui-utils" },
 ];

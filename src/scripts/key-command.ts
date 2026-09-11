@@ -1,8 +1,8 @@
 import { deviceType } from "detect-it";
 import { isbot } from "isbot";
 
+import { FlowKeys } from "flowkeys";
 import { createEffectLifecycle } from "./libs/effect-lifecycle";
-import { FlowKeys } from "./libs/flowkeys/src/FlowKeys";
 import { showToast } from "./libs/ui-toast";
 
 const lifecycle = createEffectLifecycle();
